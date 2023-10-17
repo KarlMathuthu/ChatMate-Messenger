@@ -16,9 +16,9 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBacgroundColor,
-      body: chatsDummy.isNotEmpty && chatsDummy != null
-          ? SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+      body: chatsDummy.isNotEmpty
+          ? const SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
               child: Column(
                 children: [],
               ),

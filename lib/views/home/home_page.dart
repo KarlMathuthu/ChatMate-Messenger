@@ -21,13 +21,13 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         backgroundColor: AppTheme.scaffoldBacgroundColor,
         appBar: AppBar(
-          backgroundColor: AppTheme.mainColor,
+          backgroundColor: AppTheme.scaffoldBacgroundColor,
           actions: [
             IconButton(
               onPressed: () {},
               icon: SvgPicture.asset(
                 "assets/icons/search.svg",
-                color: Colors.white,
+                color: Colors.black,
                 height: 20,
               ),
             ),
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {},
               icon: SvgPicture.asset(
                 "assets/icons/cog.svg",
-                color: Colors.white,
+                color: Colors.black,
                 height: 20,
               ),
             ),
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           title: Text(
             "ChatMate",
             style: GoogleFonts.lato(
-              color: Colors.white,
+              color: Colors.black,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -64,12 +64,12 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
             unselectedLabelStyle: GoogleFonts.lato(),
-            labelColor: Colors.white,
-            indicatorColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
+            labelColor: AppTheme.mainColor,
+            indicatorColor: AppTheme.mainColor,
+            unselectedLabelColor: AppTheme.mainColorLight,
             labelStyle: GoogleFonts.lato(),
             indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(color: Colors.white, width: 3.0),
+              borderSide: BorderSide(color: AppTheme.mainColor, width: 3.0),
             ),
           ),
         ),
