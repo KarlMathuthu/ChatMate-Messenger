@@ -17,7 +17,9 @@ class MainApp extends StatelessWidget {
       getPages: RouteClass.routes,
       initialRoute: RouteClass.splashPage,
       title: AppConstants.appName,
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
     );
   }
 }

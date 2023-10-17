@@ -243,6 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                         Get.snackbar("Warning", "Password is too weak");
                       } else {
                         // Continue sign-in.
+                        Get.toNamed(RouteClass.homePage);
                       }
                     },
                   ),
