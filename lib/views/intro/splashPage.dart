@@ -1,10 +1,27 @@
+import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/views/intro/letsYouInPage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class SplashPage extends StatelessWidget {
-  const SplashPage({super.key});
+class SplashPage extends StatefulWidget {
+  const SplashPage({Key? key});
+
+  @override
+  _SplashPageState createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToNextScreen();
+  }
+
+  Future<void> _navigateToNextScreen() async {
+    await Future.delayed(const Duration(seconds: 5));
+    Get.offAllNamed(RouteClass.letsYouIn);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +30,7 @@ class SplashPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppTheme.scaffoldBacgroundColor,
       ),
-      body: FutureBuilder(
-        future: Future.delayed(const Duration(seconds: 5)),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return const LetsYouInPage();
-          } else {
-            return splashScreenLayout();
-          }
-        },
-      ),
+      body: splashScreenLayout(),
     );
   }
 
