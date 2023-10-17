@@ -79,7 +79,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   onTap: () {
                     setState(() {});
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     prefixIcon: Icon(
                       FontAwesomeIcons.at,
                       size: 18,

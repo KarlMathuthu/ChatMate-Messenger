@@ -7,6 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../routes/route_class.dart';
+
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
@@ -243,6 +245,38 @@ class _LoginPageState extends State<LoginPage> {
                         // Continue sign-in.
                       }
                     },
+                  ),
+                ),
+              ),
+              //Reset password button.
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(RouteClass.resetPasswordPage);
+                },
+                child: Container(
+                  height: 30,
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Forgot password? ",
+                        style: GoogleFonts.lato(
+                          color: Colors.black,
+                          fontSize: 15,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: " Reset now",
+                            style: GoogleFonts.lato(
+                              color: AppTheme.mainColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
