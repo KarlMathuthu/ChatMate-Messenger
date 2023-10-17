@@ -4,6 +4,7 @@ import 'package:chat_mate_messanger/views/home/chats_page.dart';
 import 'package:chat_mate_messanger/views/home/statuses_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -21,6 +22,25 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppTheme.scaffoldBacgroundColor,
         appBar: AppBar(
           backgroundColor: AppTheme.mainColor,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                "assets/icons/search.svg",
+                color: Colors.white,
+                height: 20,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                "assets/icons/cog.svg",
+                color: Colors.white,
+                height: 20,
+              ),
+            ),
+          ],
+          title: Text("data"),
           bottom: TabBar(
             tabs: const [
               //Chats
