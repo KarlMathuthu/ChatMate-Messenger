@@ -40,7 +40,14 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-          title: Text("data"),
+          title: Text(
+            "ChatMate",
+            style: GoogleFonts.lato(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           bottom: TabBar(
             tabs: const [
               //Chats
