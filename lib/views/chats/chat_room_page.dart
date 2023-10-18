@@ -83,13 +83,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           margin: const EdgeInsets.only(top: 0.8),
           width: double.infinity,
           height: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppTheme.scaffoldBacgroundColor,
           ),
           child: Column(
             children: [
               //Chats
-              Expanded(child: Column()),
+              const Expanded(child: Column()),
               //Write message
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -98,7 +98,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     Expanded(
                       child: Container(
                         // height: 50,
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                           minHeight: 50,
                           maxHeight: 100,
                         ),
@@ -140,13 +140,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     const SizedBox(width: 5),
                     FloatingActionButton(
                       onPressed: () {},
-                      shape: CircleBorder(),
+                      shape: const CircleBorder(),
                       backgroundColor: AppTheme.mainColor,
                       child: SvgPicture.asset(
                         "assets/icons/record.svg",
                         color: Colors.white,
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
