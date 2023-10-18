@@ -1,5 +1,6 @@
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,7 @@ class _ChatsPageState extends State<ChatsPage> {
             return ListView.builder(
               itemCount: chatSnapshot.data!.docs.length,
               itemBuilder: (context, index) {
+                //This is for calcutaing the unread messages
                 List<dynamic> messages =
                     chatSnapshot.data!.docs[index]["messages"];
                 List<MessageModel> readMessages = [];
@@ -119,6 +121,15 @@ class _ChatsPageState extends State<ChatsPage> {
                       String friendUsername = friendUidSnapshot.data.toString();
 
                       return ListTile(
+                        onTap: () {
+                          Get.to(
+                            () => ChatRoomPage(
+                              mateName: friendUsername,
+                              mateUid: getFriendUid(chatSnapshot, index),
+                            ),
+                            transition: Transition.cupertino,
+                          );
+                        },
                         title: Text(
                           friendUsername,
                           style: GoogleFonts.lato(
@@ -138,7 +149,9 @@ class _ChatsPageState extends State<ChatsPage> {
                         ),
                         trailing: unreadMessageCount > 0
                             ? badges.Badge(
-                                badgeStyle: badges.BadgeStyle(
+                                badgeAnimation:
+                                    const badges.BadgeAnimation.fade(),
+                                badgeStyle: const badges.BadgeStyle(
                                   badgeColor: AppTheme.mainColor,
                                 ),
                                 badgeContent: Text(
@@ -149,7 +162,7 @@ class _ChatsPageState extends State<ChatsPage> {
                                   ),
                                 ),
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                         leading: FutureBuilder(
                             future: getUserStatus(
                                 getFriendUid(chatSnapshot, index)),
