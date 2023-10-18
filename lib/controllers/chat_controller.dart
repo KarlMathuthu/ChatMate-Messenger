@@ -30,11 +30,9 @@ class ChatController extends GetxController {
       );
 
       // Add the new chat to Cloud Firestore
-      await _firestore.collection('chats').doc(chatRoomId).set(
-            newChat.toMap(),
-          );
+      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
 
-      // Update the user's chats list
+      /* // Update the user's chats list
       for (String memberId in members) {
         await _firestore
             .collection('users')
@@ -60,7 +58,7 @@ class ChatController extends GetxController {
             'lastMessage': newChat.messages.last.toMap(),
           },
         );
-      }
+      } */
     } catch (e) {
       print('Error creating chat: $e');
     }

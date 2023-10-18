@@ -3,7 +3,6 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/home/calls_page.dart';
 import 'package:chat_mate_messanger/views/home/chats_page.dart';
 import 'package:chat_mate_messanger/views/home/statuses_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -124,7 +125,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        body: const Column(
+        body:  Column(
           children: [
             Expanded(
               child: TabBarView(
