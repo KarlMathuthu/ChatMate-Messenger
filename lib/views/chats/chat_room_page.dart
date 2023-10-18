@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,6 +40,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
+        ),
+      ),
+      body: Container(
+        margin: const EdgeInsets.only(top: 0.8),
+        decoration: BoxDecoration(
+          color: AppTheme.scaffoldBacgroundColor,
         ),
       ),
     );

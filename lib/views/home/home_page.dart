@@ -1,3 +1,4 @@
+import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/home/calls_page.dart';
@@ -15,8 +16,31 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  AuthController authController = Get.put(AuthController());
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    // Check the app's lifecycle state and update user status accordingly
+    if (state == AppLifecycleState.paused) {
+      await authController.updateUserStatus("${DateTime.now()}");
+    } else if (state == AppLifecycleState.resumed) {
+      await authController.updateUserStatus("online");
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +149,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        body:  Column(
+        body: const Column(
           children: [
             Expanded(
               child: TabBarView(

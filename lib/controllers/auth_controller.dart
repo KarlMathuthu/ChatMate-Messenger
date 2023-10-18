@@ -50,6 +50,19 @@ class AuthController extends GetxController {
     }
   }
 
+  // Function to update user status
+  Future<void> updateUserStatus(String status) async {
+    if (_auth.currentUser != null) {
+      String uid = _auth.currentUser!.uid;
+      try {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(uid)
+            .update({"userStatus": status});
+      } catch (e) {}
+    }
+  }
+
   // Login
   Future<void> login({
     required String email,
@@ -58,6 +71,7 @@ class AuthController extends GetxController {
   }) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await updateUserStatus("online");
       customLoader.hideLoader();
       Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
@@ -81,6 +95,7 @@ class AuthController extends GetxController {
   Future<void> logout({required CustomLoader customLoader}) async {
     try {
       await _auth.signOut();
+      await updateUserStatus("${DateTime.now()}");
       customLoader.hideLoader();
       Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
