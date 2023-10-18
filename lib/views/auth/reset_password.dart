@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +18,8 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   TextEditingController emailController = TextEditingController();
+  AuthController authController = Get.put(AuthController());
+  CustomLoader customLoader = CustomLoader();
   FocusNode emailNode = FocusNode();
   bool isValidEmail = false;
 
@@ -32,7 +36,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           scrolledUnderElevation: 0,
           backgroundColor: AppTheme.scaffoldBacgroundColor,
           title: Text(
-            "Reset Password", // Change the title to "Reset Password"
+            "Reset Password",
             style: GoogleFonts.lato(
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -51,7 +55,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              // Email TextField for resetting password
+             
               Container(
                 height: 50,
                 width: double.infinity,
@@ -100,7 +104,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     borderRadius: BorderRadius.circular(10),
                     color: AppTheme.mainColor,
                     child: Text(
-                      "Reset Password", // Change button text to "Reset Password"
+                      "Reset Password",
                       style: GoogleFonts.lato(
                         color: Colors.white,
                         fontSize: 15,
@@ -109,7 +113,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     ),
                     onPressed: () {
                       if (isValidEmail) {
-                        // Add your reset password logic here.
+                        customLoader.showLoader(context);
+                        authController.resetPassword(
+                          email: emailController.text.trim(),
+                        );
                       } else {
                         Get.snackbar("Error", "Enter a valid email");
                       }

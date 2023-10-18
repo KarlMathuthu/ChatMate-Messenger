@@ -64,6 +64,7 @@ class AuthController extends GetxController {
   }) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
+      Get.snackbar("Success", "Check your email to change password!");
     } catch (e) {
       Get.snackbar("Error sending password reset email", "$e");
     }
