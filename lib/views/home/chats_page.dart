@@ -24,7 +24,7 @@ class _ChatsPageState extends State<ChatsPage> {
                 children: [],
               ),
             )
-          : Stack(
+          : const Stack(
               children: [
                 /* Center(
                   child: Image.asset(
@@ -33,7 +33,7 @@ class _ChatsPageState extends State<ChatsPage> {
                     width: 200,
                   ),
                 ), */
-                Padding(
+               /*  Padding(
                   padding: const EdgeInsets.only(top: 40.0),
                   child: Center(
                     child: RichText(
@@ -56,7 +56,7 @@ class _ChatsPageState extends State<ChatsPage> {
                       ),
                     ),
                   ),
-                )
+                ) */
               ],
             ),
       floatingActionButton: chatsDummy.isEmpty

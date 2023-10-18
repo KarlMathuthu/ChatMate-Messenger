@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "479442079836",
+    "firebase_url": "https://chat-mate-messenger-default-rtdb.firebaseio.com",
+    "project_id": "chat-mate-messenger",
+    "storage_bucket": "chat-mate-messenger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479442079836:android:af824d2cad6f865ab19699",
+        "android_client_info": {
+          "package_name": "com.karlmathuthu.chat_mate_messanger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479442079836-n7pdf4auo1rot7lsdg8jg66omvm05kmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKyPHVvoSDvREetEZBhw_tkxtFAUQvxZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479442079836-n7pdf4auo1rot7lsdg8jg66omvm05kmo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
