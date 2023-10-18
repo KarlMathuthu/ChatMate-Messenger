@@ -1,19 +1,20 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppSettingsPage extends StatefulWidget {
-  const AppSettingsPage({super.key});
+class AppSettingsPage extends StatelessWidget {
+  AppSettingsPage({super.key});
 
-  @override
-  State<AppSettingsPage> createState() => _AppSettingsPageState();
-}
+  AuthController authController = Get.put(AuthController());
+  CustomLoader customLoader = CustomLoader();
 
-class _AppSettingsPageState extends State<AppSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,6 +171,9 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
             ),
             //Logout
             ListTile(
+              onTap: () {
+                _showLogoutConfirmation(context);
+              },
               leading: SvgPicture.asset(
                 "assets/icons/logout.svg",
                 color: Colors.redAccent,
@@ -184,6 +188,47 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showLogoutConfirmation(BuildContext context) async {
+    return showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            "Logout",
+            style: GoogleFonts.lato(),
+          ),
+          content: Text(
+            "Are you sure you want to log out?",
+            style: GoogleFonts.lato(),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                "Cancel",
+                style: GoogleFonts.lato(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                "Logout",
+                style: GoogleFonts.lato(
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                customLoader.showLoader(context);
+                authController.logout(customLoader: customLoader);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -47,9 +47,12 @@ class AuthController extends GetxController {
   Future<void> login({
     required String email,
     required String password,
+    required CustomLoader customLoader,
   }) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      customLoader.hideLoader();
+      Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
       Get.snackbar("Error logging in", "$e");
     }
@@ -67,9 +70,11 @@ class AuthController extends GetxController {
   }
 
   // Logout
-  Future<void> logout() async {
+  Future<void> logout({required CustomLoader customLoader}) async {
     try {
       await _auth.signOut();
+      customLoader.hideLoader();
+      Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
       Get.snackbar("Error logging out", "$e");
     }
