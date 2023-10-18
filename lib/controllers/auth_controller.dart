@@ -32,6 +32,8 @@ class AuthController extends GetxController {
           photoUrl: "none",
           userUid: userUid,
           fcmToken: fcmToken ?? "",
+          userBio: "I'm new to ChatMate!",
+          userStatus: 'online',
         );
         Map<String, dynamic> userData = userModel.toMap();
         await _userRef.child(userUid).set(userData);

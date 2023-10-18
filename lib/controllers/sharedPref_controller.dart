@@ -9,4 +9,5 @@ class SharedPrefController extends GetxController {
 
     sharedPreferences.setString("photoUrl", photoUrl);
   }
+  //Save name and bio
 }

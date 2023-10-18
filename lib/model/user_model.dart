@@ -3,6 +3,8 @@ class UserModel {
   final String email;
   final String photoUrl;
   final String userUid;
+  final String userBio;
+  final String userStatus;
   final String fcmToken;
 
   UserModel({
@@ -11,6 +13,8 @@ class UserModel {
     required this.photoUrl,
     required this.userUid,
     required this.fcmToken,
+    required this.userBio,
+    required this.userStatus,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +24,8 @@ class UserModel {
       'photoUrl': photoUrl,
       'userUid': userUid,
       'fcmToken': fcmToken,
+      'userBio': userBio,
+      'userStatus': userStatus,
     };
   }
 }
