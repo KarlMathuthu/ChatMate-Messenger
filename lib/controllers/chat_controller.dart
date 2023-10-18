@@ -31,34 +31,6 @@ class ChatController extends GetxController {
 
       // Add the new chat to Cloud Firestore
       await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
-
-      /* // Update the user's chats list
-      for (String memberId in members) {
-        await _firestore
-            .collection('users')
-            .doc(memberId)
-            .collection('chats')
-            .doc(chatRoomId)
-            .set(
-          {
-            'exists': true,
-          },
-        );
-      }
-
-      // Update the latest message in the user's profile
-      for (String memberId in members) {
-        await _firestore
-            .collection('users')
-            .doc(memberId)
-            .collection('chats')
-            .doc(chatRoomId)
-            .update(
-          {
-            'lastMessage': newChat.messages.last.toMap(),
-          },
-        );
-      } */
     } catch (e) {
       print('Error creating chat: $e');
     }
@@ -115,17 +87,6 @@ class ChatController extends GetxController {
     } catch (e) {
       print('Error deleting message: $e');
     }
-  }
-
-  // Calculate Unread Messages
-  int calculateUnreadMessageCount(List<MessageModel> messages) {
-    int unreadCount = 0;
-    for (final message in messages) {
-      if (!message.read) {
-        unreadCount++;
-      }
-    }
-    return unreadCount;
   }
 
   // Keep Message

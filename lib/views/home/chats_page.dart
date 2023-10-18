@@ -7,8 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:badges/badges.dart' as badges;
 
-import '../../utils/memojis.dart';
+import '../../model/message_model.dart';
 
 class ChatsPage extends StatefulWidget {
   const ChatsPage({super.key});
@@ -41,7 +42,7 @@ class _ChatsPageState extends State<ChatsPage> {
         String userName = userDoc.data()?['userName'];
         return userName;
       } else {
-        return """(UserModel.userName)""";
+        return "@ChatMateBot";
       }
     } catch (e) {
       return "Error fetching user data";
@@ -88,6 +89,24 @@ class _ChatsPageState extends State<ChatsPage> {
             return ListView.builder(
               itemCount: chatSnapshot.data!.docs.length,
               itemBuilder: (context, index) {
+                List<dynamic> messages =
+                    chatSnapshot.data!.docs[index]["messages"];
+                List<MessageModel> readMessages = [];
+
+                for (var messageData in messages) {
+                  if (messageData["read"] == false) {
+                    MessageModel message = MessageModel(
+                      sender: messageData["sender"],
+                      messageText: messageData["messageText"],
+                      timestamp: messageData["timestamp"],
+                      read: messageData["read"],
+                    );
+                    readMessages.add(message);
+                  }
+                }
+
+                int unreadMessageCount = readMessages.length;
+
                 return FutureBuilder(
                   future: getUserNameByUID(getFriendUid(chatSnapshot, index)),
                   builder: (context, friendUidSnapshot) {
@@ -104,7 +123,7 @@ class _ChatsPageState extends State<ChatsPage> {
                           friendUsername,
                           style: GoogleFonts.lato(
                             color: Colors.black,
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -113,19 +132,57 @@ class _ChatsPageState extends State<ChatsPage> {
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.lato(
                             color: Colors.black54,
-                            fontSize: 13,
+                            fontSize: 12,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
+                        trailing: unreadMessageCount > 0
+                            ? badges.Badge(
+                                badgeStyle: badges.BadgeStyle(
+                                  badgeColor: AppTheme.mainColor,
+                                ),
+                                badgeContent: Text(
+                                  unreadMessageCount.toString(),
+                                  style: GoogleFonts.lato(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              )
+                            : SizedBox(),
                         leading: FutureBuilder(
                             future: getUserStatus(
                                 getFriendUid(chatSnapshot, index)),
                             builder: (context, userStatusSnap) {
                               if (!userStatusSnap.hasData) {
-                                return const SizedBox();
+                                return Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: AppTheme.mainColorLight,
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      "assets/icons/default.svg",
+                                    ),
+                                  ),
+                                );
                               } else if (userStatusSnap.connectionState ==
                                   ConnectionState.waiting) {
-                                return const SizedBox();
+                                return Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: AppTheme.mainColorLight,
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      "assets/icons/default.svg",
+                                    ),
+                                  ),
+                                );
                               } else {
                                 bool isUserOnline = userStatusSnap.data == true;
 
@@ -134,14 +191,13 @@ class _ChatsPageState extends State<ChatsPage> {
                                   width: 50,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(25),
+                                    color: AppTheme.mainColorLight,
                                   ),
                                   child: Stack(
                                     children: [
                                       Center(
                                         child: SvgPicture.asset(
-                                          Memojis.man_1,
-                                          height: 50,
-                                          width: 50,
+                                          "assets/icons/default.svg",
                                         ),
                                       ),
                                       if (isUserOnline) ...{
