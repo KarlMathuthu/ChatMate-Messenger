@@ -20,61 +20,138 @@ class ChatRoomPage extends StatefulWidget {
 }
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
+  TextEditingController textEditingController = TextEditingController();
+  FocusNode focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(
-            Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+    return GestureDetector(
+      onTap: () {
+        focusNode.unfocus();
+        setState(() {});
+      },
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade300,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          scrolledUnderElevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(
+              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+            ),
           ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.mateName,
-              style: GoogleFonts.lato(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.mateName,
+                style: GoogleFonts.lato(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "online",
+                style: GoogleFonts.lato(
+                  color: Colors.black54,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                "assets/icons/call.svg",
+                color: AppTheme.mainColor,
               ),
             ),
-            Text(
-              "online",
-              style: GoogleFonts.lato(
-                color: Colors.black54,
-                fontSize: 14,
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                "assets/icons/video.svg",
+                color: AppTheme.mainColor,
               ),
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              "assets/icons/call.svg",
-              color: AppTheme.mainColor,
-            ),
+        body: Container(
+          margin: const EdgeInsets.only(top: 0.8),
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: AppTheme.scaffoldBacgroundColor,
           ),
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              "assets/icons/video.svg",
-              color: AppTheme.mainColor,
-            ),
+          child: Column(
+            children: [
+              //Chats
+              Expanded(child: Column()),
+              //Write message
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        // height: 50,
+                        constraints: BoxConstraints(
+                          minHeight: 50,
+                          maxHeight: 100,
+                        ),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: focusNode.hasFocus
+                              ? AppTheme.textfieldActiveColor
+                              : Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: focusNode.hasFocus
+                                ? AppTheme.textfieldActiveBorderColor
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: TextField(
+                          controller: textEditingController,
+                          focusNode: focusNode,
+                          maxLines: null,
+                          textAlignVertical: TextAlignVertical.bottom,
+                          keyboardType: TextInputType.text,
+                          onTap: () {
+                            setState(() {});
+                          },
+                          decoration: InputDecoration(
+                            prefixIcon: IconButton(
+                              onPressed: () {},
+                              icon: SvgPicture.asset(
+                                "assets/icons/emoji.svg",
+                                color: Colors.grey,
+                              ),
+                            ),
+                            border: InputBorder.none,
+                            hintText: "Type a message",
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    FloatingActionButton(
+                      onPressed: () {},
+                      shape: CircleBorder(),
+                      backgroundColor: AppTheme.mainColor,
+                      child: SvgPicture.asset(
+                        "assets/icons/record.svg",
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Container(
-        margin: const EdgeInsets.only(top: 0.8),
-        decoration: BoxDecoration(
-          color: AppTheme.scaffoldBacgroundColor,
         ),
       ),
     );
