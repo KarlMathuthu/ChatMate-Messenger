@@ -3,12 +3,14 @@ class UserModel {
   final String email;
   final String photoUrl;
   final String userUid;
+  final String fcmToken;
 
   UserModel({
     required this.userName,
     required this.email,
     required this.photoUrl,
     required this.userUid,
+    required this.fcmToken,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +19,7 @@ class UserModel {
       'email': email,
       'photoUrl': photoUrl,
       'userUid': userUid,
+      'fcmToken': fcmToken,
     };
   }
 }
