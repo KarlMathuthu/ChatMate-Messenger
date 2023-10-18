@@ -1,25 +1,21 @@
+import 'message_model.dart';
+
 class ChatModel {
-  final String message;
-  final String date;
-  final bool isSeen;
-  final String from;
-  final String to;
+  String chatId;
+  final List<String> members;
+  final List<MessageModel> messages;
 
   ChatModel({
-    required this.message,
-    required this.date,
-    required this.isSeen,
-    required this.from,
-    required this.to,
+    required this.chatId,
+    required this.members,
+    required this.messages,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'message': message,
-      'date': date,
-      'isSeen': isSeen,
-      'from': from,
-      'to': to,
+      'chatId': chatId,
+      'members': members,
+      'messages': messages.map((message) => message.toMap()).toList(),
     };
   }
 }
