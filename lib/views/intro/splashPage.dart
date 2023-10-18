@@ -2,7 +2,6 @@ import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key});
@@ -53,7 +52,7 @@ class _SplashPageState extends State<SplashPage> {
               ),
             ),
           ),
-          Padding(
+          /* Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Align(
               alignment: Alignment.bottomCenter,
@@ -62,7 +61,7 @@ class _SplashPageState extends State<SplashPage> {
                 size: 50,
               ),
             ),
-          ),
+          ), */
         ],
       ),
     );

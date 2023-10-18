@@ -1,3 +1,4 @@
+import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/home/calls_page.dart';
 import 'package:chat_mate_messanger/views/home/chats_page.dart';
@@ -37,77 +38,62 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 showCupertinoModalPopup(
                   context: context,
-                  builder: (BuildContext context) {
+                  builder: (BuildContext ___) {
                     return CupertinoActionSheet(
                       title: Text(
                         "Options Menu",
                         style: GoogleFonts.lato(),
                       ),
                       actions: <Widget>[
-                        CupertinoActionSheet(
-                          title: Text("Options"),
-                          actions: <Widget>[
-                            CupertinoActionSheetAction(
-                              child: Text(
-                                "Go Live",
-                                style: GoogleFonts.lato(),
-                                textAlign: TextAlign.center,
-                              ),
-                              onPressed: () {
-                                Get.back();
-                              },
-                            ),
-                            CupertinoActionSheetAction(
-                              child: Text(
-                                "New Broadcast",
-                                style: GoogleFonts.lato(),
-                                textAlign: TextAlign.center,
-                              ),
-                              onPressed: () {
-                                Get.back();
-                              },
-                            ),
-                            CupertinoActionSheetAction(
-                              child: Text(
-                                "New Group Chat",
-                                style: GoogleFonts.lato(),
-                                textAlign: TextAlign.center,
-                              ),
-                              onPressed: () {
-                                Get.back();
-                              },
-                            ),
-                            CupertinoActionSheetAction(
-                              child: Text(
-                                "Starred Messages",
-                                style: GoogleFonts.lato(),
-                                textAlign: TextAlign.center,
-                              ),
-                              onPressed: () {
-                                Get.back();
-                              },
-                            ),
-                            CupertinoActionSheetAction(
-                              child: Text(
-                                "Settings",
-                                style: GoogleFonts.lato(),
-                                textAlign: TextAlign.center,
-                              ),
-                              onPressed: () {
-                                Get.back();
-                              },
-                            ),
-                          ],
-                          cancelButton: CupertinoActionSheetAction(
-                            child: Text(
-                              "Cancel",
-                              style: GoogleFonts.lato(),
-                              textAlign: TextAlign.center,
-                            ),
-                            onPressed: () {
-                              Get.back();
-                            },
+                        CupertinoActionSheetAction(
+                          child: Text(
+                            "Go Live",
+                            style: GoogleFonts.lato(),
+                            textAlign: TextAlign.center,
                           ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        CupertinoActionSheetAction(
+                          child: Text(
+                            "New Broadcast",
+                            style: GoogleFonts.lato(),
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        CupertinoActionSheetAction(
+                          child: Text(
+                            "New Group Chat",
+                            style: GoogleFonts.lato(),
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        CupertinoActionSheetAction(
+                          child: Text(
+                            "Starred Messages",
+                            style: GoogleFonts.lato(),
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        CupertinoActionSheetAction(
+                          child: Text(
+                            "Settings",
+                            style: GoogleFonts.lato(),
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () {
+                            Get.toNamed(RouteClass.appSettingsPage);
+                          },
                         ),
                       ],
                       cancelButton: CupertinoActionSheetAction(
