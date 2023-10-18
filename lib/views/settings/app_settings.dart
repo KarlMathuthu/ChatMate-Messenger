@@ -67,7 +67,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
               ),
               leading: const CircleAvatar(),
               trailing: SvgPicture.asset(
-                "assets/icons/cog.svg",
+                "assets/icons/qr.svg",
                 color: Colors.black,
               ),
             ),
@@ -121,6 +121,64 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
               trailing: const Icon(
                 Icons.arrow_forward_ios,
                 size: 18,
+              ),
+            ),
+            const SizedBox(height: 5),
+            ListTile(
+              leading: SvgPicture.asset(
+                "assets/icons/sec.svg",
+                color: Colors.black,
+              ),
+              title: Text(
+                "Security",
+                style: GoogleFonts.lato(),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 18,
+              ),
+            ),
+            const SizedBox(height: 5),
+            ListTile(
+              leading: SvgPicture.asset(
+                "assets/icons/help.svg",
+                color: Colors.black,
+              ),
+              title: Text(
+                "Help Center",
+                style: GoogleFonts.lato(),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 18,
+              ),
+            ),
+            const SizedBox(height: 5),
+            ListTile(
+              leading: SvgPicture.asset(
+                "assets/icons/friends.svg",
+                color: Colors.black,
+              ),
+              title: Text(
+                "Invite friends",
+                style: GoogleFonts.lato(),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 18,
+              ),
+            ),
+            //Logout
+            ListTile(
+              leading: SvgPicture.asset(
+                "assets/icons/logout.svg",
+                color: Colors.redAccent,
+              ),
+              title: Text(
+                "Logout",
+                style: GoogleFonts.lato(
+                  color: Colors.redAccent,
+                ),
               ),
             ),
           ],
