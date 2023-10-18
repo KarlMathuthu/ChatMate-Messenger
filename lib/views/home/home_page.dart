@@ -34,86 +34,61 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
             ),
-            IconButton(
-              onPressed: () {
-                showCupertinoModalPopup(
-                  context: context,
-                  builder: (BuildContext ___) {
-                    return CupertinoActionSheet(
-                      title: Text(
-                        "Options Menu",
-                        style: GoogleFonts.lato(),
-                      ),
-                      actions: <Widget>[
-                        CupertinoActionSheetAction(
-                          child: Text(
-                            "Go Live",
-                            style: GoogleFonts.lato(),
-                            textAlign: TextAlign.center,
-                          ),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                        CupertinoActionSheetAction(
-                          child: Text(
-                            "New Broadcast",
-                            style: GoogleFonts.lato(),
-                            textAlign: TextAlign.center,
-                          ),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                        CupertinoActionSheetAction(
-                          child: Text(
-                            "New Group Chat",
-                            style: GoogleFonts.lato(),
-                            textAlign: TextAlign.center,
-                          ),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                        CupertinoActionSheetAction(
-                          child: Text(
-                            "Starred Messages",
-                            style: GoogleFonts.lato(),
-                            textAlign: TextAlign.center,
-                          ),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                        CupertinoActionSheetAction(
-                          child: Text(
-                            "Settings",
-                            style: GoogleFonts.lato(),
-                            textAlign: TextAlign.center,
-                          ),
-                          onPressed: () {
-                            Get.toNamed(RouteClass.appSettingsPage);
-                          },
-                        ),
-                      ],
-                      cancelButton: CupertinoActionSheetAction(
-                        child: Text(
-                          "Cancel",
-                          style: GoogleFonts.lato(),
-                        ),
-                        onPressed: () {
-                          Get.back();
-                        },
-                      ),
-                    );
-                  },
-                );
-              },
+            PopupMenuButton<String>(
+              color: Colors.white,
+              surfaceTintColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
               icon: SvgPicture.asset(
                 "assets/icons/cog.svg",
                 color: Colors.black,
                 height: 20,
               ),
+              onSelected: (String choice) {
+                switch (choice) {
+                  case 'goLive':
+                    // Handle Go Live action
+                    break;
+                  case 'newBroadcast':
+                    // Handle New Broadcast action
+                    break;
+                  case 'newGroupChat':
+                    // Handle New Group Chat action
+                    break;
+                  case 'starredMessages':
+                    // Handle Starred Messages action
+                    break;
+                  case 'settings':
+                    // Handle Settings action
+                    Get.toNamed(RouteClass.appSettingsPage);
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: 'goLive',
+                    child: Text('Go Live'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'newBroadcast',
+                    child: Text('New Broadcast'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'newGroupChat',
+                    child: Text('New Group Chat'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'starredMessages',
+                    child: Text('Starred Messages'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'settings',
+                    child: Text('Settings'),
+                  ),
+                ];
+              },
             ),
           ],
           title: Text(
