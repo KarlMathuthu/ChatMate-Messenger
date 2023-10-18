@@ -1,6 +1,7 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChatsPage extends StatefulWidget {
@@ -44,7 +45,7 @@ class _ChatsPageState extends State<ChatsPage> {
                         ),
                         children: const [
                           TextSpan(
-                            text: "Hey welcome to ChatMate\n",
+                            text: "Hey welcome to ChatMate\n\n",
                             style: TextStyle(fontWeight: FontWeight.normal),
                           ),
                           TextSpan(
@@ -58,28 +59,13 @@ class _ChatsPageState extends State<ChatsPage> {
                 )
               ],
             ),
-      floatingActionButtonLocation: chatsDummy.isEmpty
-          ? FloatingActionButtonLocation.centerDocked
-          : FloatingActionButtonLocation.endDocked,
       floatingActionButton: chatsDummy.isEmpty
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: CupertinoButton(
-                  borderRadius: BorderRadius.circular(15),
-                  color: AppTheme.mainColor,
-                  child: Text(
-                    "Start new chat",
-                    style: GoogleFonts.lato(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {},
-                ),
+          ? FloatingActionButton(
+              backgroundColor: AppTheme.mainColor,
+              onPressed: () {},
+              child: SvgPicture.asset(
+                "assets/icons/chat.svg",
+                color: Colors.white,
               ),
             )
           : FloatingActionButton(
