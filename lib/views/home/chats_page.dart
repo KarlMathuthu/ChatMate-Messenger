@@ -23,38 +23,39 @@ class _ChatsPageState extends State<ChatsPage> {
                 children: [],
               ),
             )
-          : Column(
+          : Stack(
               children: [
-                const SizedBox(height: 40),
-                Center(
+                /* Center(
                   child: Image.asset(
                     "assets/images/splash.png",
                     height: 200,
                     width: 200,
                   ),
-                ),
-                const SizedBox(height: 40),
-                Text(
-                  "Welcome 👋",
-                  style: GoogleFonts.lato(
-                    color: AppTheme.mainColor,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 40),
+                ), */
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "ChatMate connects you with your family and friends.\n Start chatting now!",
-                    style: GoogleFonts.lato(
-                      color: AppTheme.mainColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: Center(
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: GoogleFonts.lato(
+                          color: AppTheme.mainColor,
+                          fontSize: 16,
+                        ),
+                        children: const [
+                          TextSpan(
+                            text: "Hey welcome to ChatMate\n",
+                            style: TextStyle(fontWeight: FontWeight.normal),
+                          ),
+                          TextSpan(
+                            text: "Start chatting now!",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
+                )
               ],
             ),
       floatingActionButtonLocation: chatsDummy.isEmpty
