@@ -1,3 +1,4 @@
+import 'package:chat_mate_messanger/views/auth/check_user_state.dart';
 import 'package:chat_mate_messanger/views/auth/login_page.dart';
 import 'package:chat_mate_messanger/views/home/home_page.dart';
 import 'package:chat_mate_messanger/views/intro/letsYouInPage.dart';
@@ -16,6 +17,7 @@ class RouteClass {
   static String resetPasswordPage = "/resetPasswordPage";
   static String homePage = "/homePage";
   static String appSettingsPage = "/appSettingsPage";
+  static String checkUserState = "/checkUserState";
 
   static List<GetPage> routes = [
     GetPage(name: splashPage, page: () => const SplashPage()),
@@ -25,5 +27,6 @@ class RouteClass {
     GetPage(name: resetPasswordPage, page: () => ResetPasswordPage()),
     GetPage(name: homePage, page: () => HomePage()),
     GetPage(name: appSettingsPage, page: () => AppSettingsPage()),
+    GetPage(name: checkUserState, page: () => const CheckUserState()),
   ];
 }
