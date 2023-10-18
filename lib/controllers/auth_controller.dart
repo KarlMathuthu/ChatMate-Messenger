@@ -1,15 +1,15 @@
 import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Cloud Firestore
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import '../model/user_model.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DatabaseReference _userRef =
-      FirebaseDatabase.instance.ref().child('users');
+  final FirebaseFirestore _firestore =
+      FirebaseFirestore.instance; // Initialize Cloud Firestore
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   // Create Account
@@ -35,8 +35,13 @@ class AuthController extends GetxController {
           userBio: "I'm new to ChatMate!",
           userStatus: 'online',
         );
-        Map<String, dynamic> userData = userModel.toMap();
-        await _userRef.child(userUid).set(userData);
+
+        // Add user data to Cloud Firestore
+        await _firestore
+            .collection('users')
+            .doc(userUid)
+            .set(userModel.toMap());
+
         customLoader.hideLoader();
         Get.offAllNamed(RouteClass.checkUserState);
       }
@@ -89,8 +94,8 @@ class AuthController extends GetxController {
       final user = _auth.currentUser;
       if (user != null) {
         await user.delete();
-        // Optionally, remove user data from the Realtime Database as well.
-        await _userRef.child(user.uid).remove();
+        // Remove user data from Cloud Firestore
+        await _firestore.collection('users').doc(user.uid).delete();
       }
     } catch (e) {
       print("Error deleting account: $e");

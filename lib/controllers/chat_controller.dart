@@ -1,4 +1,4 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -6,7 +6,9 @@ import '../model/chat_model.dart';
 import '../model/message_model.dart';
 
 class ChatController extends GetxController {
-  //create chat
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Create Chat
   Future<void> createChat({
     required List<String> members,
     required String senderId,
@@ -27,40 +29,44 @@ class ChatController extends GetxController {
         ],
       );
 
-      // Push the new chat to the database
-      final DatabaseReference chatRef =
-          FirebaseDatabase.instance.ref().child('chats').push();
-      newChat.chatId = chatRef.key!;
-      chatRef.set(newChat.toMap());
+      // Add the new chat to Cloud Firestore
+      await _firestore.collection('chats').doc(chatRoomId).set(
+            newChat.toMap(),
+          );
 
       // Update the user's chats list
       for (String memberId in members) {
-        FirebaseDatabase.instance
-            .ref()
-            .child('users')
-            .child(memberId)
-            .child('chats')
-            .child(newChat.chatId)
-            .set(true);
+        await _firestore
+            .collection('users')
+            .doc(memberId)
+            .collection('chats')
+            .doc(chatRoomId)
+            .set(
+          {
+            'exists': true,
+          },
+        );
       }
 
       // Update the latest message in the user's profile
       for (String memberId in members) {
-        FirebaseDatabase.instance
-            .ref()
-            .child('users')
-            .child(memberId)
-            .child('chats')
-            .child(newChat.chatId)
-            .child('lastMessage')
-            .set(newChat.messages.last.toMap());
+        await _firestore
+            .collection('users')
+            .doc(memberId)
+            .collection('chats')
+            .doc(chatRoomId)
+            .update(
+          {
+            'lastMessage': newChat.messages.last.toMap(),
+          },
+        );
       }
     } catch (e) {
       print('Error creating chat: $e');
     }
   }
 
-  //Send message
+  // Send Message
   Future<void> sendMessage({
     required String chatId,
     required String senderId,
@@ -72,42 +78,40 @@ class ChatController extends GetxController {
         sender: senderId,
         messageText: messageText,
         timestamp: DateTime.now().millisecondsSinceEpoch,
+        read: false, // Mark the message as unread
       );
 
-      // Push the new message to the chat's messages in the database
-      final DatabaseReference messageRef = FirebaseDatabase.instance
-          .ref()
-          .child('chats')
-          .child(chatId)
-          .child('messages')
-          .push();
-      await messageRef.set(newMessage.toMap());
+      // Add the new message to the chat's messages in Cloud Firestore
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add(newMessage.toMap());
 
       // Update the chat's "last message" with the new message
-      await FirebaseDatabase.instance
-          .ref()
-          .child('chats')
-          .child(chatId)
-          .update({'lastMessage': newMessage.toMap()});
+      await _firestore.collection('chats').doc(chatId).update(
+        {
+          'lastMessage': newMessage.toMap(),
+        },
+      );
     } catch (e) {
       print('Error sending message: $e');
     }
   }
 
-  //Delete message
+  // Delete Message
   Future<void> deleteMessage({
     required String chatId,
     required String messageId,
   }) async {
     try {
-      // Delete the message from the chat's messages
-      await FirebaseDatabase.instance
-          .ref()
-          .child('chats')
-          .child(chatId)
-          .child('messages')
-          .child(messageId)
-          .remove();
+      // Delete the message from the chat's messages in Cloud Firestore
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .delete();
 
       // Optionally, update the chat's "last message" or other relevant data
     } catch (e) {
@@ -115,7 +119,18 @@ class ChatController extends GetxController {
     }
   }
 
-  //keep message
-  //delete for everyone
-  //message opened
+  // Calculate Unread Messages
+  int calculateUnreadMessageCount(List<MessageModel> messages) {
+    int unreadCount = 0;
+    for (final message in messages) {
+      if (!message.read) {
+        unreadCount++;
+      }
+    }
+    return unreadCount;
+  }
+
+  // Keep Message
+  // Delete for Everyone
+  // Message Opened
 }
