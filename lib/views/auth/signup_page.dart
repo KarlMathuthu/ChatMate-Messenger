@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,6 +23,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   TextEditingController nameController =
       TextEditingController(); // New controller for Name
   TextEditingController passController = TextEditingController();
+  CustomLoader customLoader = CustomLoader();
+  AuthController authController = Get.put(AuthController());
   FocusNode emaiNode = FocusNode();
   FocusNode nameNode = FocusNode(); // New FocusNode for Name
   FocusNode passNode = FocusNode();
@@ -287,6 +291,13 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         Get.snackbar("Warning", "Password is too weak");
                       } else {
                         // Continue sign-up.
+                        customLoader.showLoader(context);
+                        authController.createAccount(
+                          email: emailController.text.trim(),
+                          password: passController.text.trim(),
+                          userName: nameController.text.trim(),
+                          customLoader: customLoader,
+                        );
                       }
                     },
                   ),

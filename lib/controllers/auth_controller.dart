@@ -1,3 +1,5 @@
+import 'package:chat_mate_messanger/routes/route_class.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,6 +17,7 @@ class AuthController extends GetxController {
     required String email,
     required String password,
     required String userName,
+    required CustomLoader customLoader,
   }) async {
     try {
       final UserCredential userCredential = await _auth
@@ -32,6 +35,8 @@ class AuthController extends GetxController {
         );
         Map<String, dynamic> userData = userModel.toMap();
         await _userRef.child(userUid).set(userData);
+        customLoader.hideLoader();
+        Get.offAllNamed(RouteClass.checkUserState);
       }
     } catch (e) {
       Get.snackbar("Error creating account", "$e");
