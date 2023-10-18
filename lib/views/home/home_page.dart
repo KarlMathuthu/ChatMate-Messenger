@@ -2,7 +2,9 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/home/calls_page.dart';
 import 'package:chat_mate_messanger/views/home/chats_page.dart';
 import 'package:chat_mate_messanger/views/home/statuses_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -32,7 +34,95 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CupertinoActionSheet(
+                      title: Text(
+                        "Options Menu",
+                        style: GoogleFonts.lato(),
+                      ),
+                      actions: <Widget>[
+                        CupertinoActionSheet(
+                          title: Text("Options"),
+                          actions: <Widget>[
+                            CupertinoActionSheetAction(
+                              child: Text(
+                                "Go Live",
+                                style: GoogleFonts.lato(),
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: Text(
+                                "New Broadcast",
+                                style: GoogleFonts.lato(),
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: Text(
+                                "New Group Chat",
+                                style: GoogleFonts.lato(),
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: Text(
+                                "Starred Messages",
+                                style: GoogleFonts.lato(),
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: Text(
+                                "Settings",
+                                style: GoogleFonts.lato(),
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            ),
+                          ],
+                          cancelButton: CupertinoActionSheetAction(
+                            child: Text(
+                              "Cancel",
+                              style: GoogleFonts.lato(),
+                              textAlign: TextAlign.center,
+                            ),
+                            onPressed: () {
+                              Get.back();
+                            },
+                          ),
+                        ),
+                      ],
+                      cancelButton: CupertinoActionSheetAction(
+                        child: Text(
+                          "Cancel",
+                          style: GoogleFonts.lato(),
+                        ),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
               icon: SvgPicture.asset(
                 "assets/icons/cog.svg",
                 color: Colors.black,
