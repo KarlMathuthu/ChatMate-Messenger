@@ -26,7 +26,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   ChatController chatController = Get.put(ChatController());
   FocusNode focusNode = FocusNode();
 
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {

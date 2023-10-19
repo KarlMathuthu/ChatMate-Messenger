@@ -80,12 +80,12 @@ class _ChatsPageState extends State<ChatsPage> {
               child: CircularProgressIndicator(),
             );
           } else if (chatSnapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return SizedBox(); /* Center(
               child: LoadingAnimationWidget.fourRotatingDots(
                 color: AppTheme.loaderColor,
                 size: 50,
-              ),
-            );
+              ), */
+            // );
           } else {
             return ListView.builder(
               itemCount: chatSnapshot.data!.docs.length,
@@ -124,17 +124,18 @@ class _ChatsPageState extends State<ChatsPage> {
                         onTap: () {
                           chatController.markChatAsRead(
                               chatSnapshot.data!.docs[index]["chatId"]);
+                          //Update the UI
+                          setState(() {});
                           Get.to(
                             () => ChatRoomPage(
                               mateName: friendUsername,
                               mateUid: getFriendUid(chatSnapshot, index),
                               chatRoomId: chatSnapshot.data!.docs[index]
                                   ["chatId"],
+                          
                             ),
                             transition: Transition.cupertino,
                           );
-                          //Update the UI
-                          setState(() {});
                         },
                         title: Text(
                           friendUsername,
