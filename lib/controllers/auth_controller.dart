@@ -46,6 +46,7 @@ class AuthController extends GetxController {
         Get.offAllNamed(RouteClass.checkUserState);
       }
     } catch (e) {
+      customLoader.hideLoader();
       Get.snackbar("Error creating account", "$e");
     }
   }
@@ -75,6 +76,7 @@ class AuthController extends GetxController {
       customLoader.hideLoader();
       Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
+      customLoader.hideLoader();
       Get.snackbar("Error logging in", "$e");
     }
   }
@@ -99,6 +101,7 @@ class AuthController extends GetxController {
       customLoader.hideLoader();
       Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
+      customLoader.hideLoader();
       Get.snackbar("Error logging out", "$e");
     }
   }
