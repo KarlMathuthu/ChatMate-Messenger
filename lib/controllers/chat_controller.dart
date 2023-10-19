@@ -122,6 +122,20 @@ class ChatController extends GetxController {
   }
 
   //User Status
+  Future getUserStatus(String uid) async {
+    try {
+      var userDoc =
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+      if (userDoc.exists) {
+        String userName = userDoc.data()?['userStatus'];
+        return userName;
+      } else {
+        return "offline";
+      }
+    } catch (e) {
+      return "connecting...";
+    }
+  }
   // Keep Message
   // Delete for Everyone
   // Message Opened

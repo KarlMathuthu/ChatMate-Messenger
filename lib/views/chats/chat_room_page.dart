@@ -56,12 +56,36 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
-                "online",
-                style: GoogleFonts.lato(
-                  color: Colors.black54,
-                  fontSize: 14,
-                ),
+              FutureBuilder(
+                future: chatController.getUserStatus(widget.mateUid),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text(
+                      "connecting...",
+                      style: GoogleFonts.lato(
+                        color: Colors.black54,
+                        fontSize: 14,
+                      ),
+                    );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Text(
+                      "connecting...",
+                      style: GoogleFonts.lato(
+                        color: Colors.black54,
+                        fontSize: 14,
+                      ),
+                    );
+                  } else {
+                    return Text(
+                      snapshot.data!,
+                      style: GoogleFonts.lato(
+                        color: Colors.black54,
+                        fontSize: 14,
+                      ),
+                    );
+                  }
+                },
               ),
             ],
           ),
