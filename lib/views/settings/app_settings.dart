@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/utils/memojis.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -86,16 +85,10 @@ class AppSettingsPage extends StatelessWidget {
                         width: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
+                          color: AppTheme.mainColor,
                         ),
                         child: Stack(
                           children: [
-                            Center(
-                              child: SvgPicture.asset(
-                                Memojis.man_1,
-                                height: 50,
-                                width: 50,
-                              ),
-                            ),
                             Positioned(
                               bottom: 0,
                               right: 0,
@@ -142,16 +135,10 @@ class AppSettingsPage extends StatelessWidget {
                         width: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
+                          color: AppTheme.mainColor,
                         ),
                         child: Stack(
                           children: [
-                            Center(
-                              child: SvgPicture.asset(
-                                Memojis.man_1,
-                                height: 50,
-                                width: 50,
-                              ),
-                            ),
                             Positioned(
                               bottom: 0,
                               right: 0,
@@ -273,6 +260,7 @@ class AppSettingsPage extends StatelessWidget {
             ),
             //Logout
             ListTile(
+              splashColor: Colors.grey.shade400,
               onTap: () {
                 _showLogoutConfirmation(context);
               },
