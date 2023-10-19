@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,7 +23,9 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   TextEditingController textEditingController = TextEditingController();
+  ChatController chatController = Get.put(ChatController());
   FocusNode focusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

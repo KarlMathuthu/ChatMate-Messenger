@@ -122,6 +122,8 @@ class _ChatsPageState extends State<ChatsPage> {
 
                       return ListTile(
                         onTap: () {
+                          chatController.markChatAsRead(
+                              chatSnapshot.data!.docs[index]["chatId"]);
                           Get.to(
                             () => ChatRoomPage(
                               mateName: friendUsername,
@@ -131,6 +133,8 @@ class _ChatsPageState extends State<ChatsPage> {
                             ),
                             transition: Transition.cupertino,
                           );
+                          //Update the UI
+                          setState(() {});
                         },
                         title: Text(
                           friendUsername,
