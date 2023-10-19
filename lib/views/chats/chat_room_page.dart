@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/widgets/chat_buble.dart';
+import 'package:chat_mate_messanger/widgets/message_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -116,7 +119,47 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           child: Column(
             children: [
               //Chats
-              const Expanded(child: Column()),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      //Day
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(4.0),
+                        constraints: const BoxConstraints(
+                          minWidth: 80,
+                          maxWidth: 100,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Today',
+                            overflow: TextOverflow.fade,
+                            style: GoogleFonts.lato(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      ListView.builder(
+                        itemCount: 10,
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return MyChatBubble();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               //Write message
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -176,6 +219,22 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     )
                   ],
                 ),
+              ),
+              CustomMessageBar(
+                messageBarHintText: "Type a message",
+                messageBarHintStyle: GoogleFonts.lato(
+                  fontSize: 14,
+                ),
+                actions: [
+                  InkWell(
+                    onTap: () {},
+                    child: SvgPicture.asset(
+                      "assets/icons/emoji.svg",
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                ],
               ),
             ],
           ),
