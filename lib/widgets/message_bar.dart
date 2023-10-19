@@ -14,6 +14,7 @@ class CustomMessageBar extends StatefulWidget {
   final TextStyle messageBarHintStyle;
   final TextStyle textFieldTextStyle;
   final Color sendButtonColor;
+  final FocusNode focusNode;
 
   final void Function(String)? onSend;
   final void Function()? onTapCloseReply;
@@ -32,6 +33,7 @@ class CustomMessageBar extends StatefulWidget {
     this.textFieldTextStyle = const TextStyle(color: Colors.black),
     this.onSend,
     this.onTapCloseReply,
+    required this.focusNode,
   });
 
   @override
@@ -41,131 +43,88 @@ class CustomMessageBar extends StatefulWidget {
 class _CustomMessageBarState extends State<CustomMessageBar> {
   final TextEditingController _textController = TextEditingController();
 
-  String text = '';
-
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            widget.replying
-                ? Container(
-                    color: widget.replyWidgetColor,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 16,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.reply,
-                          color: widget.replyIconColor,
-                          size: 24,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Text(
-                              'Re : ' + widget.replyingTo,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: widget.onTapCloseReply,
-                          child: Icon(
-                            Icons.close,
-                            color: widget.replyCloseColor,
-                            size: 24,
-                          ),
-                        ),
-                      ],
-                    ))
-                : Container(),
-            widget.replying
-                ? Container(
-                    height: 1,
-                    color: Colors.grey.shade300,
-                  )
-                : Container(),
-            Container(
-              color: widget.messageBarColor,
-              padding: const EdgeInsets.symmetric(
-                vertical: 8,
-                horizontal: 16,
-              ),
-              child: Row(
-                children: <Widget>[
-                  ...widget.actions,
-                  Expanded(
-                    child: Container(
-                      child: TextField(
-                        controller: _textController,
-                        keyboardType: TextInputType.multiline,
-                        textCapitalization: TextCapitalization.sentences,
-                        minLines: 1,
-                        maxLines: 3,
-                        onChanged: (value) {
-                          text = value;
-                          setState(() {});
-                        },
-                        style: widget.textFieldTextStyle,
-                        decoration: InputDecoration(
-                          hintText: widget.messageBarHintText,
-                          hintMaxLines: 1,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 10),
-                          hintStyle: widget.messageBarHintStyle,
-                          fillColor: Colors.white,
-                          filled: true,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Colors.white,
-                              width: 0.2,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Colors.black26,
-                              width: 0.2,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+    return Container(
+      color: widget.messageBarColor,
+      padding: const EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 16,
+      ),
+      child: Row(
+        children: <Widget>[
+          ...widget.actions,
+          Expanded(
+            child: TextField(
+              focusNode: widget.focusNode,
+              controller: _textController,
+              keyboardType: TextInputType.multiline,
+              textCapitalization: TextCapitalization.sentences,
+              minLines: 1,
+              maxLines: 3,
+              onChanged: (value) {
+                setState(() {});
+              },
+              style: widget.textFieldTextStyle,
+              cursorColor: AppTheme.mainColor,
+              decoration: InputDecoration(
+                hintText: widget.messageBarHintText,
+                hintMaxLines: 1,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                hintStyle: widget.messageBarHintStyle,
+                fillColor: Colors.white,
+                filled: true,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: const BorderSide(
+                    color: Colors.white,
+                    width: 0.2,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: InkWell(
-                      child: text == ''.replaceAll("    ", "")
-                          ? SvgPicture.asset(
-                              "assets/icons/record.svg",
-                              color: AppTheme.mainColor,
-                            )
-                          : Icon(
-                              Icons.send,
-                              color: widget.sendButtonColor,
-                              size: 24,
-                            ),
-                      onTap: () {
-                        if (_textController.text.trim() != '') {
-                          if (widget.onSend != null) {
-                            widget.onSend!(_textController.text.trim());
-                          }
-                          _textController.text = '';
-                        }
-                      },
-                    ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: const BorderSide(
+                    color: Colors.black26,
+                    width: 0.2,
                   ),
-                ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+          _textController.text.trim().isEmpty
+              ? IconButton(
+                  onPressed: () {
+                    if (_textController.text.trim() != '') {
+                      if (widget.onSend != null) {
+                        widget.onSend!(_textController.text.trim());
+                      }
+                      _textController.text = '';
+                    }
+                  },
+                  icon: SvgPicture.asset(
+                    "assets/icons/record.svg",
+                    color: AppTheme.mainColor,
+                  ),
+                )
+              : IconButton(
+                  onPressed: () {
+                    if (_textController.text.trim() != '') {
+                      if (widget.onSend != null) {
+                        widget.onSend!(_textController.text.trim());
+                      }
+                      _textController.text = '';
+                    }
+                  },
+                  icon: Transform.rotate(
+                    angle: 45 * (3.141592653589793 / 180),
+                    child: SvgPicture.asset(
+                      "assets/icons/send.svg",
+                      color: AppTheme.mainColor,
+                    ),
+                  ),
+                ),
+        ],
       ),
     );
   }

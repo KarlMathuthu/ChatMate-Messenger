@@ -4,6 +4,8 @@ import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/memojis.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +17,8 @@ class AppSettingsPage extends StatelessWidget {
 
   AuthController authController = Get.put(AuthController());
   CustomLoader customLoader = CustomLoader();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -49,59 +53,127 @@ class AppSettingsPage extends StatelessWidget {
         child: Column(
           children: [
             //My account
-            ListTile(
-              onTap: () {},
-              title: Text(
-                "@KarlKiyotaka",
-                style: GoogleFonts.lato(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                "always available 🔥",
-                style: GoogleFonts.lato(
-                  color: Colors.black54,
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              leading: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: SvgPicture.asset(
-                        Memojis.man_1,
-                        height: 50,
-                        width: 50,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 15,
-                        height: 15,
-                        decoration: const BoxDecoration(
-                          color: Colors.greenAccent,
-                          shape: BoxShape.circle,
+            StreamBuilder(
+                stream: firestore
+                    .collection("users")
+                    .doc(currentUserUid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text("data");
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return ListTile(
+                      onTap: () {},
+                      title: Text(
+                        "@username",
+                        style: GoogleFonts.lato(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              trailing: SvgPicture.asset(
-                "assets/icons/qr.svg",
-                color: Colors.black,
-              ),
-            ),
+                      subtitle: Text(
+                        "loading...",
+                        style: GoogleFonts.lato(
+                          color: Colors.black54,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      leading: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: SvgPicture.asset(
+                                Memojis.man_1,
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                width: 15,
+                                height: 15,
+                                decoration: const BoxDecoration(
+                                  color: Colors.greenAccent,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      trailing: SvgPicture.asset(
+                        "assets/icons/qr.svg",
+                        color: Colors.black,
+                      ),
+                    );
+                  } else {
+                    String username = snapshot.data!.get("userName");
+                    String userbio = snapshot.data!.get("userBio");
+                    return ListTile(
+                      onTap: () {},
+                      title: Text(
+                        "@$username",
+                        style: GoogleFonts.lato(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        userbio,
+                        style: GoogleFonts.lato(
+                          color: Colors.black54,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      leading: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: SvgPicture.asset(
+                                Memojis.man_1,
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                width: 15,
+                                height: 15,
+                                decoration: const BoxDecoration(
+                                  color: Colors.greenAccent,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      trailing: SvgPicture.asset(
+                        "assets/icons/qr.svg",
+                        color: Colors.black,
+                      ),
+                    );
+                  }
+                }),
             //Settings
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),

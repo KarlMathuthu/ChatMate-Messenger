@@ -8,7 +8,7 @@ class MessageModel {
     required this.sender,
     required this.messageText,
     required this.timestamp,
-    this.read = false, // Default to unread
+    this.read = false,
   });
 
   Map<String, dynamic> toMap() {

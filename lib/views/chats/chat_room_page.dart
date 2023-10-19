@@ -1,14 +1,16 @@
 import 'dart:io';
 
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/widgets/chat_buble.dart';
 import 'package:chat_mate_messanger/widgets/message_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../widgets/chat_buble.dart';
 
 class ChatRoomPage extends StatefulWidget {
   const ChatRoomPage({
@@ -28,12 +30,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   TextEditingController textEditingController = TextEditingController();
   ChatController chatController = Get.put(ChatController());
   FocusNode focusNode = FocusNode();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         focusNode.unfocus();
-        setState(() {});
       },
       child: Scaffold(
         backgroundColor: Colors.grey.shade300,
@@ -119,53 +122,95 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           child: Column(
             children: [
               //Chats
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      //Day
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.all(4.0),
-                        constraints: const BoxConstraints(
-                          minWidth: 80,
-                          maxWidth: 100,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Today',
-                            overflow: TextOverflow.fade,
-                            style: GoogleFonts.lato(
-                              color: Colors.grey,
-                              fontSize: 12,
+              FutureBuilder(
+                future:
+                    firestore.collection("chats").doc(widget.chatRoomId).get(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Text("No chats Available"),
+                    );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                      child: Text("Loading"),
+                    );
+                  } else {
+                    List<dynamic> messages = snapshot.data!.data()!["messages"];
+                    return Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            //Day
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              margin: const EdgeInsets.all(4.0),
+                              constraints: const BoxConstraints(
+                                minWidth: 80,
+                                maxWidth: 100,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Today',
+                                  overflow: TextOverflow.fade,
+                                  style: GoogleFonts.lato(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 5),
+                            ListView.builder(
+                              itemCount: messages.length,
+                              reverse: false,
+                              physics: const ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                bool isSender = messages[index]["sender"] ==
+                                    auth.currentUser!.uid;
+
+                                bool isRead = messages[index]["read"];
+                                bool isSent = isRead == false;
+
+                                return MyChatBubble(
+                                  message: messages[index]["messageText"],
+                                  isSender: isSender,
+                                  //isRead: isRead,
+                                  //isDelivered: isDelivered,
+                                  //isSent: isSent,
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 5),
-                      ListView.builder(
-                        itemCount: 10,
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return MyChatBubble();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+                    );
+                  }
+                },
               ),
               //Write message
               CustomMessageBar(
+                focusNode: focusNode,
                 messageBarHintText: "Type a message",
                 messageBarHintStyle: GoogleFonts.lato(
                   fontSize: 14,
                 ),
+                textFieldTextStyle: GoogleFonts.lato(
+                  fontSize: 14,
+                ),
+                onSend: (message) {
+                  chatController.sendMessage(
+                    chatId: widget.chatRoomId,
+                    senderId: auth.currentUser!.uid,
+                    messageText: message,
+                  );
+                },
                 actions: [
                   InkWell(
                     onTap: () {},

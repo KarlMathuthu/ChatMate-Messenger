@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -44,27 +45,28 @@ class ChatController extends GetxController {
     required String messageText,
   }) async {
     try {
-      // Create a new message object
-      final MessageModel newMessage = MessageModel(
+      final newMessage = MessageModel(
         sender: senderId,
         messageText: messageText,
         timestamp: DateTime.now().millisecondsSinceEpoch,
-        read: false, // Mark the message as unread
       );
 
-      // Add the new message to the chat's messages in Cloud Firestore
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .add(newMessage.toMap());
+      // Reference to the Firestore document of the chat
+      final chatDoc = _firestore.collection('chats').doc(chatId);
 
-      // Update the chat's "last message" with the new message
-      await _firestore.collection('chats').doc(chatId).update(
-        {
-          'lastMessage': newMessage.toMap(),
-        },
-      );
+      // Get the current messages
+      final DocumentSnapshot chatSnapshot = await chatDoc.get();
+
+      if (chatSnapshot.exists) {
+        // Retrieve the current messages
+        List<dynamic> currentMessages = chatSnapshot.get("messages");
+
+        // Add the new message to the existing messages
+        currentMessages.add(newMessage.toMap());
+
+        // Update the chat document with the updated messages
+        await chatDoc.update({'messages': currentMessages});
+      }
     } catch (e) {
       print('Error sending message: $e');
     }
@@ -112,7 +114,7 @@ class ChatController extends GetxController {
         // Update the 'messages' field with the updated messages
         await chats.doc(chatId).update({'messages': updatedMessages});
 
-        print('Chat marked as read.');
+        print('Chat marked as read for non-current user messages.');
       } else {
         print('Chat with ID $chatId does not exist.');
       }
