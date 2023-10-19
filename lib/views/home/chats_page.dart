@@ -126,6 +126,8 @@ class _ChatsPageState extends State<ChatsPage> {
                             () => ChatRoomPage(
                               mateName: friendUsername,
                               mateUid: getFriendUid(chatSnapshot, index),
+                              chatRoomId: chatSnapshot.data!.docs[index]
+                                  ["chatId"],
                             ),
                             transition: Transition.cupertino,
                           );

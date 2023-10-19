@@ -11,10 +11,11 @@ class ChatRoomPage extends StatefulWidget {
     super.key,
     required this.mateName,
     required this.mateUid,
+    required this.chatRoomId,
   });
   final String mateName;
   final String mateUid;
-
+  final String chatRoomId;
   @override
   State<ChatRoomPage> createState() => _ChatRoomPageState();
 }
