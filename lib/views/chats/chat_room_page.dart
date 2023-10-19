@@ -161,65 +161,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                 ),
               ),
               //Write message
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        // height: 50,
-                        constraints: const BoxConstraints(
-                          minHeight: 50,
-                          maxHeight: 100,
-                        ),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: focusNode.hasFocus
-                              ? AppTheme.textfieldActiveColor
-                              : Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: focusNode.hasFocus
-                                ? AppTheme.textfieldActiveBorderColor
-                                : Colors.transparent,
-                          ),
-                        ),
-                        child: TextField(
-                          controller: textEditingController,
-                          focusNode: focusNode,
-                          maxLines: null,
-                          textAlignVertical: TextAlignVertical.bottom,
-                          keyboardType: TextInputType.text,
-                          onTap: () {
-                            setState(() {});
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              onPressed: () {},
-                              icon: SvgPicture.asset(
-                                "assets/icons/emoji.svg",
-                                color: Colors.grey,
-                              ),
-                            ),
-                            border: InputBorder.none,
-                            hintText: "Type a message",
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    FloatingActionButton(
-                      onPressed: () {},
-                      shape: const CircleBorder(),
-                      backgroundColor: AppTheme.mainColor,
-                      child: SvgPicture.asset(
-                        "assets/icons/record.svg",
-                        color: Colors.white,
-                      ),
-                    )
-                  ],
-                ),
-              ),
               CustomMessageBar(
                 messageBarHintText: "Type a message",
                 messageBarHintStyle: GoogleFonts.lato(

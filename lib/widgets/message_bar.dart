@@ -1,10 +1,11 @@
+import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-class CustomMessageBar extends StatelessWidget {
+class CustomMessageBar extends StatefulWidget {
   final bool replying;
   final String replyingTo;
   final List<Widget> actions;
-  final TextEditingController _textController = TextEditingController();
   final Color replyWidgetColor;
   final Color replyIconColor;
   final Color replyCloseColor;
@@ -13,7 +14,7 @@ class CustomMessageBar extends StatelessWidget {
   final TextStyle messageBarHintStyle;
   final TextStyle textFieldTextStyle;
   final Color sendButtonColor;
-  final void Function(String)? onTextChanged;
+
   final void Function(String)? onSend;
   final void Function()? onTapCloseReply;
 
@@ -29,13 +30,19 @@ class CustomMessageBar extends StatelessWidget {
     this.messageBarHintText = "Type your message here",
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.textFieldTextStyle = const TextStyle(color: Colors.black),
-    this.onTextChanged,
     this.onSend,
     this.onTapCloseReply,
   });
 
-  /// [MessageBar] builder method
-  ///
+  @override
+  State<CustomMessageBar> createState() => _CustomMessageBarState();
+}
+
+class _CustomMessageBarState extends State<CustomMessageBar> {
+  final TextEditingController _textController = TextEditingController();
+
+  String text = '';
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -44,9 +51,9 @@ class CustomMessageBar extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            replying
+            widget.replying
                 ? Container(
-                    color: replyWidgetColor,
+                    color: widget.replyWidgetColor,
                     padding: const EdgeInsets.symmetric(
                       vertical: 8,
                       horizontal: 16,
@@ -55,43 +62,43 @@ class CustomMessageBar extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.reply,
-                          color: replyIconColor,
+                          color: widget.replyIconColor,
                           size: 24,
                         ),
                         Expanded(
                           child: Container(
                             child: Text(
-                              'Re : ' + replyingTo,
+                              'Re : ' + widget.replyingTo,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
                         InkWell(
-                          onTap: onTapCloseReply,
+                          onTap: widget.onTapCloseReply,
                           child: Icon(
                             Icons.close,
-                            color: replyCloseColor,
+                            color: widget.replyCloseColor,
                             size: 24,
                           ),
                         ),
                       ],
                     ))
                 : Container(),
-            replying
+            widget.replying
                 ? Container(
                     height: 1,
                     color: Colors.grey.shade300,
                   )
                 : Container(),
             Container(
-              color: messageBarColor,
+              color: widget.messageBarColor,
               padding: const EdgeInsets.symmetric(
                 vertical: 8,
                 horizontal: 16,
               ),
               child: Row(
                 children: <Widget>[
-                  ...actions,
+                  ...widget.actions,
                   Expanded(
                     child: Container(
                       child: TextField(
@@ -100,14 +107,17 @@ class CustomMessageBar extends StatelessWidget {
                         textCapitalization: TextCapitalization.sentences,
                         minLines: 1,
                         maxLines: 3,
-                        onChanged: onTextChanged,
-                        style: textFieldTextStyle,
+                        onChanged: (value) {
+                          text = value;
+                          setState(() {});
+                        },
+                        style: widget.textFieldTextStyle,
                         decoration: InputDecoration(
-                          hintText: messageBarHintText,
+                          hintText: widget.messageBarHintText,
                           hintMaxLines: 1,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 8.0, vertical: 10),
-                          hintStyle: messageBarHintStyle,
+                          hintStyle: widget.messageBarHintStyle,
                           fillColor: Colors.white,
                           filled: true,
                           enabledBorder: OutlineInputBorder(
@@ -131,15 +141,20 @@ class CustomMessageBar extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
                     child: InkWell(
-                      child: Icon(
-                        Icons.send,
-                        color: sendButtonColor,
-                        size: 24,
-                      ),
+                      child: text == ''.replaceAll("    ", "")
+                          ? SvgPicture.asset(
+                              "assets/icons/record.svg",
+                              color: AppTheme.mainColor,
+                            )
+                          : Icon(
+                              Icons.send,
+                              color: widget.sendButtonColor,
+                              size: 24,
+                            ),
                       onTap: () {
                         if (_textController.text.trim() != '') {
-                          if (onSend != null) {
-                            onSend!(_textController.text.trim());
+                          if (widget.onSend != null) {
+                            widget.onSend!(_textController.text.trim());
                           }
                           _textController.text = '';
                         }
