@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../widgets/chat_buble.dart';
 
@@ -36,6 +37,15 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   List localMessages = [];
 
+  DateTime getTime(String userStatus) {
+    DateTime? dateTime = DateTime.tryParse(userStatus);
+    if (dateTime != null) {
+      return dateTime;
+    } else {
+      return DateTime.now();
+    }
+  }
+
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -61,7 +71,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                 widget.mateName,
                 style: GoogleFonts.lato(
                   color: Colors.black,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -73,7 +83,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       "connecting...",
                       style: GoogleFonts.lato(
                         color: Colors.black54,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     );
                   } else if (snapshot.connectionState ==
@@ -82,15 +92,18 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       "connecting...",
                       style: GoogleFonts.lato(
                         color: Colors.black54,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     );
                   } else {
+                    String lastSeen = timeago.format(getTime(snapshot.data!));
                     return Text(
-                      snapshot.data!,
+                      snapshot.data! == "online"
+                          ? snapshot.data!
+                          : "last seen $lastSeen",
                       style: GoogleFonts.lato(
                         color: Colors.black54,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                     );
                   }
@@ -133,12 +146,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Center(
+                      return const Center(
                         child: Text("No chats Available"),
                       );
                     } else if (snapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return Center(
+                      return const Center(
                         child: Text("Loading"),
                       );
                     } else {

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import '../model/chat_model.dart';
 import '../model/message_model.dart';
@@ -102,12 +101,15 @@ class ChatController extends GetxController {
       DocumentSnapshot chatSnapshot = await chats.doc(chatId).get();
 
       if (chatSnapshot.exists) {
+        String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
         // Retrieve the 'messages' field, which is an array of messages
         List<dynamic> messages = chatSnapshot['messages'];
 
-        // Update the 'read' field to true for each message
+        // Update the 'read' field to true for each message where senderId is not equal to currentUserUid
         List updatedMessages = messages.map((message) {
-          message['read'] = true;
+          if (message['sender'] != currentUserUid) {
+            message['read'] = true;
+          }
           return message;
         }).toList();
 

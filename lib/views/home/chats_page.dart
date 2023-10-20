@@ -87,24 +87,26 @@ class _ChatsPageState extends State<ChatsPage> {
             return ListView.builder(
               itemCount: chatSnapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                //This is for calcutaing the unread messages
                 List<dynamic> messages =
                     chatSnapshot.data!.docs[index]["messages"];
-                List<MessageModel> readMessages = [];
+                List<MessageModel> unreadMessages = [];
 
                 for (var messageData in messages) {
-                  if (messageData["read"] == false) {
+                  bool isSenderCurrentUser =
+                      messageData["sender"] == currentUserId;
+
+                  if (!isSenderCurrentUser && !messageData["read"]) {
                     MessageModel message = MessageModel(
                       sender: messageData["sender"],
                       messageText: messageData["messageText"],
                       timestamp: messageData["timestamp"],
                       read: messageData["read"],
                     );
-                    readMessages.add(message);
+                    unreadMessages.add(message);
                   }
                 }
 
-                int unreadMessageCount = readMessages.length;
+                int unreadMessageCount = unreadMessages.length;
 
                 return FutureBuilder(
                   future: getUserNameByUID(getFriendUid(chatSnapshot, index)),
@@ -120,7 +122,8 @@ class _ChatsPageState extends State<ChatsPage> {
                       return ListTile(
                         onTap: () {
                           chatController.markChatAsRead(
-                              chatSnapshot.data!.docs[index]["chatId"]);
+                            chatSnapshot.data!.docs[index]["chatId"],
+                          );
                           Get.to(
                             () => ChatRoomPage(
                               mateName: friendUsername,
