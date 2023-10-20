@@ -101,6 +101,7 @@ class _ChatsPageState extends State<ChatsPage> {
                       messageText: messageData["messageText"],
                       timestamp: messageData["timestamp"],
                       read: messageData["read"],
+                      messageType: messageData["messageType"],
                     );
                     unreadMessages.add(message);
                   }
@@ -273,16 +274,7 @@ class _ChatsPageState extends State<ChatsPage> {
           "assets/icons/chat.svg",
           color: Colors.white,
         ),
-        onPressed: () {
-          chatController.createChat(
-            members: [
-              currentUserId,
-              "KarlMathuthu",
-            ],
-            senderId: currentUserId,
-            messageText: "Hi there bro",
-          );
-        },
+        onPressed: () {},
       ),
     );
   }

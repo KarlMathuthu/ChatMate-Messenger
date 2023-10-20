@@ -186,6 +186,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           return MyChatBubble(
                             message: messages[index]["messageText"],
                             isSender: isSender,
+                            type: messages[index]["messageType"],
                             //isRead: isRead,
                             //isDelivered: isDelivered,
                             //isSent: isSent,

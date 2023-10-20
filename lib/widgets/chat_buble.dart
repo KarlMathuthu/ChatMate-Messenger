@@ -8,12 +8,14 @@ class MyChatBubble extends StatelessWidget {
     super.key,
     required this.message,
     required this.isSender,
+    required this.type,
     //required this.isRead,
     //required this.isDelivered,
     //required this.isSent,
   });
   final String message;
   final bool isSender;
+  final String type;
   //final bool isRead;
   //final bool isDelivered;
   //final bool isSent;
@@ -48,5 +50,12 @@ class MyChatBubble extends StatelessWidget {
               ),
       ],
     );
+  }
+
+  bool isUrl(String text) {
+    Uri uri = Uri.parse(text);
+
+    // Check if the scheme (protocol) of the URL is not empty (indicating it's a valid URL)
+    return uri.scheme.isNotEmpty;
   }
 }

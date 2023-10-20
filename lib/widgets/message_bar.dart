@@ -114,6 +114,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                         chatId: widget.chatRoomId,
                         senderId: widget.currentUser,
                         messageText: _textController.text.trim(),
+                        type: "text",
                       );
                     }
                     //send notifcation

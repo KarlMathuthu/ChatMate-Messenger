@@ -14,6 +14,7 @@ class ChatController extends GetxController {
     required List<String> members,
     required String senderId,
     required String messageText,
+    required String type,
   }) async {
     try {
       String chatRoomId = const Uuid().v1();
@@ -26,6 +27,7 @@ class ChatController extends GetxController {
             sender: senderId,
             messageText: messageText,
             timestamp: DateTime.now().millisecondsSinceEpoch,
+            messageType: type,
           )
         ],
       );
@@ -34,6 +36,7 @@ class ChatController extends GetxController {
         "sender": senderId,
         "timestamp": DateTime.now().millisecondsSinceEpoch,
         "read": false,
+        "type": type,
       };
       await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
       await updateLastMessage(chatRoomId, lastMessage);
@@ -47,12 +50,14 @@ class ChatController extends GetxController {
     required String chatId,
     required String senderId,
     required String messageText,
+    required String type,
   }) async {
     try {
       final newMessage = MessageModel(
         sender: senderId,
         messageText: messageText,
         timestamp: DateTime.now().millisecondsSinceEpoch,
+        messageType: type,
       );
 
       Map<String, dynamic> lastMessage = {
@@ -60,6 +65,7 @@ class ChatController extends GetxController {
         "sender": senderId,
         "timestamp": DateTime.now().millisecondsSinceEpoch,
         "read": false,
+        "type": type,
       };
 
       final chatDoc = _firestore.collection('chats').doc(chatId);
@@ -107,9 +113,6 @@ class ChatController extends GetxController {
 
       if (chatSnapshot.exists) {
         String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
-        Map<String, dynamic> lastMessage = {
-          "read": true,
-        };
 
         // Retrieve the 'messages' field, which is an array of messages
         List<dynamic> messages = chatSnapshot['messages'];
