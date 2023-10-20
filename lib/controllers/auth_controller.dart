@@ -73,6 +73,7 @@ class AuthController extends GetxController {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       await updateUserStatus("online");
+      await updateUserToken();
       customLoader.hideLoader();
       Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
@@ -117,6 +118,20 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       print("Error deleting account: $e");
+    }
+  }
+
+  //Update user token
+  Future<void> updateUserToken() async {
+    if (_auth.currentUser != null) {
+      String uid = _auth.currentUser!.uid;
+      String? fcmToken = await messaging.getToken();
+      try {
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(uid)
+            .update({"fcmToken": fcmToken});
+      } catch (e) {}
     }
   }
 }

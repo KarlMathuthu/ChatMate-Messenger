@@ -28,14 +28,10 @@ class ChatRoomPage extends StatefulWidget {
 }
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
-  final TextEditingController _textController = TextEditingController();
   ChatController chatController = Get.put(ChatController());
   FocusNode focusNode = FocusNode();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
-  String text = "";
-
-  List localMessages = [];
 
   DateTime getTime(String userStatus) {
     DateTime? dateTime = DateTime.tryParse(userStatus);
@@ -43,6 +39,21 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       return dateTime;
     } else {
       return DateTime.now();
+    }
+  }
+
+  Future getUserToken(String uid) async {
+    try {
+      var userDoc =
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+      if (userDoc.exists) {
+        String userName = userDoc.data()?['fcmToken'];
+        return userName;
+      } else {
+        return "false";
+      }
+    } catch (e) {
+      return "false";
     }
   }
 
@@ -188,14 +199,23 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               const SizedBox(height: 10),
 
               //Write message
-              CustomMessageBar(
-                focusNode: focusNode,
-                messageBarHintText: "Type a message",
-                messageBarHintStyle: GoogleFonts.lato(fontSize: 14),
-                textFieldTextStyle: GoogleFonts.lato(fontSize: 14),
-                currentUser: auth.currentUser!.uid,
-                chatRoomId: widget.chatRoomId,
-              ),
+              FutureBuilder(
+                future: getUserToken(widget.mateUid),
+                builder: (context, snapshot) {
+                  final mateToken = snapshot.data;
+
+                  return CustomMessageBar(
+                    focusNode: focusNode,
+                    messageBarHintText: "Type a message",
+                    messageBarHintStyle: GoogleFonts.lato(fontSize: 14),
+                    textFieldTextStyle: GoogleFonts.lato(fontSize: 14),
+                    currentUser: auth.currentUser!.uid,
+                    chatRoomId: widget.chatRoomId,
+                    mateName: widget.mateName,
+                    mateToken: mateToken ?? "none",
+                  );
+                },
+              )
             ],
           ),
         ),

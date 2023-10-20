@@ -31,15 +31,14 @@ class NotificationsController {
         AndroidInitializationSettings('@mipmap/ic_launcher');
     final DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (id, title, body, payload) => null,
+      onDidReceiveLocalNotification: (id, title, body, payload) {},
     );
-    const LinuxInitializationSettings initializationSettingsLinux =
-        LinuxInitializationSettings(defaultActionName: 'Open notification');
+
     final InitializationSettings initializationSettings =
         InitializationSettings(
-            android: initializationSettingsAndroid,
-            iOS: initializationSettingsDarwin,
-            linux: initializationSettingsLinux);
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+    );
     localNotification.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: onNotificationTap,
@@ -66,6 +65,7 @@ class NotificationsController {
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
+      enableVibration: true,
     );
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);

@@ -1,4 +1,5 @@
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
+import 'package:chat_mate_messanger/controllers/notifications_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,6 +14,8 @@ class CustomMessageBar extends StatefulWidget {
   final FocusNode focusNode;
   final String currentUser;
   final String chatRoomId;
+  final String mateName;
+  final String mateToken;
 
   CustomMessageBar({
     this.messageBarColor = const Color(0xffF4F4F5),
@@ -23,6 +26,8 @@ class CustomMessageBar extends StatefulWidget {
     required this.focusNode,
     required this.currentUser,
     required this.chatRoomId,
+    required this.mateName,
+    required this.mateToken,
   });
 
   @override
@@ -112,6 +117,12 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                       );
                       _textController.text = '';
                     }
+                    //send notifcation
+                    NotificationsController.sendMessageNotification(
+                      userToken: widget.mateToken,
+                      body: _textController.text.trim(),
+                      title: widget.mateName,
+                    );
                   },
                   icon: Transform.rotate(
                     angle: 45 * (3.141592653589793 / 180),
