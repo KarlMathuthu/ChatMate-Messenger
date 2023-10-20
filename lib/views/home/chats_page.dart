@@ -68,11 +68,11 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBacgroundColor,
-      body: FutureBuilder(
-        future: firestore
+      body: StreamBuilder(
+        stream: firestore
             .collection("chats")
             .where("members", arrayContains: currentUserId)
-            .get(),
+            .snapshots(),
         builder: (context, chatSnapshot) {
           if (!chatSnapshot.hasData) {
             return SizedBox();
@@ -121,8 +121,6 @@ class _ChatsPageState extends State<ChatsPage> {
                         onTap: () {
                           chatController.markChatAsRead(
                               chatSnapshot.data!.docs[index]["chatId"]);
-                          //Update the UI
-                          setState(() {});
                           Get.to(
                             () => ChatRoomPage(
                               mateName: friendUsername,
