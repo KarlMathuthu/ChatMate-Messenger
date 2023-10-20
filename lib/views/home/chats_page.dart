@@ -125,9 +125,9 @@ class _ChatsPageState extends State<ChatsPage> {
                       String lastMessageSenderId = lastMessage["sender"];
 
                       bool isLastMessageRead() {
-                        if (lastMessageSenderId != currentUserId) {
-                          bool lastMessageRead = lastMessage["read"] == true;
-                          return lastMessageRead;
+                        if (lastMessageSenderId != currentUserId &&
+                            lastMessage["read"] == true) {
+                          return true;
                         }
                         return false;
                       }

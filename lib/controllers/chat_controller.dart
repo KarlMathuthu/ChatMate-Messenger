@@ -151,6 +151,7 @@ class ChatController extends GetxController {
   //Update last message read
   Future<void> updateReadFieldInLastMessage(String chatId) async {
     try {
+      String currentUserId = FirebaseAuth.instance.currentUser!.uid;
       CollectionReference chats =
           FirebaseFirestore.instance.collection('chats');
       DocumentSnapshot chatSnapshot = await chats.doc(chatId).get();
@@ -158,7 +159,7 @@ class ChatController extends GetxController {
       if (chatSnapshot.exists) {
         Map<String, dynamic>? lastMessage = chatSnapshot['last_message'];
 
-        if (lastMessage != null) {
+        if (lastMessage != null && lastMessage['sender'] != currentUserId) {
           lastMessage['read'] = true;
 
           await chats.doc(chatId).update({'last_message': lastMessage});

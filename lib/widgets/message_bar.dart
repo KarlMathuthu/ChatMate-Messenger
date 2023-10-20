@@ -37,6 +37,7 @@ class CustomMessageBar extends StatefulWidget {
 class _CustomMessageBarState extends State<CustomMessageBar> {
   final TextEditingController _textController = TextEditingController();
   ChatController chatController = Get.put(ChatController());
+  String rawMessageText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +67,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
               maxLines: 3,
               onChanged: (value) {
                 setState(() {});
+                rawMessageText = value;
               },
               style: widget.textFieldTextStyle,
               cursorColor: AppTheme.mainColor,
@@ -117,13 +119,13 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                         type: "text",
                       );
                     }
+                    _textController.text = '';
                     //send notifcation
                     await NotificationsController.sendMessageNotification(
                       userToken: widget.mateToken,
-                      body: _textController.text.trim(),
+                      body: rawMessageText.trim(),
                       title: widget.mateName,
                     );
-                    _textController.text = '';
                   },
                   icon: Transform.rotate(
                     angle: 45 * (3.141592653589793 / 180),
