@@ -183,13 +183,24 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           bool isRead = messages[index]["read"];
                           bool isSent = isRead == false;
 
-                          return MyChatBubble(
-                            message: messages[index]["messageText"],
-                            isSender: isSender,
-                            type: messages[index]["messageType"],
-                            //isRead: isRead,
-                            //isDelivered: isDelivered,
-                            //isSent: isSent,
+                          return GestureDetector(
+                            onLongPress: () {
+                              chatController.showCustomDialog(
+                                context: context,
+                                isCurrentUser: isSender,
+                                message: messages[index]["messageText"],
+                                chatId: widget.chatRoomId,
+                                messageId: snapshot.data!.id,
+                              );
+                            },
+                            child: MyChatBubble(
+                              message: messages[index]["messageText"],
+                              isSender: isSender,
+                              type: messages[index]["messageType"],
+                              //isRead: isRead,
+                              //isDelivered: isDelivered,
+                              //isSent: isSent,
+                            ),
                           );
                         },
                       );

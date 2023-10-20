@@ -1,5 +1,6 @@
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/chats/cantacts_page.dart';
 import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -274,7 +275,9 @@ class _ChatsPageState extends State<ChatsPage> {
           "assets/icons/chat.svg",
           color: Colors.white,
         ),
-        onPressed: () {},
+        onPressed: () {
+          Get.to(() => ContactsPage(), transition: Transition.cupertino);
+        },
       ),
     );
   }

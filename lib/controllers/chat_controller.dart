@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -85,18 +87,25 @@ class ChatController extends GetxController {
     }
   }
 
-  // Delete Message
-  Future<void> deleteMessage({
-    required String chatId,
-    required String messageId,
-  }) async {
+  // Function to delete a message
+  Future<void> deleteMessage(String chatId, String messageId) async {
     try {
-      await _firestore
-          .collection('chats')
-          .doc(chatId)
-          .collection('messages')
-          .doc(messageId)
-          .delete();
+      final CollectionReference chats =
+          FirebaseFirestore.instance.collection('chats');
+      final DocumentReference chatDoc = chats.doc(chatId);
+
+      // Fetch the chat document
+      final DocumentSnapshot chatSnapshot = await chatDoc.get();
+
+      if (chatSnapshot.exists) {
+        // Get the current list of messages
+        List<dynamic> currentMessages = chatSnapshot.get("messages");
+
+        // Find and remove the message by messageId
+        currentMessages.removeWhere((message) {
+          return message['messageText'] == messageId;
+        });
+      }
     } catch (e) {
       print('Error deleting message: $e');
     }
@@ -190,6 +199,58 @@ class ChatController extends GetxController {
       return "connecting...";
     }
   }
+
+  //Delete message dialog
+  Future<void> showCustomDialog({
+    required BuildContext context,
+    required bool isCurrentUser,
+    required String message,
+    required String chatId,
+    required String messageId,
+  }) {
+    return showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(isCurrentUser ? 'Delete message' : 'Copy message'),
+          content: Text(
+            isCurrentUser
+                ? 'Are you sure you want to delete this message?'
+                : 'Message content that you want to copy.',
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(isCurrentUser ? 'Delete' : 'Copy'),
+              onPressed: () async {
+                if (isCurrentUser) {
+                  //Delete message
+                } else {
+                  await copyToClipBoard(message);
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //Copy to clipboard
+  Future copyToClipBoard(String message) async {
+    Clipboard.setData(
+      ClipboardData(text: message),
+    ).then((_) {
+      Get.snackbar("Copied", "Message copied successfully!");
+    });
+  }
+
   // Keep Message
   // Delete for Everyone
   // Message Opened
