@@ -40,6 +40,47 @@ class _ContactsPageState extends State<ContactsPage> {
               height: 20,
             ),
           ),
+          PopupMenuButton<String>(
+            color: Colors.white,
+            surfaceTintColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            icon: SvgPicture.asset(
+              "assets/icons/cog.svg",
+              color: Colors.black,
+              height: 20,
+            ),
+            onSelected: (String choice) {
+              switch (choice) {
+                case 'newContact':
+                //handle oncick
+                  break;
+                case 'newGroup':
+                //handle onclik
+                  break;
+                case 'newBroadcast':
+                //handle onclick
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'newContact',
+                  child: Text('New Contact'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'newGroup',
+                  child: Text('New Group'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'newBroadcast',
+                  child: Text('New Broadcast'),
+                ),
+              ];
+            },
+          ),
         ],
         title: Text(
           "Select Contact",
@@ -127,7 +168,10 @@ class _ContactsPageState extends State<ContactsPage> {
             ),
             const SizedBox(height: 10),
             StreamBuilder(
-              stream: firestore.collection("users").snapshots(),
+              stream: firestore
+                  .collection("users")
+                  .orderBy("userStatus", descending: true)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center();
