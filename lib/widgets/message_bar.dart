@@ -1,33 +1,28 @@
+import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class CustomMessageBar extends StatefulWidget {
-  final Color replyWidgetColor;
-  final Color replyIconColor;
-  final Color replyCloseColor;
   final Color messageBarColor;
   final String messageBarHintText;
   final TextStyle messageBarHintStyle;
   final TextStyle textFieldTextStyle;
   final Color sendButtonColor;
   final FocusNode focusNode;
-
-  final void Function(String)? onSend;
-  final void Function()? onTapCloseReply;
+  final String currentUser;
+  final String chatRoomId;
 
   CustomMessageBar({
-    this.replyWidgetColor = const Color(0xffF4F4F5),
-    this.replyIconColor = Colors.blue,
-    this.replyCloseColor = Colors.black12,
     this.messageBarColor = const Color(0xffF4F4F5),
     this.sendButtonColor = Colors.blue,
     this.messageBarHintText = "Type your message here",
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.textFieldTextStyle = const TextStyle(color: Colors.black),
-    this.onSend,
-    this.onTapCloseReply,
     required this.focusNode,
+    required this.currentUser,
+    required this.chatRoomId,
   });
 
   @override
@@ -36,6 +31,7 @@ class CustomMessageBar extends StatefulWidget {
 
 class _CustomMessageBarState extends State<CustomMessageBar> {
   final TextEditingController _textController = TextEditingController();
+  ChatController chatController = Get.put(ChatController());
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +93,6 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
               ? IconButton(
                   onPressed: () {
                     if (_textController.text.trim() != '') {
-                      if (widget.onSend != null) {
-                        widget.onSend!(_textController.text.trim());
-                      }
                       _textController.text = '';
                     }
                   },
@@ -111,9 +104,12 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
               : IconButton(
                   onPressed: () {
                     if (_textController.text.trim() != '') {
-                      if (widget.onSend != null) {
-                        widget.onSend!(_textController.text.trim());
-                      }
+                      //send message
+                      chatController.sendMessage(
+                        chatId: widget.chatRoomId,
+                        senderId: widget.currentUser,
+                        messageText: _textController.text.trim(),
+                      );
                       _textController.text = '';
                     }
                   },

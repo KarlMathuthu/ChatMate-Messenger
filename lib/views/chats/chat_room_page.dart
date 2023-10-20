@@ -178,19 +178,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               CustomMessageBar(
                 focusNode: focusNode,
                 messageBarHintText: "Type a message",
-                messageBarHintStyle: GoogleFonts.lato(
-                  fontSize: 14,
-                ),
-                textFieldTextStyle: GoogleFonts.lato(
-                  fontSize: 14,
-                ),
-                onSend: (message) {
-                  chatController.sendMessage(
-                    chatId: widget.chatRoomId,
-                    senderId: auth.currentUser!.uid,
-                    messageText: message,
-                  );
-                },
+                messageBarHintStyle: GoogleFonts.lato(fontSize: 14),
+                textFieldTextStyle: GoogleFonts.lato(fontSize: 14),
+                currentUser: auth.currentUser!.uid,
+                chatRoomId: widget.chatRoomId,
               ),
             ],
           ),
