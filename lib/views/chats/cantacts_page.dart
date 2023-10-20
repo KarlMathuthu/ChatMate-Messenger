@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../theme/app_theme.dart';
 
@@ -54,13 +56,13 @@ class _ContactsPageState extends State<ContactsPage> {
             onSelected: (String choice) {
               switch (choice) {
                 case 'newContact':
-                //handle oncick
+                  //handle oncick
                   break;
                 case 'newGroup':
-                //handle onclik
+                  //handle onclik
                   break;
                 case 'newBroadcast':
-                //handle onclick
+                  //handle onclick
                   break;
               }
             },
@@ -186,7 +188,17 @@ class _ContactsPageState extends State<ContactsPage> {
                     itemBuilder: (context, index) {
                       bool isUserOnline =
                           snapshot.data!.docs[index]["userStatus"] == "online";
+                      String chatRoomId = const Uuid().v1();
                       return ListTile(
+                        onTap: () {
+                          Get.off(
+                            () => ChatRoomPage(
+                              mateName: snapshot.data!.docs[index]["userName"],
+                              mateUid: snapshot.data!.docs[index]["userUid"],
+                              chatRoomId: chatRoomId,
+                            ),
+                          );
+                        },
                         title: Text(
                           "@${snapshot.data!.docs[index]["userName"]}",
                           style: GoogleFonts.lato(

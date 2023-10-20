@@ -161,11 +161,11 @@ class _ChatsPageState extends State<ChatsPage> {
                               : lastMessage["messageText"],
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.lato(
-                            color: isLastMessageRead() == true
+                            color: isLastMessageRead() == false
                                 ? AppTheme.loaderColor
                                 : Colors.black54,
                             fontSize: 12,
-                            fontWeight: isLastMessageRead() == true
+                            fontWeight: isLastMessageRead() == false
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                           ),
