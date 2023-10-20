@@ -39,27 +39,40 @@ class AudioCallHandler {
 
   // Function to initiate a call
   Future<void> makeCall(String toUserId) async {
+    // Initialize the WebRTC peer connection here before creating an offer
+    await initializePeerConnection();
     // Create an offer
-    final offer = await peerConnection!.createOffer({'offerToReceiveAudio': 1});
+    final offer = await peerConnection!.createOffer(
+      {
+        'offerToReceiveAudio': 1,
+      },
+    );
     await peerConnection!.setLocalDescription(offer);
 
     // Store the offer in Firestore
-    await callCollection.doc(toUserId).set({
-      'offer': offer.toMap(),
-    });
+    await callCollection.doc(toUserId).set(
+      {
+        'offer': offer.toMap(),
+      },
+    );
 
     // Listen for the answer in Firestore
-    callCollection.doc(toUserId).snapshots().listen((snapshot) async {
-      if (snapshot.exists) {
-        final answer = snapshot['answer'];
-        await peerConnection!
-            .setRemoteDescription(RTCSessionDescription(answer, 'answer'));
-      }
-    });
+    callCollection.doc(toUserId).snapshots().listen(
+      (snapshot) async {
+        if (snapshot.exists) {
+          final answer = snapshot['answer'];
+          await peerConnection!.setRemoteDescription(
+            RTCSessionDescription(answer, 'answer'),
+          );
+        }
+      },
+    );
   }
 
   // Function to answer an incoming call
   Future<void> answerCall(String fromUserId) async {
+    // Initialize the WebRTC peer connection here before answering the call
+    await initializePeerConnection();
     final offer = await callCollection.doc(fromUserId).get();
     if (offer.exists) {
       final remoteOffer = RTCSessionDescription(offer['offer'], 'offer');
@@ -70,7 +83,11 @@ class AudioCallHandler {
       await peerConnection!.setLocalDescription(answer);
 
       // Store the answer in Firestore
-      await callCollection.doc(fromUserId).set({'answer': answer.toMap()});
+      await callCollection.doc(fromUserId).set(
+        {
+          'answer': answer.toMap(),
+        },
+      );
     }
   }
 
