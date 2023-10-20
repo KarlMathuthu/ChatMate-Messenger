@@ -118,6 +118,17 @@ class _ChatsPageState extends State<ChatsPage> {
                       return const SizedBox();
                     } else {
                       String friendUsername = friendUidSnapshot.data.toString();
+                      Map<String, dynamic> lastMessage =
+                          chatSnapshot.data!.docs[index]["last_message"];
+                      String lastMessageSenderId = lastMessage["sender"];
+
+                      bool isLastMessageRead() {
+                        if (lastMessageSenderId != currentUserId) {
+                          bool lastMessageRead = lastMessage["read"] == true;
+                          return lastMessageRead;
+                        }
+                        return false;
+                      }
 
                       return ListTile(
                         onTap: () {
@@ -143,12 +154,16 @@ class _ChatsPageState extends State<ChatsPage> {
                           ),
                         ),
                         subtitle: Text(
-                          "I tried to call you but yoh, My mom took the phone.",
+                          lastMessageSenderId == currentUserId
+                              ? "Me : ${lastMessage["messageText"]}"
+                              : lastMessage["messageText"],
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.lato(
                             color: Colors.black54,
                             fontSize: 12,
-                            fontWeight: FontWeight.normal,
+                            fontWeight: isLastMessageRead == false
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                         trailing: unreadMessageCount > 0

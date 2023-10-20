@@ -29,9 +29,14 @@ class ChatController extends GetxController {
           )
         ],
       );
-
-      // Add the new chat to Cloud Firestore
+      Map<String, dynamic> lastMessage = {
+        "messageText": messageText,
+        "sender": senderId,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "read": false,
+      };
       await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
+      updateLastMessage(chatRoomId, lastMessage);
     } catch (e) {
       print('Error creating chat: $e');
     }
@@ -57,20 +62,15 @@ class ChatController extends GetxController {
         "read": false,
       };
 
-      // Reference to the Firestore document of the chat
       final chatDoc = _firestore.collection('chats').doc(chatId);
 
-      // Get the current messages
       final DocumentSnapshot chatSnapshot = await chatDoc.get();
 
       if (chatSnapshot.exists) {
-        // Retrieve the current messages
         List<dynamic> currentMessages = chatSnapshot.get("messages");
 
-        // Add the new message to the existing messages
         currentMessages.add(newMessage.toMap());
 
-        // Update the chat document with the updated messages
         await chatDoc.update({'messages': currentMessages});
       }
       updateLastMessage(chatId, lastMessage);
@@ -85,15 +85,12 @@ class ChatController extends GetxController {
     required String messageId,
   }) async {
     try {
-      // Delete the message from the chat's messages in Cloud Firestore
       await _firestore
           .collection('chats')
           .doc(chatId)
           .collection('messages')
           .doc(messageId)
           .delete();
-
-      // Optionally, update the chat's "last message" or other relevant data
     } catch (e) {
       print('Error deleting message: $e');
     }
