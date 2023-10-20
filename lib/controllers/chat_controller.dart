@@ -36,7 +36,7 @@ class ChatController extends GetxController {
         "read": false,
       };
       await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
-      updateLastMessage(chatRoomId, lastMessage);
+      await updateLastMessage(chatRoomId, lastMessage);
     } catch (e) {
       print('Error creating chat: $e');
     }
@@ -73,7 +73,7 @@ class ChatController extends GetxController {
 
         await chatDoc.update({'messages': currentMessages});
       }
-      updateLastMessage(chatId, lastMessage);
+      await updateLastMessage(chatId, lastMessage);
     } catch (e) {
       print('Error sending message: $e');
     }
@@ -107,6 +107,10 @@ class ChatController extends GetxController {
 
       if (chatSnapshot.exists) {
         String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+        Map<String, dynamic> lastMessage = {
+          "read": true,
+        };
+
         // Retrieve the 'messages' field, which is an array of messages
         List<dynamic> messages = chatSnapshot['messages'];
 
@@ -120,6 +124,8 @@ class ChatController extends GetxController {
 
         // Update the 'messages' field with the updated messages
         await chats.doc(chatId).update({'messages': updatedMessages});
+        //Update last message read
+        await updateReadFieldInLastMessage(chatId);
 
         print('Chat marked as read for non-current user messages.');
       } else {
@@ -127,6 +133,27 @@ class ChatController extends GetxController {
       }
     } catch (e) {
       print('Error marking chat as read: $e');
+    }
+  }
+
+  //Update last message read
+  Future<void> updateReadFieldInLastMessage(String chatId) async {
+    try {
+      CollectionReference chats =
+          FirebaseFirestore.instance.collection('chats');
+      DocumentSnapshot chatSnapshot = await chats.doc(chatId).get();
+
+      if (chatSnapshot.exists) {
+        Map<String, dynamic>? lastMessage = chatSnapshot['last_message'];
+
+        if (lastMessage != null) {
+          lastMessage['read'] = true;
+
+          await chats.doc(chatId).update({'last_message': lastMessage});
+        }
+      }
+    } catch (e) {
+      print('Error updating "read" field: $e');
     }
   }
 

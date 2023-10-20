@@ -54,13 +54,13 @@ class _ChatsPageState extends State<ChatsPage> {
       var userDoc =
           await FirebaseFirestore.instance.collection("users").doc(uid).get();
       if (userDoc.exists) {
-        String userName = userDoc.data()?['userStatus'];
-        return userName;
+        String userStatus = userDoc.data()?['userStatus'];
+        return userStatus;
       } else {
-        return "false";
+        return "offline";
       }
     } catch (e) {
-      return "false";
+      return "offline";
     }
   }
 
@@ -159,9 +159,11 @@ class _ChatsPageState extends State<ChatsPage> {
                               : lastMessage["messageText"],
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.lato(
-                            color: Colors.black54,
+                            color: isLastMessageRead() == true
+                                ? AppTheme.loaderColor
+                                : Colors.black54,
                             fontSize: 12,
-                            fontWeight: isLastMessageRead == false
+                            fontWeight: isLastMessageRead() == true
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                           ),
@@ -216,7 +218,8 @@ class _ChatsPageState extends State<ChatsPage> {
                                   ),
                                 );
                               } else {
-                                bool isUserOnline = userStatusSnap.data == true;
+                                bool isUserOnline =
+                                    userStatusSnap.data! == "online";
 
                                 return Container(
                                   height: 50,
@@ -240,7 +243,8 @@ class _ChatsPageState extends State<ChatsPage> {
                                             width: 15,
                                             height: 15,
                                             decoration: const BoxDecoration(
-                                              color: Colors.greenAccent,
+                                              color: Color.fromARGB(
+                                                  255, 73, 255, 167),
                                               shape: BoxShape.circle,
                                             ),
                                           ),

@@ -97,8 +97,8 @@ class AuthController extends GetxController {
   // Logout
   Future<void> logout({required CustomLoader customLoader}) async {
     try {
-      await _auth.signOut();
       await updateUserStatus("${DateTime.now()}");
+      await _auth.signOut();
       customLoader.hideLoader();
       Get.offAllNamed(RouteClass.checkUserState);
     } catch (e) {
