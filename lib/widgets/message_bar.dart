@@ -107,7 +107,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                   ),
                 )
               : IconButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_textController.text.trim() != '') {
                       //send message
                       chatController.sendMessage(
@@ -115,14 +115,14 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                         senderId: widget.currentUser,
                         messageText: _textController.text.trim(),
                       );
-                      _textController.text = '';
                     }
                     //send notifcation
-                    NotificationsController.sendMessageNotification(
+                    await NotificationsController.sendMessageNotification(
                       userToken: widget.mateToken,
                       body: _textController.text.trim(),
                       title: widget.mateName,
                     );
+                    _textController.text = '';
                   },
                   icon: Transform.rotate(
                     angle: 45 * (3.141592653589793 / 180),
