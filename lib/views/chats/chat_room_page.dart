@@ -27,11 +27,14 @@ class ChatRoomPage extends StatefulWidget {
 }
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
-  TextEditingController textEditingController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
   ChatController chatController = Get.put(ChatController());
   FocusNode focusNode = FocusNode();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  String text = "";
+
+  List localMessages = [];
 
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -122,78 +125,55 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           child: Column(
             children: [
               //Chats
-              FutureBuilder(
-                future:
-                    firestore.collection("chats").doc(widget.chatRoomId).get(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text("No chats Available"),
-                    );
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Center(
-                      child: Text("Loading"),
-                    );
-                  } else {
-                    List<dynamic> messages = snapshot.data!.data()!["messages"];
-                    return Expanded(
-                      child: SingleChildScrollView(
+              Expanded(
+                child: StreamBuilder(
+                  stream: firestore
+                      .collection("chats")
+                      .doc(widget.chatRoomId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: Text("No chats Available"),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(
+                        child: Text("Loading"),
+                      );
+                    } else {
+                      List<dynamic> messages =
+                          snapshot.data!.data()!["messages"];
+                      // Sort messages by "timestamp" in descending order
+                      messages.sort(
+                          (a, b) => b["timestamp"].compareTo(a["timestamp"]));
+                      return ListView.builder(
+                        itemCount: messages.length,
+                        reverse: true,
                         physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          children: [
-                            //Day
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.all(4.0),
-                              constraints: const BoxConstraints(
-                                minWidth: 80,
-                                maxWidth: 100,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Today',
-                                  overflow: TextOverflow.fade,
-                                  style: GoogleFonts.lato(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            ListView.builder(
-                              itemCount: messages.length,
-                              reverse: false,
-                              physics: const ClampingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                bool isSender = messages[index]["sender"] ==
-                                    auth.currentUser!.uid;
+                        shrinkWrap: false,
+                        itemBuilder: (context, index) {
+                          bool isSender = messages[index]["sender"] ==
+                              auth.currentUser!.uid;
 
-                                bool isRead = messages[index]["read"];
-                                bool isSent = isRead == false;
+                          bool isRead = messages[index]["read"];
+                          bool isSent = isRead == false;
 
-                                return MyChatBubble(
-                                  message: messages[index]["messageText"],
-                                  isSender: isSender,
-                                  //isRead: isRead,
-                                  //isDelivered: isDelivered,
-                                  //isSent: isSent,
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                },
+                          return MyChatBubble(
+                            message: messages[index]["messageText"],
+                            isSender: isSender,
+                            //isRead: isRead,
+                            //isDelivered: isDelivered,
+                            //isSent: isSent,
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
+              const SizedBox(height: 10),
+
               //Write message
               CustomMessageBar(
                 focusNode: focusNode,
@@ -211,16 +191,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     messageText: message,
                   );
                 },
-                actions: [
-                  InkWell(
-                    onTap: () {},
-                    child: SvgPicture.asset(
-                      "assets/icons/emoji.svg",
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                ],
               ),
             ],
           ),

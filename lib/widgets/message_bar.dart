@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CustomMessageBar extends StatefulWidget {
-  final bool replying;
-  final String replyingTo;
-  final List<Widget> actions;
   final Color replyWidgetColor;
   final Color replyIconColor;
   final Color replyCloseColor;
@@ -20,9 +17,6 @@ class CustomMessageBar extends StatefulWidget {
   final void Function()? onTapCloseReply;
 
   CustomMessageBar({
-    this.replying = false,
-    this.replyingTo = "",
-    this.actions = const [],
     this.replyWidgetColor = const Color(0xffF4F4F5),
     this.replyIconColor = Colors.blue,
     this.replyCloseColor = Colors.black12,
@@ -53,7 +47,14 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
       ),
       child: Row(
         children: <Widget>[
-          ...widget.actions,
+          InkWell(
+            onTap: () {},
+            child: SvgPicture.asset(
+              "assets/icons/emoji.svg",
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(width: 5),
           Expanded(
             child: TextField(
               focusNode: widget.focusNode,

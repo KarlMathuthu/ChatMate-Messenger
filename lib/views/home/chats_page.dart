@@ -75,9 +75,7 @@ class _ChatsPageState extends State<ChatsPage> {
             .get(),
         builder: (context, chatSnapshot) {
           if (!chatSnapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return SizedBox();
           } else if (chatSnapshot.connectionState == ConnectionState.waiting) {
             return SizedBox(); /* Center(
               child: LoadingAnimationWidget.fourRotatingDots(
@@ -131,7 +129,6 @@ class _ChatsPageState extends State<ChatsPage> {
                               mateUid: getFriendUid(chatSnapshot, index),
                               chatRoomId: chatSnapshot.data!.docs[index]
                                   ["chatId"],
-                          
                             ),
                             transition: Transition.cupertino,
                           );
