@@ -50,6 +50,13 @@ class ChatController extends GetxController {
         timestamp: DateTime.now().millisecondsSinceEpoch,
       );
 
+      Map<String, dynamic> lastMessage = {
+        "messageText": messageText,
+        "sender": senderId,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "read": false,
+      };
+
       // Reference to the Firestore document of the chat
       final chatDoc = _firestore.collection('chats').doc(chatId);
 
@@ -66,6 +73,7 @@ class ChatController extends GetxController {
         // Update the chat document with the updated messages
         await chatDoc.update({'messages': currentMessages});
       }
+      updateLastMessage(chatId, lastMessage);
     } catch (e) {
       print('Error sending message: $e');
     }
@@ -123,6 +131,21 @@ class ChatController extends GetxController {
     } catch (e) {
       print('Error marking chat as read: $e');
     }
+  }
+
+  //Update last_message
+  Future<void> updateLastMessage(
+    String chatId,
+    Map<String, dynamic> lastMessage,
+  ) async {
+    try {
+      // Reference to the Firestore collection "chats"
+      CollectionReference chats =
+          FirebaseFirestore.instance.collection('chats');
+
+      // Update the "last_message" field of the chat document
+      await chats.doc(chatId).update({'last_message': lastMessage});
+    } catch (e) {}
   }
 
   //User Status

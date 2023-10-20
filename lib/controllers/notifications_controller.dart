@@ -48,7 +48,7 @@ class NotificationsController {
 
   // on tap local notification in foreground
   static void onNotificationTap(NotificationResponse notificationResponse) {
-    Get.off(() => const HomePage());
+    Get.offAll(() => const HomePage());
   }
 
   // show a simple notification
