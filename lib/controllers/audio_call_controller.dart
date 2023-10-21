@@ -1,3 +1,6 @@
+import 'package:chat_mate_messanger/views/calls/voice_call_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -95,5 +98,22 @@ class AudioCallHandler {
   Future<void> endCall() async {
     await peerConnection?.close();
     localStream?.getTracks().forEach((track) => track.stop());
+  }
+
+  // Listen for incoming calls and navigate to CallPage
+  void listenForIncomingCalls(BuildContext context) {
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final callCollection = FirebaseFirestore.instance.collection('calls');
+    callCollection.doc(currentUserId).snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        // An incoming call is detected, navigate to the CallPage
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const VoiceCallPage(),
+          ),
+        );
+      }
+    });
   }
 }
