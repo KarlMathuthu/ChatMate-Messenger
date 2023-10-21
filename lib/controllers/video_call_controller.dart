@@ -1,9 +1,14 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
-typedef void StreamStateCallback(MediaStream stream);
+import '../views/calls/voice_call_page.dart';
+
+// Callback to notify when a remote stream is added
+typedef StreamStateCallback = void Function(MediaStream stream);
 
 class CallSignaling {
   Map<String, dynamic> configuration = {
@@ -24,7 +29,9 @@ class CallSignaling {
   String? currentCallStatus;
   StreamStateCallback? onAddRemoteStream;
 
-  Future<String> startCall(RTCVideoRenderer remoteRenderer) async {
+  // Function to start a call
+  Future<String> startCall(
+      RTCVideoRenderer remoteRenderer, String toUid) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference callRef = db.collection('calls').doc();
 
@@ -55,6 +62,7 @@ class CallSignaling {
     Map<String, dynamic> callWithOffer = {
       'offer': offer.toMap(),
       'status': 'waiting', // Set the status to "waiting"
+      'toUid': toUid,
     };
 
     await callRef.set(callWithOffer);
@@ -105,18 +113,26 @@ class CallSignaling {
         }
       });
     });
-    // Listen for remote ICE candidates above
 
     return callId;
   }
 
+  // Function to answer an incoming call
   Future<void> answerCall(RTCVideoRenderer remoteVideo) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
+    String currentUser = FirebaseAuth.instance.currentUser!.uid;
 
     // Get the most recent call that is waiting to be answered
     QuerySnapshot callQuery = await db
         .collection('calls')
-        .where('status', isEqualTo: 'waiting')
+        .where(
+          'status',
+          isEqualTo: 'waiting',
+        )
+        .where(
+          "toUid",
+          isEqualTo: currentUser,
+        )
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
@@ -207,6 +223,7 @@ class CallSignaling {
     }
   }
 
+  // Function to open user media (camera and microphone)
   Future<void> openUserMedia(
     RTCVideoRenderer localVideo,
     RTCVideoRenderer remoteVideo,
@@ -220,6 +237,7 @@ class CallSignaling {
     remoteVideo.srcObject = await createLocalMediaStream('key');
   }
 
+  // Function to end a call
   Future<void> endCall(RTCVideoRenderer localVideo) async {
     List<MediaStreamTrack> tracks = localVideo.srcObject!.getTracks();
     tracks.forEach((track) {
@@ -247,6 +265,7 @@ class CallSignaling {
     remoteStream?.dispose();
   }
 
+  // Function to register peer connection listeners
   void registerPeerConnectionListeners() {
     peerConnection?.onIceGatheringState = (RTCIceGatheringState state) {
       print('ICE gathering state changed: $state');
@@ -269,5 +288,32 @@ class CallSignaling {
       onAddRemoteStream?.call(stream);
       remoteStream = stream;
     };
+  }
+
+  // Function to listen for incoming calls
+  void listenForIncomingCalls(BuildContext context) {
+    String currentUser = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+
+    // Listen for incoming calls where status is "waiting" and toUid matches the currentUser
+    db
+        .collection('calls')
+        .where('status', isEqualTo: 'waiting')
+        .where('toUid', isEqualTo: currentUser)
+        .snapshots()
+        .listen((QuerySnapshot snapshot) {
+      for (QueryDocumentSnapshot doc in snapshot.docs) {
+        String callId = doc.id;
+
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const VoiceCallPage(
+              mateUid: "your_mate_uid_here",
+            ),
+          ),
+        );
+      }
+    });
   }
 }
