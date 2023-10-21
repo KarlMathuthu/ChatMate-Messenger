@@ -124,19 +124,24 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(
+                  () => CallPage(
+                    callType: 'Audio',
+                    contactId: widget.mateUid,
+                    mateName: widget.mateName,
+                    isOffering: true,
+                    mateUid: widget.mateUid,
+                  ),
+                );
+              },
               icon: SvgPicture.asset(
                 "assets/icons/call.svg",
                 color: AppTheme.mainColor,
               ),
             ),
             IconButton(
-              onPressed: () {
-                Get.to(
-                  () => CallPage(),
-                  transition: Transition.cupertino,
-                );
-              },
+              onPressed: () {},
               icon: SvgPicture.asset(
                 "assets/icons/video.svg",
                 color: AppTheme.mainColor,

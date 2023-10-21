@@ -7,22 +7,22 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
-enum CallSituations {
-  Dialing,
-  InCall,
-  Done,
-}
+import '../../enums/call_situations.dart';
 
 class CallPage extends StatefulWidget {
-  static const ROUTE_NAME = '/callScreen';
-  String? name;
+  String? mateName;
   String? callType;
   String? contactId;
-  String? roomId;
+  String? mateUid;
   bool? isOffering;
 
-  CallPage(
-      {this.name, this.callType, this.contactId, this.isOffering, this.roomId});
+  CallPage({
+    this.mateName,
+    this.callType,
+    this.contactId,
+    this.isOffering,
+    this.mateUid,
+  });
 
   @override
   State<CallPage> createState() => _CallPageState();
@@ -34,8 +34,8 @@ class _CallPageState extends State<CallPage> {
   late String docID;
 
   bool isFirst = true;
-  RTCVideoRenderer _localVideoRenderer = RTCVideoRenderer();
-  RTCVideoRenderer _remoteVideoRenderer = RTCVideoRenderer();
+  final RTCVideoRenderer _localVideoRenderer = RTCVideoRenderer();
+  final RTCVideoRenderer _remoteVideoRenderer = RTCVideoRenderer();
 
   RTCPeerConnection? peerConnection;
 
@@ -53,8 +53,9 @@ class _CallPageState extends State<CallPage> {
     // TODO: implement initState
     super.initState();
     print(
-        'THIS IS SEROIS  isOffering : ${widget.isOffering} and contactID : ${widget.contactId} and RoomID : ${widget.roomId}');
-    docID = widget.roomId ?? '';
+      'THIS IS SEROIS  isOffering : ${widget.isOffering} and contactID : ${widget.contactId} and RoomID : ${widget.mateUid}',
+    );
+    docID = widget.mateUid ?? '';
     _localVideoRenderer.initialize();
     _remoteVideoRenderer.initialize();
     initLocalCamera();
@@ -89,22 +90,22 @@ class _CallPageState extends State<CallPage> {
             children: [
               ElevatedButton.icon(
                   onPressed: () {
-                    createAnswer(widget.roomId!);
+                    createAnswer(widget.mateUid!);
                   },
-                  icon: Icon(Icons.check),
-                  label: Text('answer')),
+                  icon: const Icon(Icons.check),
+                  label: const Text('answer')),
               ElevatedButton.icon(
                   onPressed: () {
                     hangUp(docID);
                   },
-                  icon: Icon(Icons.cancel),
-                  label: Text('cancel')),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('cancel')),
               ElevatedButton.icon(
                   onPressed: () {
                     setState(() {});
                   },
-                  icon: Icon(Icons.restart_alt),
-                  label: Text('state')),
+                  icon: const Icon(Icons.restart_alt),
+                  label: const Text('state')),
             ],
           )
         ],
@@ -181,8 +182,12 @@ class _CallPageState extends State<CallPage> {
   // }
 
   initLocalCamera() async {
-    _localStream = await navigator.mediaDevices
-        .getUserMedia({'video': true, 'audio': true});
+    _localStream = await navigator.mediaDevices.getUserMedia(
+      {
+        'video': true,
+        'audio': true,
+      },
+    );
     _localVideoRenderer.srcObject = _localStream;
     // _localVideoRenderer.srcObject = await navigator.mediaDevices
     //     .getUserMedia({'video': true, 'audio': true});
@@ -218,11 +223,13 @@ class _CallPageState extends State<CallPage> {
       'optional': []
     };
     peerConnection =
-        await createPeerConnection(configuration,offerSdpConstraints);
+        await createPeerConnection(configuration, offerSdpConstraints);
 
     peerConnection!.addStream(_localStream!);
 
-    // _localStream!.getTracks().forEach((track) => peerConnection!.addTrack(track,_localStream!));
+    _localStream!.getTracks().forEach(
+          (track) => peerConnection!.addTrack(track, _localStream!),
+        );
 
     print(
         'this is offer local streams lenght : ${peerConnection!.getLocalStreams().length}');
@@ -361,7 +368,8 @@ class _CallPageState extends State<CallPage> {
     if (roomSnapshot.exists) {
       print(
           'this answer Create PeerConnection with configuration: $configuration');
-      peerConnection = await createPeerConnection(configuration,offerSdpConstraints);
+      peerConnection =
+          await createPeerConnection(configuration, offerSdpConstraints);
       // _localStream = await initLocalCamera();
       peerConnection!.addStream(_localStream!);
 
@@ -469,34 +477,44 @@ class _CallPageState extends State<CallPage> {
 
   @override
   void dispose() {
-
     super.dispose();
     hangUp(docID);
     _localVideoRenderer.dispose();
     _remoteVideoRenderer.dispose();
   }
-  
-  void hangUp(String docId)async{
+
+  void hangUp(String docId) async {
     _localStream!.getTracks().forEach((element) {
       element.stop();
     });
-    if(_remoteStream !=null){
+    if (_remoteStream != null) {
       _remoteStream!.getTracks().forEach((element) {
         element.stop();
       });
     }
 
-    if(peerConnection != null){
+    if (peerConnection != null) {
       peerConnection!.close();
     }
     _localStream!.dispose();
     _remoteStream!.dispose();
     _localVideoRenderer.dispose();
     _remoteVideoRenderer.dispose();
-    await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection('Room').doc(docId).delete();
-    await FirebaseFirestore.instance.collection('users').doc(widget.contactId).collection('Room').doc(docId).delete();
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('Room')
+        .doc(docId)
+        .delete();
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.contactId)
+        .collection('Room')
+        .doc(docId)
+        .delete();
     Navigator.of(context).pop();
-    }
+  }
+
   void registerPeerConnectionListeners() {
     peerConnection?.onIceGatheringState = (RTCIceGatheringState state) {
       print('ICE gathering state changed: $state');
@@ -535,7 +553,7 @@ class _CallTimerState extends State<CallTimer> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeExpandedBySeconds += 1;
       });
