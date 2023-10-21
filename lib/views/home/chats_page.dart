@@ -35,34 +35,40 @@ class _ChatsPageState extends State<ChatsPage> {
     return 'No friend found';
   }
 
-  Future getUserNameByUID(String uid) async {
-    try {
-      var userDoc =
-          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+  Stream<String> getUserNameByUID(String uid) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map((userDoc) {
       if (userDoc.exists) {
         String userName = userDoc.data()?['userName'];
         return userName;
       } else {
         return "@ChatMateBot";
       }
-    } catch (e) {
+    }).handleError((error) {
+      print("Error fetching user data: $error");
       return "Error fetching user data";
-    }
+    });
   }
 
-  Future getUserStatus(String uid) async {
-    try {
-      var userDoc =
-          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+  Stream<String> getUserStatus(String uid) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map((userDoc) {
       if (userDoc.exists) {
         String userStatus = userDoc.data()?['userStatus'];
         return userStatus;
       } else {
         return "offline";
       }
-    } catch (e) {
+    }).handleError((error) {
+      print("Error fetching user status: $error");
       return "offline";
-    }
+    });
   }
 
   @override
@@ -110,8 +116,8 @@ class _ChatsPageState extends State<ChatsPage> {
 
                 int unreadMessageCount = unreadMessages.length;
 
-                return FutureBuilder(
-                  future: getUserNameByUID(getFriendUid(chatSnapshot, index)),
+                return StreamBuilder<String>(
+                  stream: getUserNameByUID(getFriendUid(chatSnapshot, index)),
                   builder: (context, friendUidSnapshot) {
                     if (friendUidSnapshot.connectionState ==
                         ConnectionState.waiting) {
@@ -186,8 +192,8 @@ class _ChatsPageState extends State<ChatsPage> {
                                 ),
                               )
                             : const SizedBox(),
-                        leading: FutureBuilder(
-                            future: getUserStatus(
+                        leading: StreamBuilder<String>(
+                            stream: getUserStatus(
                                 getFriendUid(chatSnapshot, index)),
                             builder: (context, userStatusSnap) {
                               if (!userStatusSnap.hasData) {

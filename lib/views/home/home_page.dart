@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../controllers/audio_call_controller.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
 
@@ -22,6 +24,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    //Listen to incoming calls
+    AudioCallHandler().listenForIncomingCalls(context);
   }
 
   @override

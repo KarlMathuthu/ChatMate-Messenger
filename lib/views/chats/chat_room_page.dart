@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/controllers/audio_call_controller.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/widgets/message_bar.dart';
@@ -124,7 +125,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                AudioCallHandler().makeCall(widget.mateUid);
+              },
               icon: SvgPicture.asset(
                 "assets/icons/call.svg",
                 color: AppTheme.mainColor,

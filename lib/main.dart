@@ -40,6 +40,7 @@ void main() async {
       }
     },
   );
+
   runApp(const MainApp());
 }
 
