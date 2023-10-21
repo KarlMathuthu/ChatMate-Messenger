@@ -110,10 +110,7 @@ class AudioCallHandler {
         Navigator.push(
           context,
           CupertinoPageRoute(
-            builder: (context) => const VoiceCallPage(
-              mateUid:
-                  "dTUVlCfuQvakNv2jtHaS71:APA91bH1CKOvS6hlIQhjFtDPKiyD70nTGSU50WYQaUBqxVfYxbagjdwkaG2tal3B2qxYANU_7kO6cDNYVSH2Htm6eSOyOcDuIA04HheEmXaxQSjO4uqGkqpfjpHEih3eY7CvPQmTfc1w",
-            ),
+            builder: (context) => const VoiceCallPage(),
           ),
         );
       }

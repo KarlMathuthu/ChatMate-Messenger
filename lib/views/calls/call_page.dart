@@ -33,6 +33,7 @@ class _CallMatePageState extends State<CallMatePage> {
     });
     signaling.openUserMedia(_localRenderer, _remoteRenderer);
     signaling.startCall(_remoteRenderer, widget.mateUid);
+    setState(() {});
 
     super.initState();
   }
@@ -51,23 +52,16 @@ class _CallMatePageState extends State<CallMatePage> {
       appBar: AppBar(
         title: Text(widget.mateName),
       ),
-      body: Stack(
+      body: Column(
         children: [
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: RTCVideoView(
-                      _localRenderer,
-                      mirror: true,
-                      filterQuality: FilterQuality.medium,
-                    ),
-                  ),
-                  Expanded(
-                    child: RTCVideoView(_remoteRenderer,),
-                  ),
+                  Expanded(child: RTCVideoView(_localRenderer, mirror: true)),
+                  Expanded(child: RTCVideoView(_remoteRenderer)),
                 ],
               ),
             ),
@@ -75,7 +69,7 @@ class _CallMatePageState extends State<CallMatePage> {
           //Render remote camera
           //Render local camera
           //end call, turn off video/mic
-          Align(
+          /*  Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: 60,
@@ -109,7 +103,7 @@ class _CallMatePageState extends State<CallMatePage> {
                 ],
               ),
             ),
-          ),
+          ), */
         ],
       ),
     );
