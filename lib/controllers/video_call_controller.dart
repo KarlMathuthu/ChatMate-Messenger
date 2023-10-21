@@ -228,8 +228,12 @@ class CallSignaling {
     RTCVideoRenderer localVideo,
     RTCVideoRenderer remoteVideo,
   ) async {
-    var stream = await navigator.mediaDevices
-        .getUserMedia({'video': true, 'audio': true});
+    var stream = await navigator.mediaDevices.getUserMedia(
+      {
+        'video': true,
+        'audio': true,
+      },
+    );
 
     localVideo.srcObject = stream;
     localStream = stream;

@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../controllers/audio_call_controller.dart';
+import '../../controllers/video_call_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -20,12 +20,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AuthController authController = Get.put(AuthController());
+  CallSignaling signaling = CallSignaling();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     //Listen to incoming calls
-    AudioCallHandler().listenForIncomingCalls(context);
+    signaling.listenForIncomingCalls(context);
   }
 
   @override

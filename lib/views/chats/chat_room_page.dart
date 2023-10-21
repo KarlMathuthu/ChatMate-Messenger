@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chat_mate_messanger/controllers/audio_call_controller.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/calls/call_page.dart';
 import 'package:chat_mate_messanger/widgets/message_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -125,16 +126,22 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                AudioCallHandler().makeCall(widget.mateUid);
-              },
+              onPressed: () {},
               icon: SvgPicture.asset(
                 "assets/icons/call.svg",
                 color: AppTheme.mainColor,
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(
+                  () => CallMatePage(
+                    mateName: widget.mateName,
+                    mateUid: widget.mateUid,
+                  ),
+                  transition: Transition.cupertino,
+                );
+              },
               icon: SvgPicture.asset(
                 "assets/icons/video.svg",
                 color: AppTheme.mainColor,
