@@ -1,6 +1,7 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:status_view/status_view.dart';
 
 class StatusesPage extends StatefulWidget {
   const StatusesPage({super.key});
@@ -10,12 +11,22 @@ class StatusesPage extends StatefulWidget {
 }
 
 class _StatusesPageState extends State<StatusesPage> {
+  List<String> names = [
+    "@AlexAmbrose",
+    "@DebbieClifton",
+    "@JustinAmbrose",
+  ];
+  List<int> numberOfStatus = [
+    3,
+    1,
+    5,
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBacgroundColor,
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             //My Status.
@@ -62,6 +73,43 @@ class _StatusesPageState extends State<StatusesPage> {
                   ),
                 ],
               ),
+            ),
+            ListView.builder(
+              itemCount: 3,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {},
+                  title: Text(
+                    names[index],
+                    style: GoogleFonts.lato(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  subtitle: Text(
+                    "Today at 15:04",
+                    style: GoogleFonts.lato(
+                      color: Colors.black54,
+                      fontSize: 13,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  leading: StatusView(
+                    radius: 25,
+                    spacing: 15,
+                    strokeWidth: 2,
+                    indexOfSeenStatus: 1,
+                    numberOfStatus: numberOfStatus[index],
+                    padding: 4,
+                    centerImageUrl: "https://picsum.photos/200/300",
+                    seenColor: Colors.grey,
+                    unSeenColor: Colors.red,
+                  ),
+                );
+              },
             ),
             //Recent Statuses.
             /*  Row(
