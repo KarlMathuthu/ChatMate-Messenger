@@ -1,5 +1,7 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/status/status_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:status_view/status_view.dart';
 
@@ -80,7 +82,12 @@ class _StatusesPageState extends State<StatusesPage> {
               physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) {
                 return ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(
+                      () => const StatusViewPage(),
+                      transition: Transition.cupertino,
+                    );
+                  },
                   title: Text(
                     names[index],
                     style: GoogleFonts.lato(
