@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:chat_mate_messanger/controllers/audio_call_controller.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/calls/call_page.dart';
@@ -135,10 +133,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             IconButton(
               onPressed: () {
                 Get.to(
-                  () => CallMatePage(
-                    mateName: widget.mateName,
-                    mateUid: widget.mateUid,
-                  ),
+                  () => CallPage(),
                   transition: Transition.cupertino,
                 );
               },
