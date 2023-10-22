@@ -15,12 +15,10 @@ class _CallPageState extends State<CallPage> {
   Signaling signaling = Signaling();
   RTCVideoRenderer localRenderer = RTCVideoRenderer();
   RTCVideoRenderer remoteRenderer = RTCVideoRenderer();
-
-  String? roomId;
   TextEditingController textEditingController = TextEditingController(text: '');
 
   @override
-  void initState() {
+  void initState() async {
     localRenderer.initialize();
     remoteRenderer.initialize();
     signaling.onAddRemoteStream = ((stream) {
@@ -28,7 +26,10 @@ class _CallPageState extends State<CallPage> {
       setState(() {});
     });
     signaling.openUserMedia(localRenderer, remoteRenderer);
-
+    await signaling.createRoom(
+      remoteRenderer,
+      widget.mateUid,
+    );
     super.initState();
   }
 
@@ -52,20 +53,6 @@ class _CallPageState extends State<CallPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  roomId = await signaling.createRoom(
-                    remoteRenderer,
-                    widget.mateUid,
-                  );
-                  textEditingController.text = roomId!;
-                  setState(() {});
-                },
-                child: Text("Create room"),
-              ),
-              SizedBox(
-                width: 8,
-              ),
               ElevatedButton(
                 onPressed: () {
                   // Add roomId
