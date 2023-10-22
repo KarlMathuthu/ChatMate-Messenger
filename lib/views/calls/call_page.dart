@@ -77,7 +77,7 @@ class _CallPageState extends State<CallPage> {
                   ),
                   child: audioCallLayout(widget.mateName, context),
                 )
-              : RTCVideoView(localRenderer, mirror: true),
+              : videoCallLayout(localRenderer, remoteRenderer),
           /* Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -94,6 +94,34 @@ class _CallPageState extends State<CallPage> {
       ),
     );
   }
+}
+
+Widget videoCallLayout(
+  RTCVideoRenderer localRenderer,
+  RTCVideoRenderer remoteRenderer,
+) {
+  return Stack(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: SizedBox(
+            height: 200,
+            width: 130,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: RTCVideoView(
+                localRenderer,
+                mirror: true,
+                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+              ),
+            ),
+          ),
+        ),
+      )
+    ],
+  );
 }
 
 Widget audioCallLayout(String mateName, BuildContext context) {
