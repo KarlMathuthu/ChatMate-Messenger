@@ -157,7 +157,8 @@ Widget audioCallLayout(String mateName) {
                   ),
                   onPressed: () {},
                   icon: SvgPicture.asset(
-                    "assets/icons/default.svg",
+                    "assets/icons/soundOn.svg",
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -172,7 +173,10 @@ Widget audioCallLayout(String mateName) {
                     ),
                   ),
                   onPressed: () {},
-                  icon: Icon(Icons.speaker),
+                  icon: SvgPicture.asset(
+                    "assets/icons/audioOn.svg",
+                    color: Colors.white,
+                  ),
                 ),
               ),
               //End call
