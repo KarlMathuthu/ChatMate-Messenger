@@ -134,29 +134,39 @@ class _NewChatPageState extends State<NewChatPage> {
         decoration: const BoxDecoration(
           color: AppTheme.scaffoldBacgroundColor,
         ),
-        child: Column(
-          children: [
-            Expanded(child: Column()),
-            //Write message
-            FutureBuilder(
-              future: getUserToken(widget.mateUid),
-              builder: (context, snapshot) {
-                final mateToken = snapshot.data;
+        child: widget.mateUid == auth.currentUser!.uid
+            ? Center(
+                child: Text(
+                  "You can't message yourself!",
+                  style: GoogleFonts.lato(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            : Column(
+                children: [
+                  Expanded(child: Column()),
+                  //Write message
+                  FutureBuilder(
+                    future: getUserToken(widget.mateUid),
+                    builder: (context, snapshot) {
+                      final mateToken = snapshot.data;
 
-                return CustomMessageBar(
-                  focusNode: focusNode,
-                  messageBarHintText: "Type a message",
-                  messageBarHintStyle: GoogleFonts.lato(fontSize: 14),
-                  textFieldTextStyle: GoogleFonts.lato(fontSize: 14),
-                  currentUser: auth.currentUser!.uid,
-                  chatRoomId: widget.chatRoomId,
-                  mateName: widget.mateName,
-                  mateToken: mateToken ?? "none",
-                );
-              },
-            )
-          ],
-        ),
+                      return CustomMessageBar(
+                        focusNode: focusNode,
+                        messageBarHintText: "Type a message",
+                        messageBarHintStyle: GoogleFonts.lato(fontSize: 14),
+                        textFieldTextStyle: GoogleFonts.lato(fontSize: 14),
+                        currentUser: auth.currentUser!.uid,
+                        chatRoomId: widget.chatRoomId,
+                        mateName: widget.mateName,
+                        mateToken: mateToken ?? "none",
+                      );
+                    },
+                  )
+                ],
+              ),
       ),
     );
   }
