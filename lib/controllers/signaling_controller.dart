@@ -73,7 +73,8 @@ class Signaling {
         .collection("users")
         .doc(mateUid)
         .collection("calls")
-        .add(
+        .doc(mateUid)
+        .update(
       {
         "calleeUid": currentUserUid,
         "callRoomId": roomId,
