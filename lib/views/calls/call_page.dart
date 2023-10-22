@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/signaling_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
@@ -74,7 +75,7 @@ class _CallPageState extends State<CallPage> {
                   decoration: const BoxDecoration(
                     color: AppTheme.callScaffoldColor,
                   ),
-                  child: audioCallLayout(widget.mateName),
+                  child: audioCallLayout(widget.mateName, context),
                 )
               : RTCVideoView(localRenderer, mirror: true),
           /* Expanded(
@@ -95,7 +96,7 @@ class _CallPageState extends State<CallPage> {
   }
 }
 
-Widget audioCallLayout(String mateName) {
+Widget audioCallLayout(String mateName, BuildContext context) {
   return Stack(
     children: [
       Align(
@@ -112,7 +113,7 @@ Widget audioCallLayout(String mateName) {
             ),
           ),
           title: Text(
-            "@$mateName",
+            "Voice Call",
             style: GoogleFonts.lato(
               color: Colors.white,
               fontSize: 18,
@@ -142,8 +143,21 @@ Widget audioCallLayout(String mateName) {
             mateName,
             style: GoogleFonts.lato(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 240),
+        child: Center(
+          child: Text(
+            "05:46 minutes",
+            style: GoogleFonts.lato(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.normal,
             ),
           ),
         ),
@@ -202,7 +216,39 @@ Widget audioCallLayout(String mateName) {
                       AppTheme.endCallButtonColor,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CupertinoAlertDialog(
+                          title: const Text("End Call"),
+                          content: const Text(
+                              "Are you sure you want to end this call?"),
+                          actions: <Widget>[
+                            CupertinoDialogAction(
+                              child: const Text("Cancel"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            CupertinoDialogAction(
+                              child: const Text(
+                                "End Call",
+                                style: TextStyle(
+                                  color: CupertinoColors.systemRed,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () {
+                                // Add your logic to end the call here
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   icon: SvgPicture.asset(
                     "assets/icons/endcall.svg",
                     color: Colors.white,
