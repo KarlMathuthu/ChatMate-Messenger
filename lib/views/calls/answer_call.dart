@@ -71,19 +71,7 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 240),
-            child: Center(
-              child: Text(
-                "05:46 minutes",
-                style: GoogleFonts.lato(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ),
-          ),
+         
           //Three buttons
           Align(
             alignment: Alignment.bottomCenter,
@@ -101,7 +89,7 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
                     child: IconButton.filled(
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(
-                          AppTheme.mainColor,
+                          AppTheme.mainColorLight,
                         ),
                       ),
                       onPressed: () {},
@@ -124,7 +112,7 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
                       ),
                       onPressed: () {},
                       icon: SvgPicture.asset(
-                        "assets/icons/endcall.svg",
+                        "assets/icons/declineCall.svg",
                         color: Colors.white,
                       ),
                     ),
