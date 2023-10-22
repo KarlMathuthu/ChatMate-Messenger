@@ -129,6 +129,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   () => CallPage(
                     mateUid: widget.mateUid,
                     callType: "audio",
+                    mateName: widget.mateName,
                   ),
                 );
               },
@@ -143,6 +144,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   () => CallPage(
                     mateUid: widget.mateUid,
                     callType: "video",
+                    mateName: widget.mateName,
                   ),
                 );
               },

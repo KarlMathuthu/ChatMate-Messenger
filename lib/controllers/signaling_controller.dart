@@ -228,6 +228,8 @@ class Signaling {
           );
         });
       });
+      //Call connected.
+      print("Call connected successfully!");
     }
   }
 

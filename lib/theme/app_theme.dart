@@ -8,4 +8,7 @@ class AppTheme {
   static const scaffoldBacgroundColor = Colors.white;
   static const textfieldActiveBorderColor = Color.fromARGB(255, 127, 170, 255);
   static const textfieldActiveColor = Color.fromARGB(110, 225, 235, 255);
+  static const endCallButtonColor = Color.fromARGB(255, 247, 85, 85);
+  static const callButtonsColor = Color.fromARGB(255, 98, 91, 94);
+  static const callScaffoldColor = Color.fromARGB(255, 22, 20, 24);
 }
