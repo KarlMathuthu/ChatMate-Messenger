@@ -167,9 +167,7 @@ class _NewChatPageState extends State<NewChatPage> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
+                                return Center();
                               } else if (snapshot.hasError) {
                                 return Center(
                                   child: Text("Error: ${snapshot.error}"),
@@ -184,6 +182,9 @@ class _NewChatPageState extends State<NewChatPage> {
                                 List<dynamic> messages =
                                     snapshot.data!.data()!["messages"];
 
+                                messages.sort((a, b) =>
+                                    b["timestamp"].compareTo(a["timestamp"]));
+
                                 return ListView.builder(
                                   shrinkWrap: true,
                                   physics: const ClampingScrollPhysics(),
@@ -194,8 +195,7 @@ class _NewChatPageState extends State<NewChatPage> {
                                                 [index]["sender"] ==
                                             auth.currentUser!.uid;
 
-                                    bool isRead = snapshot.data!
-                                        .data()!["messages"][index]["read"];
+                                    bool isRead = messages[index]["read"];
                                     bool isSent = isRead == false;
 
                                     return GestureDetector(
@@ -203,20 +203,16 @@ class _NewChatPageState extends State<NewChatPage> {
                                         chatController.showCustomDialog(
                                           context: context,
                                           isCurrentUser: isSender,
-                                          message:
-                                              snapshot.data!.data()!["messages"]
-                                                  [index]["messageText"],
+                                          message: messages[index]
+                                              ["messageText"],
                                           chatId: widget.chatRoomId,
                                           messageId: snapshot.data!.id,
                                         );
                                       },
                                       child: MyChatBubble(
-                                        message:
-                                            snapshot.data!.data()!["messages"]
-                                                [index]["messageText"],
+                                        message: messages[index]["messageText"],
                                         isSender: isSender,
-                                        type: snapshot.data!.data()!["messages"]
-                                            [index]["messageType"],
+                                        type: messages[index]["messageType"],
                                         //isRead: isRead,
                                         //isDelivered: isDelivered,
                                         //isSent: isSent,
