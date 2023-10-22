@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class CallPage extends StatefulWidget {
-  const CallPage({super.key});
+  const CallPage({super.key, required this.mateUid});
+  final String mateUid;
 
   @override
   State<CallPage> createState() => _CallPageState();
@@ -53,7 +54,10 @@ class _CallPageState extends State<CallPage> {
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  roomId = await signaling.createRoom(remoteRenderer);
+                  roomId = await signaling.createRoom(
+                    remoteRenderer,
+                    widget.mateUid,
+                  );
                   textEditingController.text = roomId!;
                   setState(() {});
                 },

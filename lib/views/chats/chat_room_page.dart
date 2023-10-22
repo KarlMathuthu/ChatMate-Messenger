@@ -126,7 +126,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             IconButton(
               onPressed: () {
                 Get.to(
-                  () => CallPage(),
+                  () => CallPage(
+                    mateUid: widget.mateUid,
+                  ),
                 );
               },
               icon: SvgPicture.asset(
