@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     //Listen for incoming calls.
-    signaling.listenForCallCollectionChanges();
+    signaling.listenForCallCollectionChanges(context);
   }
 
   @override

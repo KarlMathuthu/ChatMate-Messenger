@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 typedef StreamStateCallback = void Function(MediaStream stream);
@@ -127,7 +128,7 @@ class Signaling {
   }
 
   //Listen for incomming calls.
-  void listenForCallCollectionChanges() {
+  void listenForCallCollectionChanges(BuildContext context) {
     String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
     final callCollection = FirebaseFirestore.instance
         .collection("users")
@@ -139,7 +140,7 @@ class Signaling {
         for (var change in querySnapshot.docChanges) {
           if (change.type == DocumentChangeType.added) {
             print("Something else added in calls");
-            // You can access the added document's data using change.doc.data()
+           Navigator.push(context, route)
           }
         }
       }
