@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../theme/app_theme.dart';
 
@@ -191,6 +192,7 @@ class _ContactsPageState extends State<ContactsPage> {
                     itemBuilder: (context, index) {
                       bool isUserOnline =
                           snapshot.data!.docs[index]["userStatus"] == "online";
+                      String chatRoomId = const Uuid().v1();
 
                       return ListTile(
                         onTap: () async {
@@ -200,6 +202,7 @@ class _ContactsPageState extends State<ContactsPage> {
                               mateStatus: snapshot.data!.docs[index]
                                   ["userStatus"],
                               mateUid: snapshot.data!.docs[index]["userUid"],
+                              chatRoomId: chatRoomId,
                             ),
                             transition: Transition.cupertino,
                           );

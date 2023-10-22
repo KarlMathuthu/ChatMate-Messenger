@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../theme/app_theme.dart';
-import '../calls/answer_call.dart';
+import '../../widgets/message_bar.dart';
 import '../calls/call_page.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -16,22 +18,41 @@ class NewChatPage extends StatefulWidget {
     required this.mateName,
     required this.mateStatus,
     required this.mateUid,
+    required this.chatRoomId,
   });
   final String mateName;
   final String mateStatus;
   final String mateUid;
+  final String chatRoomId;
 
   @override
   State<NewChatPage> createState() => _NewChatPageState();
 }
 
 class _NewChatPageState extends State<NewChatPage> {
+  FocusNode focusNode = FocusNode();
+  FirebaseAuth auth = FirebaseAuth.instance;
   DateTime getTime(String userStatus) {
     DateTime? dateTime = DateTime.tryParse(userStatus);
     if (dateTime != null) {
       return dateTime;
     } else {
       return DateTime.now();
+    }
+  }
+
+  Future getUserToken(String uid) async {
+    try {
+      var userDoc =
+          await FirebaseFirestore.instance.collection("users").doc(uid).get();
+      if (userDoc.exists) {
+        String userName = userDoc.data()?['fcmToken'];
+        return userName;
+      } else {
+        return "false";
+      }
+    } catch (e) {
+      return "false";
     }
   }
 
@@ -91,13 +112,13 @@ class _NewChatPageState extends State<NewChatPage> {
           ),
           IconButton(
             onPressed: () {
-              /*  Get.to(
-                  () => CallPage(
-                    mateUid: widget.mateUid,
-                    callType: "video",
-                    mateName: widget.mateName,
-                  ),
-                ); */
+              Get.to(
+                () => CallPage(
+                  mateUid: widget.mateUid,
+                  callType: "video",
+                  mateName: widget.mateName,
+                ),
+              );
             },
             icon: SvgPicture.asset(
               "assets/icons/video.svg",
@@ -105,6 +126,37 @@ class _NewChatPageState extends State<NewChatPage> {
             ),
           ),
         ],
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        margin: const EdgeInsets.only(top: 0.8),
+        decoration: const BoxDecoration(
+          color: AppTheme.scaffoldBacgroundColor,
+        ),
+        child: Column(
+          children: [
+            Expanded(child: Column()),
+            //Write message
+            FutureBuilder(
+              future: getUserToken(widget.mateUid),
+              builder: (context, snapshot) {
+                final mateToken = snapshot.data;
+
+                return CustomMessageBar(
+                  focusNode: focusNode,
+                  messageBarHintText: "Type a message",
+                  messageBarHintStyle: GoogleFonts.lato(fontSize: 14),
+                  textFieldTextStyle: GoogleFonts.lato(fontSize: 14),
+                  currentUser: auth.currentUser!.uid,
+                  chatRoomId: widget.chatRoomId,
+                  mateName: widget.mateName,
+                  mateToken: mateToken ?? "none",
+                );
+              },
+            )
+          ],
+        ),
       ),
     );
   }
