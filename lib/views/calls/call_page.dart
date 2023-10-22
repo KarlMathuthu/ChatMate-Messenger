@@ -71,7 +71,7 @@ class _CallPageState extends State<CallPage> {
               ? Container(
                   width: double.infinity,
                   height: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppTheme.callScaffoldColor,
                   ),
                   child: audioCallLayout(widget.mateName),
@@ -135,12 +135,25 @@ Widget audioCallLayout(String mateName) {
           ),
         ),
       ),
+      Padding(
+        padding: const EdgeInsets.only(top: 180),
+        child: Center(
+          child: Text(
+            mateName,
+            style: GoogleFonts.lato(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
       //Three buttons
       Align(
         alignment: Alignment.bottomCenter,
         child: Container(
           height: 80,
-          margin: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           width: double.infinity,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -150,7 +163,7 @@ Widget audioCallLayout(String mateName) {
                 height: 60,
                 width: 60,
                 child: IconButton.filled(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(
                       AppTheme.callButtonsColor,
                     ),
@@ -167,7 +180,7 @@ Widget audioCallLayout(String mateName) {
                 height: 60,
                 width: 60,
                 child: IconButton.filled(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(
                       AppTheme.callButtonsColor,
                     ),
@@ -184,7 +197,7 @@ Widget audioCallLayout(String mateName) {
                 height: 60,
                 width: 60,
                 child: IconButton.filled(
-                  style: ButtonStyle(
+                  style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(
                       AppTheme.endCallButtonColor,
                     ),
