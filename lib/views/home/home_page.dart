@@ -1,4 +1,5 @@
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
+import 'package:chat_mate_messanger/controllers/signaling_controller.dart';
 import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/home/calls_page.dart';
@@ -18,10 +19,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AuthController authController = Get.put(AuthController());
+  Signaling signaling = Signaling();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    //Listen for incoming calls.
+    signaling.listenForCallCollectionChanges();
   }
 
   @override
