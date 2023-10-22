@@ -112,10 +112,24 @@ Widget videoCallLayout(
 ) {
   return Stack(
     children: [
+      //Remote RTCVideoView
+      Align(
+        alignment: Alignment.center,
+        child: SizedBox(
+          height: double.infinity,
+          width: double.infinity,
+          child: RTCVideoView(
+            localRenderer,
+            mirror: true,
+            objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+          ),
+        ),
+      ),
+      //Local RTCVideoView
       Align(
         alignment: Alignment.topCenter,
         child: AppBar(
-          backgroundColor: AppTheme.callScaffoldColor,
+          backgroundColor: Colors.transparent,
           leading: IconButton(
             onPressed: () {
               Get.back();
@@ -125,13 +139,25 @@ Widget videoCallLayout(
               color: Colors.white,
             ),
           ),
-          title: Text(
-            "@$mateName",
-            style: GoogleFonts.lato(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          title: Column(
+            children: [
+              Text(
+                "@$mateName",
+                style: GoogleFonts.lato(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "05:46 minutes",
+                style: GoogleFonts.lato(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ],
           ),
           centerTitle: true,
         ),
@@ -180,7 +206,7 @@ Widget videoCallLayout(
                   ),
                 ),
               ),
-            
+
               //mute
               SizedBox(
                 height: 60,
