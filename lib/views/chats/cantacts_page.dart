@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import 'package:chat_mate_messanger/controllers/chat_controller.dart';
+import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../theme/app_theme.dart';
 
@@ -17,6 +21,8 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+  ChatController chatController = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,8 +192,27 @@ class _ContactsPageState extends State<ContactsPage> {
                     itemBuilder: (context, index) {
                       bool isUserOnline =
                           snapshot.data!.docs[index]["userStatus"] == "online";
+                      List<String> members = [
+                        currentUserUid,
+                        snapshot.data!.docs[index]["userUid"],
+                      ];
+
                       return ListTile(
-                        onTap: () {},
+                        onTap: () async {
+                          await chatController.createChat(
+                            members: members,
+                            senderId: currentUserUid,
+                            messageText: "Say Hi",
+                            type: "text",
+                          );
+                          Get.to(
+                            () => ChatRoomPage(
+                              mateName: snapshot.data!.docs[index]["userName"],
+                              mateUid: snapshot.data!.docs[index]["userUid"],
+                              chatRoomId: "chatRoomId",
+                            ),
+                          );
+                        },
                         title: Text(
                           "@${snapshot.data!.docs[index]["userName"]}",
                           style: GoogleFonts.lato(

@@ -12,7 +12,7 @@ class ChatController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Create Chat
-  Future<void> createChat({
+  Future<String> createChat({
     required List<String> members,
     required String senderId,
     required String messageText,
@@ -40,11 +40,13 @@ class ChatController extends GetxController {
         "read": false,
         "type": type,
       };
-      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
       await updateLastMessage(chatRoomId, lastMessage);
+      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
+      return chatRoomId;
     } catch (e) {
       print('Error creating chat: $e');
     }
+    return "none";
   }
 
   // Send Message

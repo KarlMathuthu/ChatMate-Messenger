@@ -312,6 +312,7 @@ class AppSettingsPage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
+                Navigator.of(context).pop();
                 customLoader.showLoader(context);
                 authController.logout(customLoader: customLoader);
               },

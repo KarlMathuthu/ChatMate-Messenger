@@ -122,7 +122,7 @@ class _ChatsPageState extends State<ChatsPage> {
                     if (friendUidSnapshot.connectionState ==
                         ConnectionState.waiting) {
                       return const SizedBox();
-                    } else if (friendUidSnapshot.hasError) {
+                    } else if (!friendUidSnapshot.hasData) {
                       return const SizedBox();
                     } else {
                       String friendUsername = friendUidSnapshot.data.toString();
