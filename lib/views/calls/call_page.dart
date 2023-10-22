@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -86,19 +85,37 @@ class _CallPageState extends State<CallPage> {
                   widget.mateName,
                   context,
                 ),
-          /* Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                 
-                  Expanded(child: RTCVideoView(remoteRenderer)),
-                ],
-              ),
-            ),
-          ), */
         ],
+      ),
+    );
+  }
+}
+
+Widget renderVideoOrText(RTCVideoRenderer remoteRender, String mateName) {
+  if (remoteRender.textureId != null) {
+    return Align(
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: double.infinity,
+        width: double.infinity,
+        child: RTCVideoView(
+          remoteRender,
+          objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+        ),
+      ),
+    );
+  } else {
+    return Container(
+      color: AppTheme.callScaffoldColor,
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
+        child: Text(
+          "Calling $mateName ...",
+          style: GoogleFonts.lato(
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
@@ -112,19 +129,7 @@ Widget videoCallLayout(
 ) {
   return Stack(
     children: [
-      //Remote RTCVideoView
-      Align(
-        alignment: Alignment.center,
-        child: SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: RTCVideoView(
-            localRenderer,
-            mirror: true,
-            objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-          ),
-        ),
-      ),
+      renderVideoOrText(remoteRenderer, mateName),
       //Local RTCVideoView
       Align(
         alignment: Alignment.topCenter,
