@@ -31,6 +31,7 @@ class Signaling {
   Future<String> createRoom(
     RTCVideoRenderer? remoteRenderer,
     String mateUid,
+    String callType,
   ) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference roomRef = db.collection('calls').doc();
@@ -74,11 +75,13 @@ class Signaling {
         .doc(mateUid)
         .collection("calls")
         .doc(mateUid)
-        .update(
+        .set(
       {
         "calleeUid": currentUserUid,
         "callRoomId": roomId,
+        "callType": callType,
         "time": DateTime.now(),
+        "callState": "dialing",
       },
     );
 

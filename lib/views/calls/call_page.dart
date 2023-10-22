@@ -42,7 +42,7 @@ class _CallPageState extends State<CallPage> {
       remoteRenderer,
       widget.callType,
     );
-    //initializeCall();
+    initializeCall();
     super.initState();
   }
 
@@ -50,6 +50,7 @@ class _CallPageState extends State<CallPage> {
     await signaling.createRoom(
       remoteRenderer,
       widget.mateUid,
+      widget.callType,
     );
     setState(() {});
   }

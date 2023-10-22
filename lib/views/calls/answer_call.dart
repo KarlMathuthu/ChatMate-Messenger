@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/signaling_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/calls/call_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,10 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
   String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String? callId;
+  String? callType;
 
-  void answerCall() async {
-    firestore
+  void getCallRoom() async {
+    await firestore
         .collection("users")
         .doc(currentUserUid)
         .collection("calls")
@@ -32,8 +34,34 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
         .then(
           (value) => {
             callId = value["callRoomId"],
+            callType = value["callType"],
           },
         );
+  }
+
+  void answerCall() async {
+    await signaling.joinRoom(
+      callId ?? "none",
+      null,
+    );
+  }
+
+  void declineCall() async {}
+
+  void initilizaMedia() async {
+    signaling.openUserMedia(
+      null,
+      null,
+      callType ?? "audio",
+    );
+    print("Got user media");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCallRoom();
+    initilizaMedia();
   }
 
   @override
@@ -104,7 +132,9 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
                           AppTheme.mainColorLight,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        answerCall();
+                      },
                       icon: SvgPicture.asset(
                         "assets/icons/call.svg",
                         color: Colors.white,
