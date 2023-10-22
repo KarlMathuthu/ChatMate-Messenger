@@ -40,8 +40,9 @@ class ChatController extends GetxController {
         "read": false,
         "type": type,
       };
-      await updateLastMessage(chatRoomId, lastMessage);
+
       await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
+      await updateLastMessage(chatRoomId, lastMessage);
       return chatRoomId;
     } catch (e) {
       print('Error creating chat: $e');

@@ -16,6 +16,8 @@ class CustomMessageBar extends StatefulWidget {
   final String chatRoomId;
   final String mateName;
   final String mateToken;
+  final bool isNewChat;
+  final String? mateUid;
 
   CustomMessageBar({
     this.messageBarColor = const Color(0xffF4F4F5),
@@ -23,11 +25,13 @@ class CustomMessageBar extends StatefulWidget {
     this.messageBarHintText = "Type your message here",
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.textFieldTextStyle = const TextStyle(color: Colors.black),
+    this.mateUid,
     required this.focusNode,
     required this.currentUser,
     required this.chatRoomId,
     required this.mateName,
     required this.mateToken,
+    required this.isNewChat,
   });
 
   @override
@@ -111,13 +115,24 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
               : IconButton(
                   onPressed: () async {
                     if (_textController.text.trim() != '') {
-                      //send message
-                      chatController.sendMessage(
-                        chatId: widget.chatRoomId,
-                        senderId: widget.currentUser,
-                        messageText: _textController.text.trim(),
-                        type: "text",
-                      );
+                      widget.isNewChat
+                          ? chatController.createChat(
+                              members: [
+                                widget.currentUser,
+                                widget.mateUid ?? "",
+                              ],
+                              senderId: widget.currentUser,
+                              messageText: _textController.text.trim(),
+                              type: "text",
+                            )
+                          :
+                          //send message
+                          chatController.sendMessage(
+                              chatId: widget.chatRoomId,
+                              senderId: widget.currentUser,
+                              messageText: _textController.text.trim(),
+                              type: "text",
+                            );
                     }
                     _textController.text = '';
                     //send notifcation
