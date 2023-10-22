@@ -33,7 +33,7 @@ class Signaling {
     String mateUid,
   ) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference roomRef = db.collection('calls').doc(mateUid);
+    DocumentReference roomRef = db.collection('calls').doc();
 
     print('Create PeerConnection with configuration: $configuration');
 

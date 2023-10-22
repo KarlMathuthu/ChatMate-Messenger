@@ -15,10 +15,9 @@ class _CallPageState extends State<CallPage> {
   Signaling signaling = Signaling();
   RTCVideoRenderer localRenderer = RTCVideoRenderer();
   RTCVideoRenderer remoteRenderer = RTCVideoRenderer();
-  TextEditingController textEditingController = TextEditingController(text: '');
 
   @override
-  void initState() async {
+  void initState() {
     localRenderer.initialize();
     remoteRenderer.initialize();
     signaling.onAddRemoteStream = ((stream) {
@@ -26,11 +25,16 @@ class _CallPageState extends State<CallPage> {
       setState(() {});
     });
     signaling.openUserMedia(localRenderer, remoteRenderer);
+    initializeCall();
+    super.initState();
+  }
+
+  void initializeCall() async {
     await signaling.createRoom(
       remoteRenderer,
       widget.mateUid,
     );
-    super.initState();
+    setState(() {});
   }
 
   @override
@@ -49,32 +53,6 @@ class _CallPageState extends State<CallPage> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Add roomId
-                  signaling.joinRoom(
-                    textEditingController.text.trim(),
-                    remoteRenderer,
-                  );
-                },
-                child: Text("Join room"),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  signaling.hangUp(localRenderer);
-                },
-                child: Text("Hangup"),
-              )
-            ],
-          ),
-          SizedBox(height: 8),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -87,21 +65,6 @@ class _CallPageState extends State<CallPage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Join the following Room: "),
-                Flexible(
-                  child: TextFormField(
-                    controller: textEditingController,
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(height: 8)
         ],
       ),
     );
