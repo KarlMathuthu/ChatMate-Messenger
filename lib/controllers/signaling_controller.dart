@@ -29,7 +29,7 @@ class Signaling {
   StreamStateCallback? onAddRemoteStream;
 
   Future<String> createRoom(
-    RTCVideoRenderer remoteRenderer,
+    RTCVideoRenderer? remoteRenderer,
     String mateUid,
   ) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -154,7 +154,7 @@ class Signaling {
     });
   }
 
-  Future<void> joinRoom(String roomId, RTCVideoRenderer remoteVideo) async {
+  Future<void> joinRoom(String roomId, RTCVideoRenderer? remoteVideo) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     print(roomId);
     DocumentReference roomRef = db.collection('calls').doc(roomId);
@@ -232,20 +232,21 @@ class Signaling {
   }
 
   Future<void> openUserMedia(
-    RTCVideoRenderer localVideo,
-    RTCVideoRenderer remoteVideo,
+    RTCVideoRenderer? localVideo,
+    RTCVideoRenderer? remoteVideo,
+    String callType,
   ) async {
     var stream = await navigator.mediaDevices.getUserMedia(
       {
-        'video': true,
-        'audio': true,
+        'video': callType == "video" ? true : false,
+        'audio': callType == "audio" ? true : false,
       },
     );
 
-    localVideo.srcObject = stream;
+    localVideo?.srcObject = stream;
     localStream = stream;
 
-    remoteVideo.srcObject = await createLocalMediaStream('key');
+    remoteVideo?.srcObject = await createLocalMediaStream('key');
   }
 
   Future<void> hangUp(RTCVideoRenderer localVideo) async {

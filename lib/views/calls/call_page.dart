@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class CallPage extends StatefulWidget {
-  const CallPage({super.key, required this.mateUid});
+  const CallPage({
+    super.key,
+    required this.mateUid,
+    required this.callType,
+  });
   final String mateUid;
+  final String callType;
 
   @override
   State<CallPage> createState() => _CallPageState();
@@ -24,8 +29,12 @@ class _CallPageState extends State<CallPage> {
       remoteRenderer.srcObject = stream;
       setState(() {});
     });
-    signaling.openUserMedia(localRenderer, remoteRenderer);
-    initializeCall();
+    signaling.openUserMedia(
+      localRenderer,
+      remoteRenderer,
+      widget.callType,
+    );
+    //initializeCall();
     super.initState();
   }
 
@@ -48,25 +57,49 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBacgroundColor,
-      appBar: AppBar(
-        title: Text("Call Page"),
-      ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
+          widget.callType == "audio"
+              ? Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  child: audioCallLayout(),
+                )
+              : RTCVideoView(localRenderer, mirror: true),
+          /* Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(child: RTCVideoView(localRenderer, mirror: true)),
+                 
                   Expanded(child: RTCVideoView(remoteRenderer)),
                 ],
               ),
             ),
-          ),
+          ), */
         ],
       ),
     );
   }
+}
+
+Widget audioCallLayout() {
+  return Stack(
+    children: [
+      Center(
+        child: Container(
+          height: 200,
+          width: 200,
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(100),
+          ),
+        ),
+      ),
+    ],
+  );
 }

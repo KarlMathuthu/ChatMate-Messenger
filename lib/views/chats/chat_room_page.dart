@@ -128,6 +128,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                 Get.to(
                   () => CallPage(
                     mateUid: widget.mateUid,
+                    callType: "audio",
                   ),
                 );
               },
@@ -137,7 +138,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(
+                  () => CallPage(
+                    mateUid: widget.mateUid,
+                    callType: "video",
+                  ),
+                );
+              },
               icon: SvgPicture.asset(
                 "assets/icons/video.svg",
                 color: AppTheme.mainColor,
