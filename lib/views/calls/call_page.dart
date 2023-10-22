@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:chat_mate_messanger/controllers/signaling_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CallPage extends StatefulWidget {
   const CallPage({
@@ -90,13 +95,38 @@ class _CallPageState extends State<CallPage> {
 Widget audioCallLayout() {
   return Stack(
     children: [
+      Align(
+        alignment: Alignment.topCenter,
+        child: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(
+              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+            ),
+          ),
+          title: Text(
+            "Settings",
+            style: GoogleFonts.lato(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
+        ),
+      ),
       Center(
         child: Container(
-          height: 200,
-          width: 200,
+          height: 150,
+          width: 150,
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(100),
+          ),
+          child: SvgPicture.asset(
+            "assets/icons/default.svg",
           ),
         ),
       ),
