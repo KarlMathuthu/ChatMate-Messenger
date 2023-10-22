@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 typedef StreamStateCallback = void Function(MediaStream stream);
@@ -24,9 +25,12 @@ class Signaling {
   String? currentRoomText;
   StreamStateCallback? onAddRemoteStream;
 
-  Future<String> createRoom(RTCVideoRenderer remoteRenderer) async {
+  Future<String> createRoom(
+    RTCVideoRenderer remoteRenderer,
+    String mateUid,
+  ) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference roomRef = db.collection('rooms').doc();
+    DocumentReference roomRef = db.collection('calls').doc(mateUid);
 
     print('Create PeerConnection with configuration: $configuration');
 
@@ -52,13 +56,27 @@ class Signaling {
     await peerConnection!.setLocalDescription(offer);
     print('Created offer: $offer');
 
-    Map<String, dynamic> roomWithOffer = {'offer': offer.toMap()};
+    Map<String, dynamic> roomWithOffer = {
+      'offer': offer.toMap(),
+    };
 
     await roomRef.set(roomWithOffer);
     var roomId = roomRef.id;
     print('New room created with SDK offer. Room ID: $roomId');
     currentRoomText = 'Current room is $roomId - You are the caller!';
-    // Created a Room
+    String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+    //Set the room Id to the mate you're calling
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(mateUid)
+        .collection("calls")
+        .add(
+      {
+        "calleeUid": currentUserUid,
+        "callRoomId": roomId,
+        "time": DateTime.now(),
+      },
+    );
 
     peerConnection?.onTrack = (RTCTrackEvent event) {
       print('Got remote track: ${event.streams[0]}');
@@ -108,10 +126,30 @@ class Signaling {
     return roomId;
   }
 
+  //Listen for incomming calls.
+  void listenForCallCollectionChanges() {
+    String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+    final callCollection = FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUserUid)
+        .collection("calls");
+
+    callCollection.snapshots().listen((querySnapshot) {
+      if (querySnapshot.docChanges.isNotEmpty) {
+        for (var change in querySnapshot.docChanges) {
+          if (change.type == DocumentChangeType.added) {
+            print("Something else added in calls");
+            // You can access the added document's data using change.doc.data()
+          }
+        }
+      }
+    });
+  }
+
   Future<void> joinRoom(String roomId, RTCVideoRenderer remoteVideo) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     print(roomId);
-    DocumentReference roomRef = db.collection('rooms').doc('$roomId');
+    DocumentReference roomRef = db.collection('calls').doc(roomId);
     var roomSnapshot = await roomRef.get();
     print('Got room ${roomSnapshot.exists}');
 
@@ -158,7 +196,10 @@ class Signaling {
       await peerConnection!.setLocalDescription(answer);
 
       Map<String, dynamic> roomWithAnswer = {
-        'answer': {'type': answer.type, 'sdp': answer.sdp}
+        'answer': {
+          'type': answer.type,
+          'sdp': answer.sdp,
+        }
       };
 
       await roomRef.update(roomWithAnswer);
@@ -186,8 +227,12 @@ class Signaling {
     RTCVideoRenderer localVideo,
     RTCVideoRenderer remoteVideo,
   ) async {
-    var stream = await navigator.mediaDevices
-        .getUserMedia({'video': true, 'audio': false});
+    var stream = await navigator.mediaDevices.getUserMedia(
+      {
+        'video': true,
+        'audio': true,
+      },
+    );
 
     localVideo.srcObject = stream;
     localStream = stream;
@@ -208,7 +253,7 @@ class Signaling {
 
     if (roomId != null) {
       var db = FirebaseFirestore.instance;
-      var roomRef = db.collection('rooms').doc(roomId);
+      var roomRef = db.collection('calls').doc(roomId);
       var calleeCandidates = await roomRef.collection('calleeCandidates').get();
       calleeCandidates.docs.forEach((document) => document.reference.delete());
 
