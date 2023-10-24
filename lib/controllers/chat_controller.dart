@@ -185,7 +185,9 @@ class ChatController extends GetxController {
 
       // Update the "last_message" field of the chat document
       await chats.doc(chatId).update({'last_message': lastMessage});
-    } catch (e) {}
+    } catch (e) {
+      print("Failed to updated last_message $e");
+    }
   }
 
   //User Status
