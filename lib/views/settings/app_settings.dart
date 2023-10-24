@@ -112,6 +112,9 @@ class AppSettingsPage extends StatelessWidget {
                   } else {
                     String username = snapshot.data!.get("userName");
                     String userbio = snapshot.data!.get("userBio");
+                    String initials = username[0].toUpperCase() +
+                        username[username.length - 1].toUpperCase();
+
                     return ListTile(
                       onTap: () {},
                       title: Text(
@@ -135,10 +138,20 @@ class AppSettingsPage extends StatelessWidget {
                         width: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
-                          color: AppTheme.mainColor,
+                          color: AppTheme.loaderColor,
                         ),
                         child: Stack(
                           children: [
+                            Center(
+                              child: Text(
+                                initials,
+                                style: GoogleFonts.lato(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                             Positioned(
                               bottom: 0,
                               right: 0,
