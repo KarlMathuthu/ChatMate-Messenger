@@ -201,7 +201,7 @@ class _ContactsPageState extends State<ContactsPage> {
                             () => ChatRoomPage(
                               mateName: snapshot.data!.docs[index]["userName"],
                               mateUid: snapshot.data!.docs[index]["userUid"],
-                              chatRoomId: chatRoomId,
+                              chatRoomId: currentUserUid,
                               isNewChat: true,
                             ),
                           );

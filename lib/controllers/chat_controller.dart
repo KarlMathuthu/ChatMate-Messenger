@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 
 import '../model/chat_model.dart';
 import '../model/message_model.dart';
@@ -19,7 +18,8 @@ class ChatController extends GetxController {
     required String type,
   }) async {
     try {
-      String chatRoomId = const Uuid().v1();
+      //String chatRoomId = const Uuid().v1();
+      String chatRoomId = FirebaseAuth.instance.currentUser!.uid;
       // Create a new chat model
       final ChatModel newChat = ChatModel(
         chatId: chatRoomId,
