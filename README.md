@@ -120,8 +120,6 @@ I appreciate your support and contributions!
 
 If you find ChatMate - Messenger useful or interesting, don't forget to give us a star on GitHub. Your support keeps us motivated to continue improving the app.
 
-[Add download or usage instructions here if applicable]
-
 Happy chatting! 😊📱📢📸🎉
 
 ## Developer
