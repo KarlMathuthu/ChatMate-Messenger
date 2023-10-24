@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../widgets/status_view_widget.dart';
 
@@ -28,6 +29,15 @@ class _StatusesPageState extends State<StatusesPage> {
     1,
     5,
   ];
+  DateTime getTime(String userStatus) {
+    DateTime? dateTime = DateTime.tryParse(userStatus);
+    if (dateTime != null) {
+      return dateTime;
+    } else {
+      return DateTime.now();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,6 +192,11 @@ class _StatusesPageState extends State<StatusesPage> {
                       String userName = statusMap["userName"];
                       String initials = userName[0].toUpperCase() +
                           userName[userName.length - 1].toUpperCase();
+                      String statusUpdateTime = timeago.format(
+                        getTime(
+                          statusMap["timestamp"].toString(),
+                        ),
+                      );
                       return ListTile(
                         onTap: () {
                           Get.to(
@@ -198,7 +213,7 @@ class _StatusesPageState extends State<StatusesPage> {
                           ),
                         ),
                         subtitle: Text(
-                          "Today at 15:04",
+                          statusUpdateTime,
                           style: GoogleFonts.lato(
                             color: Colors.black54,
                             fontSize: 13,

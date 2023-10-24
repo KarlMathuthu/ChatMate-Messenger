@@ -15,7 +15,7 @@ class StatusController {
       if (currentUser != null) {
         final StatusModel status = StatusModel(
           text: statusText,
-          timestamp: Timestamp.fromDate(DateTime.now()),
+          timestamp: DateTime.now().toString(),
           userName: "Tony",
         );
 

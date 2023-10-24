@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StatusModel {
   final String text;
-  final Timestamp timestamp;
+  final String timestamp;
   final String userName;
 
   StatusModel({
@@ -13,7 +12,7 @@ class StatusModel {
 
   factory StatusModel.fromMap(Map<String, dynamic> data) {
     final String text = data['text'];
-    final Timestamp timestamp = data['timestamp'];
+    final String timestamp = data['timestamp'];
     final String userName = data["userName"];
 
     return StatusModel(
