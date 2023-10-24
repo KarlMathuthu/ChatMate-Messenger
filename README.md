@@ -16,6 +16,21 @@ ChatMate - Messenger comes packed with a range of features to enhance your messa
 
 - **Call History**: Keep track of your call history and never lose an important conversation.
 
+
+## Note: Testing 🧪
+
+If you'd like to test the app, please use the following credentials. Creating dummy accounts is discouraged, as they will be promptly removed during testing. We appreciate your cooperation.
+
+**Account 1:**
+- Email: tony@gmail.com
+- Password: 123456M
+
+**Account 2:**
+- Email: boyd@gmail.com
+- Password: 123456M
+
+Feel free to use these accounts for testing and familiarizing yourself with the app's features. Your feedback is invaluable as we continue to improve ChatMate - Messenger. Thank you for your understanding and assistance.
+
 ## Credits 🙌
 
 We would like to extend our gratitude to [Prabhanu Gunaweera](https://github.com/prahack) for his outstanding Chat Bubble library that has added a delightful touch to my app.
@@ -86,6 +101,7 @@ This structure represents the Firestore database schema, where you have a collec
 ## Project Status 🛠️
 
 ChatMate - Messenger is an ongoing project, constantly evolving to provide the best messaging experience for its users. All the essential settings pages and other features have been successfully implemented, and the WebRTC integration for audio and video calls is flawless.
+
 
 ## Contribution 🤝
 
