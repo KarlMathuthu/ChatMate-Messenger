@@ -20,10 +20,12 @@ class ChatRoomPage extends StatefulWidget {
     required this.mateName,
     required this.mateUid,
     required this.chatRoomId,
+    required this.isNewChat,
   });
   final String mateName;
   final String mateUid;
   final String chatRoomId;
+  final bool isNewChat;
   @override
   State<ChatRoomPage> createState() => _ChatRoomPageState();
 }
@@ -177,9 +179,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       .doc(widget.chatRoomId)
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
+                    if (!snapshot.hasData ||
+                        snapshot.data == null ||
+                        snapshot.data!.data() == null) {
                       return const Center(
-                        child: Text("No chats Available"),
+                        child: Text("Send your first message"),
                       );
                     } else if (snapshot.connectionState ==
                         ConnectionState.waiting) {
@@ -247,7 +251,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     chatRoomId: widget.chatRoomId,
                     mateName: widget.mateName,
                     mateToken: mateToken ?? "none",
-                    isNewChat: false,
+                    isNewChat: widget.isNewChat,
                   );
                 },
               )

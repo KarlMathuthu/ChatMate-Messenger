@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
+import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:chat_mate_messanger/views/chats/new_chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -197,6 +198,14 @@ class _ContactsPageState extends State<ContactsPage> {
                       return ListTile(
                         onTap: () async {
                           Get.off(
+                            () => ChatRoomPage(
+                              mateName: snapshot.data!.docs[index]["userName"],
+                              mateUid: snapshot.data!.docs[index]["userUid"],
+                              chatRoomId: chatRoomId,
+                              isNewChat: true,
+                            ),
+                          );
+                          /*  Get.off(
                             () => NewChatPage(
                               mateName: snapshot.data!.docs[index]["userName"],
                               mateStatus: snapshot.data!.docs[index]
@@ -204,8 +213,7 @@ class _ContactsPageState extends State<ContactsPage> {
                               mateUid: snapshot.data!.docs[index]["userUid"],
                               chatRoomId: chatRoomId,
                             ),
-                            transition: Transition.cupertino,
-                          );
+                          ); */
                         },
                         title: Text(
                           "@${snapshot.data!.docs[index]["userName"]}",
