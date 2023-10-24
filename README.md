@@ -78,6 +78,9 @@ We would like to extend our gratitude to [Prabhanu Gunaweera](https://github.com
 
 This structure represents the Firestore database schema, where you have a collection of `users` containing user information and a collection of `chats` containing chat information, including the last message in each chat. You can add more documents as your application requires, and populate the fields accordingly.
 
+## Example of Database structure.
+![Alt text](assets/images/letsyouin.png)
+
 ## Project Status 🛠️
 
 ChatMate - Messenger is an ongoing project, constantly evolving to provide the best messaging experience for its users. All the essential settings pages and other features have been successfully implemented, and the WebRTC integration for audio and video calls is flawless.
