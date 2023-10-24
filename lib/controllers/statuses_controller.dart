@@ -28,18 +28,28 @@ class StatusController {
     }
   }
 
-  // Function to add the current user's UID to the "viewers" array of a specific status.
+// Function to add the current user's UID to the "viewers" array of a specific status.
   Future<void> addCurrentUserToViewers(String statusId) async {
     try {
       final User? currentUser = _auth.currentUser;
       if (currentUser != null) {
-        // Get the status document by the current user's UID.
-        DocumentReference statusRef = statusCollection.doc(currentUser.uid);
+        // Get the status document by its ID.
+        DocumentReference statusRef = statusCollection.doc(statusId);
 
-        // Update the "viewers" array to add the current user's UID.
-        await statusRef.update({
-          'viewers': FieldValue.arrayUnion([currentUser.uid]),
-        });
+        // Fetch the document to check if the current user's UID is in the "viewers" array.
+        DocumentSnapshot statusDoc = await statusRef.get();
+
+        // Get the current viewers array and the user's UID.
+        List<dynamic> viewers = statusDoc.get('viewers') ?? [];
+        String userUid = currentUser.uid;
+
+        // Check if the user's UID is not already in the viewers array before updating it.
+        if (!viewers.contains(userUid)) {
+          viewers.add(userUid);
+
+          // Update the "viewers" array with the updated list.
+          await statusRef.update({'viewers': viewers});
+        }
       }
     } catch (e) {
       // Handle any errors that occur during the operation.

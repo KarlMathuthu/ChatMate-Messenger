@@ -1,5 +1,7 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/status/status_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +15,8 @@ class StatusesPage extends StatefulWidget {
 }
 
 class _StatusesPageState extends State<StatusesPage> {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String currentUser = FirebaseAuth.instance.currentUser!.uid;
   List<String> names = [
     "@AlexAmbrose",
     "@DebbieClifton",
@@ -38,7 +42,7 @@ class _StatusesPageState extends State<StatusesPage> {
                 "My Status",
                 style: GoogleFonts.lato(
                   color: Colors.black,
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -46,36 +50,112 @@ class _StatusesPageState extends State<StatusesPage> {
                 "Tap to add status updates",
                 style: GoogleFonts.lato(
                   color: Colors.black54,
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              leading: Stack(
-                children: [
-                  // CircleAvatar
-                  const CircleAvatar(
-                    //    radius: 25,
-                    backgroundColor: Color.fromARGB(255, 222, 235, 255),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.mainColor,
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 14,
-                      ),
-                    ),
-                  ),
-                ],
+              leading: StreamBuilder(
+                stream:
+                    firestore.collection("users").doc(currentUser).snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Stack(
+                      children: [
+                        // CircleAvatar
+                        const CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Color.fromARGB(255, 222, 235, 255),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppTheme.mainColor,
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Stack(
+                      children: [
+                        // CircleAvatar
+                        const CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Color.fromARGB(255, 222, 235, 255),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppTheme.mainColor,
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    String username = snapshot.data!.get("userName");
+                    String initials = username[0].toUpperCase() +
+                        username[username.length - 1].toUpperCase();
+
+                    return Stack(
+                      children: [
+                        // CircleAvatar
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor: const Color.fromARGB(255, 96, 149, 255),
+                          child: Center(
+                            child: Text(
+                              initials,
+                              style: GoogleFonts.lato(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppTheme.mainColor,
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
             ),
+            //Get Statuses from 'statuses'
             ListView.builder(
               itemCount: 3,
               shrinkWrap: true,
@@ -118,34 +198,6 @@ class _StatusesPageState extends State<StatusesPage> {
                 );
               },
             ),
-            //Recent Statuses.
-            /*  Row(
-              children: [
-                const SizedBox(width: 8),
-                Text(
-                  "Recent Statuses",
-                  style: GoogleFonts.lato(
-                    color: Colors.black54,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ), */
-            //Viewed statuses.
-            /*  Row(
-              children: [
-                const SizedBox(width: 8),
-                Text(
-                  "Viewed Statuses",
-                  style: GoogleFonts.lato(
-                    color: Colors.black54,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ), */
           ],
         ),
       ),
