@@ -17,7 +17,7 @@ class CustomMessageBar extends StatefulWidget {
   final String mateName;
   final String mateToken;
   final bool isNewChat;
-  final String? mateUid;
+  final String mateUid;
 
   CustomMessageBar({
     this.messageBarColor = const Color(0xffF4F4F5),
@@ -25,7 +25,7 @@ class CustomMessageBar extends StatefulWidget {
     this.messageBarHintText = "Type your message here",
     this.messageBarHintStyle = const TextStyle(fontSize: 16),
     this.textFieldTextStyle = const TextStyle(color: Colors.black),
-    this.mateUid,
+    required this.mateUid,
     required this.focusNode,
     required this.currentUser,
     required this.chatRoomId,

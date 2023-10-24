@@ -252,6 +252,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     mateName: widget.mateName,
                     mateToken: mateToken ?? "none",
                     isNewChat: widget.isNewChat,
+                    mateUid: widget.mateUid,
                   );
                 },
               )
