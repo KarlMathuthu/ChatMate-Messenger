@@ -79,7 +79,9 @@ We would like to extend our gratitude to [Prabhanu Gunaweera](https://github.com
 This structure represents the Firestore database schema, where you have a collection of `users` containing user information and a collection of `chats` containing chat information, including the last message in each chat. You can add more documents as your application requires, and populate the fields accordingly.
 
 ## Example of Database structure.
-![Alt text](assets/images/letsyouin.png)
+![Chats](assets/images/chats.png)
+![Users](assets/images/users.png)
+
 
 ## Project Status 🛠️
 
