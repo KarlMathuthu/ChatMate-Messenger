@@ -10,17 +10,15 @@ class StatusController {
   List<QueryDocumentSnapshot> statuses = [];
 
   // Function to add a new status to Firestore.
-  Future<void> addStatus(String userId, String statusText) async {
+  Future<void> addStatus(String statusText) async {
     try {
-      // Add a new document with status data to the 'statuses' collection.
-      await statusCollection.add({
-        'userId': userId,
+      String userId = _auth.currentUser!.uid;
+      await statusCollection.doc(userId).set({
         'statusText': statusText,
         'timestamp': DateTime.now(),
         'viewers': []
       });
     } catch (e) {
-      // Handle any errors that occur during the operation.
       print('Error adding status: $e');
     }
   }
