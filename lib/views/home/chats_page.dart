@@ -126,6 +126,9 @@ class _ChatsPageState extends State<ChatsPage> {
                       return const SizedBox();
                     } else {
                       String friendUsername = friendUidSnapshot.data.toString();
+                      String initials = friendUsername[0].toUpperCase() +
+                          friendUsername[friendUsername.length - 1]
+                              .toUpperCase();
                       Map<String, dynamic> lastMessage =
                           chatSnapshot.data!.docs[index]["last_message"];
                       String lastMessageSenderId = lastMessage["sender"];
@@ -207,8 +210,13 @@ class _ChatsPageState extends State<ChatsPage> {
                                     color: AppTheme.mainColorLight,
                                   ),
                                   child: Center(
-                                    child: SvgPicture.asset(
-                                      "assets/icons/default.svg",
+                                    child: Text(
+                                      initials,
+                                      style: GoogleFonts.lato(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -222,8 +230,13 @@ class _ChatsPageState extends State<ChatsPage> {
                                     color: AppTheme.mainColorLight,
                                   ),
                                   child: Center(
-                                    child: SvgPicture.asset(
-                                      "assets/icons/default.svg",
+                                    child: Text(
+                                      initials,
+                                      style: GoogleFonts.lato(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -241,8 +254,13 @@ class _ChatsPageState extends State<ChatsPage> {
                                   child: Stack(
                                     children: [
                                       Center(
-                                        child: SvgPicture.asset(
-                                          "assets/icons/default.svg",
+                                        child: Text(
+                                          initials,
+                                          style: GoogleFonts.lato(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                       if (isUserOnline) ...{

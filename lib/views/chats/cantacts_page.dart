@@ -193,7 +193,10 @@ class _ContactsPageState extends State<ContactsPage> {
                     itemBuilder: (context, index) {
                       bool isUserOnline =
                           snapshot.data!.docs[index]["userStatus"] == "online";
-                      String chatRoomId = const Uuid().v1();
+
+                      String username = snapshot.data!.docs[index]["userName"];
+                      String initials = username[0].toUpperCase() +
+                          username[username.length - 1].toUpperCase();
 
                       return ListTile(
                         onTap: () async {
@@ -236,13 +239,18 @@ class _ContactsPageState extends State<ContactsPage> {
                           width: 50,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
-                            color: AppTheme.mainColorLight,
+                            color: AppTheme.loaderColor,
                           ),
                           child: Stack(
                             children: [
                               Center(
-                                child: SvgPicture.asset(
-                                  "assets/icons/default.svg",
+                                child: Text(
+                                  initials,
+                                  style: GoogleFonts.lato(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                               if (isUserOnline) ...{
