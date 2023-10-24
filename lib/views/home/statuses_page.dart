@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:status_view/status_view.dart';
+
+import '../../widgets/status_view_widget.dart';
 
 class StatusesPage extends StatefulWidget {
   const StatusesPage({super.key});
@@ -211,9 +212,18 @@ class _StatusesPageState extends State<StatusesPage> {
                           indexOfSeenStatus: 1,
                           numberOfStatus: numberOfStatus[index],
                           padding: 4,
-                          centerImageUrl: "https://picsum.photos/200/300",
                           seenColor: Colors.grey,
                           unSeenColor: Colors.red,
+                          child: Center(
+                            child: Text(
+                              initials,
+                              style: GoogleFonts.lato(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     },

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class StatusView extends StatelessWidget {
@@ -7,22 +8,22 @@ class StatusView extends StatelessWidget {
   final double spacing;
   final double radius;
   final double padding;
-  final String centerImageUrl;
   final double strokeWidth;
   final Color seenColor;
   final Color unSeenColor;
+  final Widget child;
 
-  StatusView(
-      {this.numberOfStatus = 10,
-      this.indexOfSeenStatus = 0,
-      this.spacing = 10.0,
-      this.radius = 50,
-      this.padding = 5,
-      required this.centerImageUrl,
-      this.strokeWidth = 4,
-      this.seenColor = Colors.grey,
-      this.unSeenColor = Colors.blue})
-      : assert(centerImageUrl != null, "Please provide centerImageUrl");
+  StatusView({
+    this.numberOfStatus = 10,
+    this.indexOfSeenStatus = 0,
+    this.spacing = 10.0,
+    this.radius = 50,
+    this.padding = 5,
+    this.strokeWidth = 4,
+    this.seenColor = Colors.grey,
+    this.unSeenColor = Colors.blue,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,8 @@ class StatusView extends StatelessWidget {
           ),
           CircleAvatar(
             radius: radius - padding,
-            backgroundImage: NetworkImage(centerImageUrl),
+            backgroundColor: const Color.fromARGB(255, 96, 149, 255),
+            child: child,
           ),
         ],
       ),
