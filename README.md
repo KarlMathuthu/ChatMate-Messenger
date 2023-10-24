@@ -24,6 +24,60 @@ We would like to extend our gratitude to [Prabhanu Gunaweera](https://github.com
 
 (Insert screenshots and logo here)
 
+## Firestore Database Structure 📊
+
+### Collection: `users`
+
+- **Document 1**
+  - `userName`: String
+  - `userUid`: String
+  - `fcmToken`: String
+  - `email`: String
+  - `photoUrl`: String
+  - `userBio`: String
+  - `userStatus`: String (Online or Last Seen)
+
+- **Document 2**
+  - `userName`: String
+  - `userUid`: String
+  - `fcmToken`: String
+  - `email`: String
+  - `photoUrl`: String
+  - `userBio`: String
+  - `userStatus`: String (Online or Last Seen)
+
+(Repeat the structure for more user documents as needed)
+
+### Collection: `chats`
+
+- **Document 1**
+  - `members`: Array of Strings
+    - `"first user"`
+    - `"second user"`
+  - `chatId`: String
+  - `last_message`: Map<String, dynamic>
+    - `messageText`: String
+    - `messageType`: String
+    - `read`: Boolean (true if the message is read, false if not)
+    - `senderId`: String
+    - `timestamp`: Timestamp
+
+- **Document 2**
+  - `members`: Array of Strings
+    - `"first user"`
+    - `"second user"`
+  - `chatId`: String
+  - `last_message`: Map
+    - `messageText`: String
+    - `messageType`: String
+    - `read`: Boolean (true if the message is read, false if not)
+    - `senderId`: String
+    - `timestamp`: Timestamp
+
+(Repeat the structure for more chat documents as needed)
+
+This structure represents the Firestore database schema, where you have a collection of `users` containing user information and a collection of `chats` containing chat information, including the last message in each chat. You can add more documents as your application requires, and populate the fields accordingly.
+
 ## Project Status 🛠️
 
 ChatMate - Messenger is an ongoing project, constantly evolving to provide the best messaging experience for its users. All the essential settings pages and other features have been successfully implemented, and the WebRTC integration for audio and video calls is flawless.
