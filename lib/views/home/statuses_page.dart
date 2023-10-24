@@ -179,6 +179,8 @@ class _StatusesPageState extends State<StatusesPage> {
 
                       Map<String, dynamic> statusMap = statusList[index];
                       String userName = statusMap["userName"];
+                      String initials = userName[0].toUpperCase() +
+                          userName[userName.length - 1].toUpperCase();
                       return ListTile(
                         onTap: () {
                           Get.to(
