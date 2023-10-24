@@ -1,26 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StatusModel {
-  final String statusText;
-  final Timestamp timeStamp;
+  final String text;
+  final Timestamp timestamp;
 
   StatusModel({
-    required this.statusText,
-    required this.timeStamp,
+    required this.text,
+    required this.timestamp,
   });
+
   factory StatusModel.fromMap(Map<String, dynamic> data) {
-    final String statusText = data['statusText'];
-    final Timestamp timeStamp = data['timeStamp'];
+    final String text = data['text'];
+    final Timestamp timestamp = data['timestamp'];
 
     return StatusModel(
-      statusText: statusText,
-      timeStamp: timeStamp,
+      text: text,
+      timestamp: timestamp,
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
-      'statusText': statusText,
-      'timeStamp': timeStamp,
+      'text': text,
+      'timestamp': timestamp,
     };
   }
 }

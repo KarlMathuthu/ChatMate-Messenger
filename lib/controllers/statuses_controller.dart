@@ -1,36 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../model/status_model.dart';
+
 class StatusController {
   final CollectionReference statusCollection =
       FirebaseFirestore.instance.collection('statuses');
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // List to store statuses.
-  List<QueryDocumentSnapshot> statuses = [];
-
-  // Function to add a new status to Firestore.
+  // Function to add a new status to Firestore using StatusModel.
   Future<void> addStatus(String statusText) async {
     try {
-      String userId = _auth.currentUser!.uid;
-      await statusCollection.doc(userId).set({
-        'statusText': statusText,
-        'timestamp': DateTime.now(),
-        'viewers': []
-      });
-    } catch (e) {
-      print('Error adding status: $e');
-    }
-  }
+      final User? currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        final StatusModel status = StatusModel(
+          text: statusText,
+          timestamp: Timestamp.fromDate(DateTime.now()),
+        );
 
-  // Function to delete a status by its ID.
-  Future<void> deleteStatus(String statusId) async {
-    try {
-      // Delete the document with the given statusId.
-      await statusCollection.doc(statusId).delete();
+        await statusCollection.doc(currentUser.uid).update({
+          'status': FieldValue.arrayUnion([status.toMap()])
+        });
+      }
     } catch (e) {
       // Handle any errors that occur during the operation.
-      print('Error deleting status: $e');
+      print('Error adding status: $e');
     }
   }
 
@@ -39,8 +33,8 @@ class StatusController {
     try {
       final User? currentUser = _auth.currentUser;
       if (currentUser != null) {
-        // Get the status document by its ID.
-        DocumentReference statusRef = statusCollection.doc(statusId);
+        // Get the status document by the current user's UID.
+        DocumentReference statusRef = statusCollection.doc(currentUser.uid);
 
         // Update the "viewers" array to add the current user's UID.
         await statusRef.update({
@@ -53,12 +47,46 @@ class StatusController {
     }
   }
 
-  // Function to listen to changes in the 'statuses' collection and update the 'statuses' list.
-  void viewStatus(Function(List<QueryDocumentSnapshot>) onStatusUpdate) {
-    statusCollection.snapshots().listen((QuerySnapshot querySnapshot) {
-      statuses = querySnapshot.docs;
-      // Call the provided callback function to update the UI with the latest statuses.
-      onStatusUpdate(statuses);
-    });
+// Function to listen to changes in the current user's statuses.
+  void viewStatus(Function(List<StatusModel>) onStatusUpdate) {
+    final User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      // Query the Firestore collection for the current user's statuses.
+      statusCollection.doc(currentUser.uid).get().then((DocumentSnapshot doc) {
+        if (doc.exists) {
+          final List<dynamic>? statusData = doc['status'];
+          if (statusData != null) {
+            final List<StatusModel> statuses = statusData
+                .map((status) => StatusModel.fromMap(status))
+                .toList();
+            onStatusUpdate(statuses);
+          }
+        }
+      }).catchError((e) {
+        // Handle any errors that occur during the operation.
+        print('Error fetching statuses: $e');
+      });
+    }
+  }
+
+  // Function to delete a status from the array of statuses under the current user's document.
+  Future<void> deleteStatus(String statusText) async {
+    try {
+      final User? currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        await statusCollection.doc(currentUser.uid).update({
+          'status': FieldValue.arrayRemove(
+            [
+              {
+                'text': statusText,
+              }
+            ],
+          )
+        });
+      }
+    } catch (e) {
+      // Handle any errors that occur during the operation.
+      print('Error deleting status: $e');
+    }
   }
 }
