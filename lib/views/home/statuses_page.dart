@@ -121,7 +121,8 @@ class _StatusesPageState extends State<StatusesPage> {
                         // CircleAvatar
                         CircleAvatar(
                           radius: 25,
-                          backgroundColor: const Color.fromARGB(255, 96, 149, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 96, 149, 255),
                           child: Center(
                             child: Text(
                               initials,
@@ -156,46 +157,66 @@ class _StatusesPageState extends State<StatusesPage> {
               ),
             ),
             //Get Statuses from 'statuses'
-            ListView.builder(
-              itemCount: 3,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return ListTile(
-                  onTap: () {
-                    Get.to(
-                      () => const StatusViewPage(),
-                      transition: Transition.cupertino,
-                    );
-                  },
-                  title: Text(
-                    names[index],
-                    style: GoogleFonts.lato(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  subtitle: Text(
-                    "Today at 15:04",
-                    style: GoogleFonts.lato(
-                      color: Colors.black54,
-                      fontSize: 13,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  leading: StatusView(
-                    radius: 25,
-                    spacing: 15,
-                    strokeWidth: 2,
-                    indexOfSeenStatus: 1,
-                    numberOfStatus: numberOfStatus[index],
-                    padding: 4,
-                    centerImageUrl: "https://picsum.photos/200/300",
-                    seenColor: Colors.grey,
-                    unSeenColor: Colors.red,
-                  ),
-                );
+
+            StreamBuilder(
+              stream: firestore.collection("statuses").snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox();
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      List<dynamic> statusList =
+                          snapshot.data!.docs[index]["status"];
+
+                      Map<String, dynamic> statusMap = statusList[index];
+                      String userName = statusMap["userName"];
+                      return ListTile(
+                        onTap: () {
+                          Get.to(
+                            () => const StatusViewPage(),
+                            transition: Transition.cupertino,
+                          );
+                        },
+                        title: Text(
+                          userName,
+                          style: GoogleFonts.lato(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        subtitle: Text(
+                          "Today at 15:04",
+                          style: GoogleFonts.lato(
+                            color: Colors.black54,
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        leading: StatusView(
+                          radius: 25,
+                          spacing: 15,
+                          strokeWidth: 2,
+                          indexOfSeenStatus: 1,
+                          numberOfStatus: numberOfStatus[index],
+                          padding: 4,
+                          centerImageUrl: "https://picsum.photos/200/300",
+                          seenColor: Colors.grey,
+                          unSeenColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ],
