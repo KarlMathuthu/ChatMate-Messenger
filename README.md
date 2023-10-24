@@ -122,6 +122,9 @@ If you find ChatMate - Messenger useful or interesting, don't forget to give us 
 
 Happy chatting! 😊📱📢📸🎉
 
+## Donate
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z4QG03B)
+
 ## Developer
 
 Made with ❤️ by Karl Mathuthu.
