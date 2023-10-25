@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -84,7 +85,7 @@ class NotificationsController {
     required String body,
     required String title,
   }) async {
-    String fcmApiKey = "";
+    String fcmApiKey = dotenv.env['FIREBASE_NOTIFICATION_API_KEY']!;
     try {
       await http.post(
         Uri.parse("https://fcm.googleapis.com/fcm/send"),

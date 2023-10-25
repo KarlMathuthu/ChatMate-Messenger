@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -49,8 +50,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBKyPHVvoSDvREetEZBhw_tkxtFAUQvxZM',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_ANDROID_API']!,
     appId: '1:479442079836:android:af824d2cad6f865ab19699',
     messagingSenderId: '479442079836',
     projectId: 'chat-mate-messenger',
@@ -58,14 +59,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'chat-mate-messenger.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCeNcp2WdZtaF4haprphaKOngA8YrC6LVA',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_IOS_API']!,
     appId: '1:479442079836:ios:b3ee5eb40fad5b07b19699',
     messagingSenderId: '479442079836',
     projectId: 'chat-mate-messenger',
     databaseURL: 'https://chat-mate-messenger-default-rtdb.firebaseio.com',
     storageBucket: 'chat-mate-messenger.appspot.com',
-    iosClientId: '479442079836-ajhscduu2gbpld4pshe973928p12hhsd.apps.googleusercontent.com',
+    iosClientId:
+        '479442079836-ajhscduu2gbpld4pshe973928p12hhsd.apps.googleusercontent.com',
     iosBundleId: 'com.karlmathuthu.chatMateMessanger',
   );
 }
