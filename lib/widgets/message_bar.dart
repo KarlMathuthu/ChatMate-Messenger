@@ -4,6 +4,7 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:emoji_keyboard_flutter/emoji_keyboard_flutter.dart';
 
 class CustomMessageBar extends StatefulWidget {
   final Color messageBarColor;
@@ -39,9 +40,11 @@ class CustomMessageBar extends StatefulWidget {
 }
 
 class _CustomMessageBarState extends State<CustomMessageBar> {
-  final TextEditingController _textController = TextEditingController();
+  TextEditingController textController = TextEditingController();
   ChatController chatController = Get.put(ChatController());
   String rawMessageText = '';
+  bool showEmojiKeyboard = false;
+  TextEditingController emojiTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
       child: Row(
         children: <Widget>[
           InkWell(
-            onTap: () {},
+            onTap: () async {},
             child: SvgPicture.asset(
               "assets/icons/emoji.svg",
               color: Colors.grey,
@@ -64,7 +67,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
           Expanded(
             child: TextField(
               focusNode: widget.focusNode,
-              controller: _textController,
+              controller: textController,
               keyboardType: TextInputType.multiline,
               textCapitalization: TextCapitalization.sentences,
               minLines: 1,
@@ -100,11 +103,11 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
               ),
             ),
           ),
-          _textController.text.trim().isEmpty
+          textController.text.trim().isEmpty
               ? IconButton(
                   onPressed: () {
-                    if (_textController.text.trim() != '') {
-                      _textController.text = '';
+                    if (textController.text.trim() != '') {
+                      textController.text = '';
                     }
                   },
                   icon: SvgPicture.asset(
@@ -114,7 +117,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                 )
               : IconButton(
                   onPressed: () async {
-                    if (_textController.text.trim() != '') {
+                    if (textController.text.trim() != '') {
                       widget.isNewChat
                           ? chatController.createChat(
                               members: [
@@ -122,7 +125,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                                 widget.mateUid ?? "",
                               ],
                               senderId: widget.currentUser,
-                              messageText: _textController.text.trim(),
+                              messageText: textController.text.trim(),
                               type: "text",
                             )
                           :
@@ -130,11 +133,11 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                           chatController.sendMessage(
                               chatId: widget.chatRoomId,
                               senderId: widget.currentUser,
-                              messageText: _textController.text.trim(),
+                              messageText: textController.text.trim(),
                               type: "text",
                             );
                     }
-                    _textController.text = '';
+                    textController.text = '';
                     //send notifcation
                     await NotificationsController.sendMessageNotification(
                       userToken: widget.mateToken,

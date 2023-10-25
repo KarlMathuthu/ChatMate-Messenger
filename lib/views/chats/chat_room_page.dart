@@ -35,6 +35,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   FocusNode focusNode = FocusNode();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
+  bool hasKeyboard = false;
 
   DateTime getTime(String userStatus) {
     DateTime? dateTime = DateTime.tryParse(userStatus);
