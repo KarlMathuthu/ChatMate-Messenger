@@ -84,8 +84,7 @@ class NotificationsController {
     required String body,
     required String title,
   }) async {
-    String fcmApiKey =
-        "AAAAb6D5kFw:APA91bHKKOXE0h6N9_ZoWl7CcJRXEe1IdB_9V3Dtzs_BSp-VtuT08SED0y_W8R0xiRLDYlDlBNWULV1btP8Q0EDCXIdYcYFHnidxu5cCKjoUWp38OmB8o8gkWmGXYzx1RzTURTbOou2-";
+    String fcmApiKey = "";
     try {
       await http.post(
         Uri.parse("https://fcm.googleapis.com/fcm/send"),
