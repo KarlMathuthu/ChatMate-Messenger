@@ -19,16 +19,7 @@ class StatusesPage extends StatefulWidget {
 class _StatusesPageState extends State<StatusesPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String currentUser = FirebaseAuth.instance.currentUser!.uid;
-  List<String> names = [
-    "@AlexAmbrose",
-    "@DebbieClifton",
-    "@JustinAmbrose",
-  ];
-  List<int> numberOfStatus = [
-    3,
-    1,
-    5,
-  ];
+
   DateTime getTime(String userStatus) {
     DateTime? dateTime = DateTime.tryParse(userStatus);
     if (dateTime != null) {
@@ -189,7 +180,7 @@ class _StatusesPageState extends State<StatusesPage> {
                           snapshot.data!.docs[index]["status"];
 
                       Map<String, dynamic> statusMap = statusList[index];
-                      String userName = statusMap["userName"];
+                      String userName = snapshot.data!.docs[index]["userName"];
                       String initials = userName[0].toUpperCase() +
                           userName[userName.length - 1].toUpperCase();
                       String statusUpdateTime = timeago.format(
@@ -197,12 +188,16 @@ class _StatusesPageState extends State<StatusesPage> {
                           statusMap["timestamp"].toString(),
                         ),
                       );
+                      
+
                       return ListTile(
                         onTap: () {
-                          Get.to(
+                          /* Get.to(
                             () => const StatusViewPage(),
                             transition: Transition.cupertino,
-                          );
+                          ); */
+                          print(
+                              "KKKKKKKKKKKKKKAAAAAAAAAAAAAAARRRRRRRRRRRRRRRLLLLLLLLLLLL = $statusMap");
                         },
                         title: Text(
                           userName,
@@ -221,14 +216,14 @@ class _StatusesPageState extends State<StatusesPage> {
                           ),
                         ),
                         leading: StatusView(
-                          radius: 25,
+                          radius: 28,
                           spacing: 15,
                           strokeWidth: 2,
                           indexOfSeenStatus: 1,
-                          numberOfStatus: numberOfStatus[index],
+                          numberOfStatus: statusList.length,
                           padding: 4,
                           seenColor: Colors.grey,
-                          unSeenColor: Colors.red,
+                          unSeenColor: AppTheme.mainColor,
                           child: Center(
                             child: Text(
                               initials,

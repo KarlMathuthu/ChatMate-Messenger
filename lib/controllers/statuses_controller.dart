@@ -16,7 +16,6 @@ class StatusController {
         final StatusModel status = StatusModel(
           text: statusText,
           timestamp: DateTime.now().toString(),
-          userName: "Tony",
         );
 
         await statusCollection.doc(currentUser.uid).update({
