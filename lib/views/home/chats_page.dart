@@ -48,7 +48,6 @@ class _ChatsPageState extends State<ChatsPage> {
         return "@ChatMateBot";
       }
     }).handleError((error) {
-      print("Error fetching user data: $error");
       return "Error fetching user data";
     });
   }
@@ -66,20 +65,8 @@ class _ChatsPageState extends State<ChatsPage> {
         return "offline";
       }
     }).handleError((error) {
-      print("Error fetching user status: $error");
       return "offline";
     });
-  }
-
-  void setDynamicBatchNumber(int unreadMessages) async {
-    try {
-      await FlutterDynamicIcon.setApplicationIconBadgeNumber(
-        unreadMessages,
-      );
-    } catch (e) {
-      print(
-          "kkkkkkkkkkkkkkkkkkkaaaaaaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrrlllllllllllllll Errrrrrorrr $e");
-    }
   }
 
   @override
@@ -93,9 +80,9 @@ class _ChatsPageState extends State<ChatsPage> {
             .snapshots(),
         builder: (context, chatSnapshot) {
           if (!chatSnapshot.hasData) {
-            return SizedBox();
+            return const SizedBox();
           } else if (chatSnapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox(); /* Center(
+            return const SizedBox(); /* Center(
               child: LoadingAnimationWidget.fourRotatingDots(
                 color: AppTheme.loaderColor,
                 size: 50,
@@ -122,7 +109,6 @@ class _ChatsPageState extends State<ChatsPage> {
                       messageType: messageData["messageType"],
                     );
                     unreadMessages.add(message);
-                    setDynamicBatchNumber(unreadMessages.length);
                   }
                 }
 
@@ -314,7 +300,7 @@ class _ChatsPageState extends State<ChatsPage> {
           color: Colors.white,
         ),
         onPressed: () {
-          Get.to(() => ContactsPage(), transition: Transition.cupertino);
+          Get.to(() => const ContactsPage(), transition: Transition.cupertino);
         },
       ),
     );
