@@ -37,7 +37,7 @@ We would like to extend our gratitude to [Prabhanu Gunaweera](https://github.com
 
 ## Screenshots and Logo 📸
 
-![ChatMateLogo](assets/images/appLogo.png)
+<img src="assets/images/appLogo.png" alt="ChatMateLogo" height="150">
 
 ## Firestore Database Structure 📊
 
