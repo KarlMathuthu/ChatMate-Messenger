@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,6 +21,8 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
   Signaling signaling = Signaling();
   String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  RTCVideoRenderer localRenderer = RTCVideoRenderer();
+  RTCVideoRenderer remoteRenderer = RTCVideoRenderer();
   String? callId;
   String? callType;
 
@@ -45,7 +48,14 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
     );
   }
 
-  void declineCall() async {}
+  void declineCall() async {
+    await firestore
+        .collection("users")
+        .doc(currentUserUid)
+        .collection("calls")
+        .doc(currentUserUid)
+        .delete();
+  }
 
   void initilizaMedia() async {
     signaling.openUserMedia(
@@ -151,7 +161,9 @@ class _AnswerCallPageState extends State<AnswerCallPage> {
                           AppTheme.endCallButtonColor,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        declineCall();
+                      },
                       icon: SvgPicture.asset(
                         "assets/icons/declineCall.svg",
                         color: Colors.white,

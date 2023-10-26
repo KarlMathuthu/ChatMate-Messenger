@@ -189,7 +189,7 @@ class AppSettingsPage extends StatelessWidget {
               ),
               title: Text(
                 "Chats",
-                style: GoogleFonts.lato(),
+                style: GoogleFonts.lato(fontSize: 15),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
@@ -204,7 +204,7 @@ class AppSettingsPage extends StatelessWidget {
               ),
               title: Text(
                 "Notifications",
-                style: GoogleFonts.lato(),
+                style: GoogleFonts.lato(fontSize: 15),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
@@ -219,7 +219,7 @@ class AppSettingsPage extends StatelessWidget {
               ),
               title: Text(
                 "Storage & Data",
-                style: GoogleFonts.lato(),
+                style: GoogleFonts.lato(fontSize: 15),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
@@ -234,7 +234,7 @@ class AppSettingsPage extends StatelessWidget {
               ),
               title: Text(
                 "Security",
-                style: GoogleFonts.lato(),
+                style: GoogleFonts.lato(fontSize: 15),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
@@ -249,7 +249,7 @@ class AppSettingsPage extends StatelessWidget {
               ),
               title: Text(
                 "Help Center",
-                style: GoogleFonts.lato(),
+                style: GoogleFonts.lato(fontSize: 15),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
@@ -264,7 +264,7 @@ class AppSettingsPage extends StatelessWidget {
               ),
               title: Text(
                 "Invite friends",
-                style: GoogleFonts.lato(),
+                style: GoogleFonts.lato(fontSize: 15),
               ),
               trailing: const Icon(
                 Icons.arrow_forward_ios,
@@ -283,9 +283,7 @@ class AppSettingsPage extends StatelessWidget {
               ),
               title: Text(
                 "Logout",
-                style: GoogleFonts.lato(
-                  color: Colors.redAccent,
-                ),
+                style: GoogleFonts.lato(color: Colors.redAccent, fontSize: 15),
               ),
             ),
           ],
