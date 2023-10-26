@@ -2,6 +2,9 @@ import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../utils/images.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key});
@@ -14,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _navigateToNextScreen();
+    // _navigateToNextScreen();
   }
 
   Future<void> _navigateToNextScreen() async {
@@ -46,22 +49,38 @@ class _SplashPageState extends State<SplashPage> {
             padding: const EdgeInsets.only(bottom: 80),
             child: Center(
               child: Image.asset(
-                "assets/images/splash.png",
-                height: 150,
-                width: 150,
+                Images.splashImage,
+                height: 100,
+                width: 100,
               ),
             ),
           ),
-          /* Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 30.0),
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: LoadingAnimationWidget.fourRotatingDots(
-                color: AppTheme.loaderColor,
-                size: 50,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "from",
+                      style: GoogleFonts.lato(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "\nKarl Kiyotaka",
+                      style: GoogleFonts.lato(
+                        color: AppTheme.mainColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ), */
+          ),
         ],
       ),
     );
