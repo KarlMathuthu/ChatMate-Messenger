@@ -1,6 +1,7 @@
 import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/constants.dart';
+import 'package:chat_mate_messanger/utils/images.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,7 +21,7 @@ class LetsYouInPage extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Image.asset(
-              "assets/images/letsyouin.png",
+              Images.splashImage2,
               height: 160,
               width: 160,
             ),
@@ -29,7 +30,7 @@ class LetsYouInPage extends StatelessWidget {
             AppConstants.introText,
             style: GoogleFonts.lato(
               color: Colors.black,
-              fontSize: 30,
+              fontSize: 25,
               fontWeight: FontWeight.bold,
             ),
           ),
