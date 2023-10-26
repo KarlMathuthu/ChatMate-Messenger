@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/signaling_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -85,6 +86,8 @@ class _CallPageState extends State<CallPage> {
                   remoteRenderer,
                   widget.mateName,
                   context,
+                  widget.mateUid,
+                  signaling,
                 ),
         ],
       ),
@@ -127,6 +130,8 @@ Widget videoCallLayout(
   RTCVideoRenderer remoteRenderer,
   String mateName,
   BuildContext context,
+  String mateUid,
+  Signaling signaling,
 ) {
   return Stack(
     children: [
@@ -263,7 +268,14 @@ Widget videoCallLayout(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
+                                signaling.hangUp(localRenderer);
+                                await FirebaseFirestore.instance
+                                    .collection("calls")
+                                    .doc(mateUid)
+                                    .delete();
+                                print("Call ended");
+                                Get.back();
                                 // Add your logic to end the call here
                                 Navigator.of(context).pop();
                               },

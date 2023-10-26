@@ -145,16 +145,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             IconButton(
               onPressed: () {
                 Get.to(
-                  () => AnswerCallPage(),
-                  transition: Transition.cupertino,
-                );
-                /*  Get.to(
                   () => CallPage(
                     mateUid: widget.mateUid,
                     callType: "video",
                     mateName: widget.mateName,
                   ),
-                ); */
+                );
               },
               icon: SvgPicture.asset(
                 "assets/icons/video.svg",
