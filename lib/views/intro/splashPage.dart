@@ -17,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    // _navigateToNextScreen();
+    _navigateToNextScreen();
   }
 
   Future<void> _navigateToNextScreen() async {
