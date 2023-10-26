@@ -5,7 +5,6 @@ import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -72,6 +71,17 @@ class _ChatsPageState extends State<ChatsPage> {
     });
   }
 
+  void setDynamicBatchNumber(int unreadMessages) async {
+    try {
+      await FlutterDynamicIcon.setApplicationIconBadgeNumber(
+        unreadMessages,
+      );
+    } catch (e) {
+      print(
+          "kkkkkkkkkkkkkkkkkkkaaaaaaaaaaaaaaaaaaaarrrrrrrrrrrrrrrrrlllllllllllllll Errrrrrorrr $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,13 +122,7 @@ class _ChatsPageState extends State<ChatsPage> {
                       messageType: messageData["messageType"],
                     );
                     unreadMessages.add(message);
-                    try {
-                      FlutterDynamicIcon.setApplicationIconBadgeNumber(
-                        unreadMessages.length,
-                      );
-                    } catch (e) {
-                      print(e);
-                    }
+                    setDynamicBatchNumber(unreadMessages.length);
                   }
                 }
 
