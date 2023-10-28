@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
-import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,12 +23,14 @@ class _ContactsPageState extends State<ContactsPage> {
   String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
   ChatController chatController = Get.put(ChatController());
 
-  void showSendWaveDialog(String mateName) {
+  void showSendWaveDialog(String mateName, String mateUid) {
     Get.dialog(
       CupertinoAlertDialog(
         title: Text(
-          "Wave at $mateName \n👋",
-          style: GoogleFonts.lato(),
+          "Wave at $mateName \n\n👋\n",
+          style: GoogleFonts.lato(
+            fontWeight: FontWeight.normal,
+          ),
         ),
         content: Text(
           "Do you want to send a wave to mate?",
@@ -56,10 +57,24 @@ class _ContactsPageState extends State<ContactsPage> {
             ),
             onPressed: () {
               Get.back();
+              //send a wave to mate
+              waveAtMate(currentUserUid, mateUid);
             },
           ),
         ],
       ),
+    );
+  }
+
+  void waveAtMate(String currentUserUid, String mateUid) {
+    chatController.createChat(
+      members: [
+        currentUserUid,
+        mateUid,
+      ],
+      senderId: currentUserUid,
+      messageText: "👋👋",
+      type: "wave",
     );
   }
 
@@ -246,7 +261,7 @@ class _ContactsPageState extends State<ContactsPage> {
                             Get.snackbar("No no 😊😳",
                                 "You can't send a message to yourself Mate!");
                           } else {
-                            showSendWaveDialog(username);
+                            showSendWaveDialog(username, mateUid);
                           }
                         },
                         title: Text(
