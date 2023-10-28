@@ -74,7 +74,16 @@ class ChatController extends GetxController {
           )
         ],
       );
+      Map<String, dynamic> lastMessage = {
+        "messageText": messageText,
+        "sender": senderId,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "read": false,
+        "type": type,
+      };
+
       await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
+      await updateLastMessage(chatRoomId, lastMessage);
     } catch (e) {
       print('Error sending wave : $e');
     }

@@ -130,6 +130,9 @@ class _ChatsPageState extends State<ChatsPage> {
                       Map<String, dynamic>? lastMessage =
                           chatSnapshot.data!.docs[index]["last_message"];
                       String lastMessageSenderId = lastMessage!["sender"];
+                      String messageType = lastMessage["type"];
+                      bool isAWave = messageType == "wave" ||
+                          lastMessage["messageText"] == null;
 
                       bool isLastMessageRead() {
                         if (lastMessageSenderId != currentUserId &&
@@ -163,22 +166,31 @@ class _ChatsPageState extends State<ChatsPage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        subtitle: Text(
-                          lastMessageSenderId == currentUserId
-                              ? "Me : ${lastMessage["messageText"]}"
-                              : lastMessage["messageText"],
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.lato(
-                            color: isLastMessageRead() == false &&
-                                    lastMessageSenderId != currentUserId
-                                ? AppTheme.loaderColor
-                                : Colors.black54,
-                            fontSize: 12,
-                            fontWeight: isLastMessageRead() == false
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
+                        subtitle: isAWave
+                            ? Text(
+                                "A new wave 👋!",
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.lato(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              )
+                            : Text(
+                                lastMessageSenderId == currentUserId
+                                    ? "Me : ${lastMessage["messageText"]}"
+                                    : lastMessage["messageText"],
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.lato(
+                                  color: isLastMessageRead() == false &&
+                                          lastMessageSenderId != currentUserId
+                                      ? AppTheme.loaderColor
+                                      : Colors.black54,
+                                  fontSize: 12,
+                                  fontWeight: isLastMessageRead() == false
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                              ),
                         trailing: unreadMessageCount > 0
                             ? badges.Badge(
                                 badgeAnimation:
@@ -300,11 +312,7 @@ class _ChatsPageState extends State<ChatsPage> {
           color: Colors.white,
         ),
         onPressed: () {
-          Get.to(
-              () =>const ContactsPage(
-                  
-                  ),
-              transition: Transition.cupertino);
+          Get.to(() => const ContactsPage(), transition: Transition.cupertino);
         },
       ),
     );

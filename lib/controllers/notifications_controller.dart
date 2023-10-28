@@ -67,6 +67,7 @@ class NotificationsController {
       priority: Priority.high,
       ticker: 'ticker',
       enableVibration: true,
+      icon: "@drawable/applogo",
     );
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
