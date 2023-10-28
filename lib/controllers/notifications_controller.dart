@@ -67,6 +67,8 @@ class NotificationsController {
       priority: Priority.high,
       ticker: 'ticker',
       enableVibration: true,
+      sound: RawResourceAndroidNotificationSound('@raw/notification'),
+      playSound: true,
       icon: "@drawable/applogo",
     );
     const NotificationDetails notificationDetails =

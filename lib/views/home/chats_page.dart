@@ -143,6 +143,12 @@ class _ChatsPageState extends State<ChatsPage> {
                       }
 
                       return ListTile(
+                        onLongPress: () {
+                          chatController.showDeleteDialog(
+                            context: context,
+                            chatId: chatSnapshot.data!.docs[index].id,
+                          );
+                        },
                         onTap: () {
                           chatController.markChatAsRead(
                             chatSnapshot.data!.docs[index]["chatId"],

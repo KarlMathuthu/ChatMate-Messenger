@@ -287,6 +287,35 @@ class ChatController extends GetxController {
     );
   }
 
+  Future<void> showDeleteDialog({
+    required BuildContext context,
+    required String chatId,
+  }) {
+    return showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text('Delete Chat'),
+          content: Text('Are you sure you want to delete this chat?'),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text('Delete'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   //Copy to clipboard
   Future copyToClipBoard(String message) async {
     Clipboard.setData(
