@@ -79,6 +79,9 @@ class _CallPageState extends State<CallPage> {
                   child: audioCallLayout(
                     widget.mateName,
                     context,
+                    widget.mateUid,
+                    signaling,
+                    localRenderer,
                   ),
                 )
               : videoCallLayout(
@@ -299,7 +302,13 @@ Widget videoCallLayout(
   );
 }
 
-Widget audioCallLayout(String mateName, BuildContext context) {
+Widget audioCallLayout(
+  String mateName,
+  BuildContext context,
+  String mateUid,
+  Signaling signaling,
+  RTCVideoRenderer localRenderer,
+) {
   return Stack(
     children: [
       Align(
@@ -442,8 +451,14 @@ Widget audioCallLayout(String mateName, BuildContext context) {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              onPressed: () {
-                                // Add your logic to end the call here
+                              onPressed: () async {
+                                signaling.hangUp(localRenderer);
+                                await FirebaseFirestore.instance
+                                    .collection("calls")
+                                    .doc(mateUid)
+                                    .delete();
+                                print("Call ended");
+                                Get.back();
                                 Navigator.of(context).pop();
                               },
                             ),
