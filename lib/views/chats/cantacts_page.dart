@@ -69,7 +69,7 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   void waveAtMate(String currentUserUid, String mateUid) {
-    chatController.createChat(
+    chatController.sendAWaveToMate(
       members: [
         currentUserUid,
         mateUid,
