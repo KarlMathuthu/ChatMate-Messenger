@@ -24,30 +24,55 @@ class MyChatBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        isSender == true
+        type == "wave" && isSender == true
             ? BubbleNormal(
                 text: message,
                 isSender: isSender,
                 //color: Color(0xFF1B97F3),
-                color: AppTheme.mainColor,
+                color: Colors.white,
                 tail: true,
                 //seen: isRead,
                 //sent: isSent,
                 textStyle: GoogleFonts.lato(
-                  fontSize: 14,
+                  fontSize: 18,
                   color: Colors.white,
                 ),
               )
-            : BubbleNormal(
-                text: message,
-                isSender: isSender,
-                color: Color(0xFFE8E8EE),
-                textStyle: GoogleFonts.lato(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-                tail: true,
-              ),
+            : type == "wave" && isSender == false
+                ? BubbleNormal(
+                    text: message,
+                    isSender: isSender,
+                    color: Colors.transparent,
+                    textStyle: GoogleFonts.lato(
+                      fontSize: 14,
+                      color: Colors.white,
+                    ),
+                    tail: true,
+                  )
+                : type == "text" && isSender == true
+                    ? BubbleNormal(
+                        text: message,
+                        isSender: isSender,
+                        //color: Color(0xFF1B97F3),
+                        color: AppTheme.mainColor,
+                        tail: true,
+                        //seen: isRead,
+                        //sent: isSent,
+                        textStyle: GoogleFonts.lato(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      )
+                    : BubbleNormal(
+                        text: message,
+                        isSender: isSender,
+                        color: Color(0xFFE8E8EE),
+                        textStyle: GoogleFonts.lato(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        tail: true,
+                      ),
       ],
     );
   }

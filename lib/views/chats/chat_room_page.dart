@@ -204,6 +204,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                               auth.currentUser!.uid;
 
                           bool isRead = messages[index]["read"];
+
                           bool isSent = isRead == false;
 
                           return GestureDetector(

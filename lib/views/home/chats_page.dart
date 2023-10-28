@@ -127,9 +127,9 @@ class _ChatsPageState extends State<ChatsPage> {
                       String initials = friendUsername[0].toUpperCase() +
                           friendUsername[friendUsername.length - 1]
                               .toUpperCase();
-                      Map<String, dynamic> lastMessage =
+                      Map<String, dynamic>? lastMessage =
                           chatSnapshot.data!.docs[index]["last_message"];
-                      String lastMessageSenderId = lastMessage["sender"];
+                      String lastMessageSenderId = lastMessage!["sender"];
 
                       bool isLastMessageRead() {
                         if (lastMessageSenderId != currentUserId &&
