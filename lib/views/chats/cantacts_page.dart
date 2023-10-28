@@ -59,6 +59,8 @@ class _ContactsPageState extends State<ContactsPage> {
               Get.back();
               //send a wave to mate
               waveAtMate(currentUserUid, mateUid);
+              Get.snackbar(
+                  "Wave sent 😊😊", "You have sent a wave to $mateName");
             },
           ),
         ],

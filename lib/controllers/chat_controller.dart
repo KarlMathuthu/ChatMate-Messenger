@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 import '../model/chat_model.dart';
 import '../model/message_model.dart';
@@ -18,8 +19,8 @@ class ChatController extends GetxController {
     required String type,
   }) async {
     try {
-      //String chatRoomId = const Uuid().v1();
-      String chatRoomId = FirebaseAuth.instance.currentUser!.uid;
+      String chatRoomId = const Uuid().v1();
+
       // Create a new chat model
       final ChatModel newChat = ChatModel(
         chatId: chatRoomId,
@@ -48,6 +49,44 @@ class ChatController extends GetxController {
       print('Error creating chat: $e');
     }
     return "none";
+  }
+
+  //Send a wave
+  void sendAWaveToMate({
+    required List<String> members,
+    required String senderId,
+    required String messageText,
+    required String type,
+  }) async {
+    try {
+      String chatRoomId = const Uuid().v1();
+
+      // Create a new chat model
+      final ChatModel newChat = ChatModel(
+        chatId: chatRoomId,
+        members: members,
+        messages: [
+          MessageModel(
+            sender: senderId,
+            messageText: messageText,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+            messageType: type,
+          )
+        ],
+      );
+      Map<String, dynamic> lastMessage = {
+        "messageText": messageText,
+        "sender": senderId,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "read": false,
+        "type": type,
+      };
+
+      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
+      await updateLastMessage(chatRoomId, lastMessage);
+    } catch (e) {
+      print('Error sending wave : $e');
+    }
   }
 
   // Send Message
