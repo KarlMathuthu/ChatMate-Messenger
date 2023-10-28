@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
+import 'package:chat_mate_messanger/controllers/notifications_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +24,11 @@ class _ContactsPageState extends State<ContactsPage> {
   String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
   ChatController chatController = Get.put(ChatController());
 
-  void showSendWaveDialog(String mateName, String mateUid) {
+  void showSendWaveDialog(
+    String mateName,
+    String mateUid,
+    String mateToken,
+  ) {
     Get.dialog(
       CupertinoAlertDialog(
         title: Text(
@@ -55,10 +60,17 @@ class _ContactsPageState extends State<ContactsPage> {
                 color: AppTheme.mainColor,
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               Get.back();
               //send a wave to mate
               waveAtMate(currentUserUid, mateUid);
+              //send a notification.
+              NotificationsController.sendMessageNotification(
+                userToken: mateToken,
+                body:
+                    "A mate sent you a wave 😊, Reply them and become friends!",
+                title: "ChatMate - Wave 👋",
+              );
               Get.snackbar(
                   "Wave sent 😊😊", "You have sent a wave to $mateName");
             },
@@ -252,6 +264,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
                       String username = snapshot.data!.docs[index]["userName"];
                       String mateUid = snapshot.data!.docs[index]["userUid"];
+                      String mateToken = snapshot.data!.docs[index]["fcmToken"];
                       String currentUserUid =
                           FirebaseAuth.instance.currentUser!.uid;
                       String initials = username[0].toUpperCase() +
@@ -263,7 +276,11 @@ class _ContactsPageState extends State<ContactsPage> {
                             Get.snackbar("No no 😊😳",
                                 "You can't send a message to yourself Mate!");
                           } else {
-                            showSendWaveDialog(username, mateUid);
+                            showSendWaveDialog(
+                              username,
+                              mateUid,
+                              mateToken,
+                            );
                           }
                         },
                         title: Text(

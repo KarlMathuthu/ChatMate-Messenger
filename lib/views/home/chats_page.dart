@@ -300,7 +300,11 @@ class _ChatsPageState extends State<ChatsPage> {
           color: Colors.white,
         ),
         onPressed: () {
-          Get.to(() => const ContactsPage(), transition: Transition.cupertino);
+          Get.to(
+              () =>const ContactsPage(
+                  
+                  ),
+              transition: Transition.cupertino);
         },
       ),
     );
