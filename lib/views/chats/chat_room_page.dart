@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/views/calls/answer_call.dart';
 import 'package:chat_mate_messanger/views/calls/call_page.dart';
 import 'package:chat_mate_messanger/widgets/message_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
