@@ -1,6 +1,6 @@
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
+import 'package:chat_mate_messanger/controllers/sharedPref_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/views/chats/cantacts_page.dart';
 import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../model/message_model.dart';
+import '../chats/cantacts_page.dart';
 
 class ChatsPage extends StatefulWidget {
   const ChatsPage({super.key});
@@ -25,6 +26,7 @@ class _ChatsPageState extends State<ChatsPage> {
   String currentUserId = FirebaseAuth.instance.currentUser!.uid;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CustomLoader customLoader = CustomLoader();
+  SharedPrefController sharedPrefController = Get.put(SharedPrefController());
 
   String getFriendUid(
       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> chatData, int index) {
