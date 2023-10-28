@@ -2,6 +2,7 @@ import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/chats/cantacts_page.dart';
 import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _ChatsPageState extends State<ChatsPage> {
   ChatController chatController = Get.put(ChatController());
   String currentUserId = FirebaseAuth.instance.currentUser!.uid;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CustomLoader customLoader = CustomLoader();
 
   String getFriendUid(
       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> chatData, int index) {
@@ -147,6 +149,7 @@ class _ChatsPageState extends State<ChatsPage> {
                           chatController.showDeleteDialog(
                             context: context,
                             chatId: chatSnapshot.data!.docs[index].id,
+                            customLoader: customLoader,
                           );
                         },
                         onTap: () {

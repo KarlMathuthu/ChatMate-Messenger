@@ -1,8 +1,11 @@
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/chat_model.dart';
@@ -290,24 +293,41 @@ class ChatController extends GetxController {
   Future<void> showDeleteDialog({
     required BuildContext context,
     required String chatId,
+    required CustomLoader customLoader,
   }) {
     return showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text('Delete Chat'),
-          content: Text('Are you sure you want to delete this chat?'),
+          title: const Text('Delete Chat'),
+          content: const Text('Are you sure you want to delete this chat?'),
           actions: <Widget>[
-            CupertinoDialogAction(
-              child: Text('Delete'),
-              onPressed: () async {
-                Navigator.of(context).pop();
-              },
-            ),
             CupertinoDialogAction(
               child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                'Delete',
+                style: GoogleFonts.lato(
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                customLoader.showLoader(context);
+                //Delete chat.
+                await FirebaseFirestore.instance
+                    .collection("chats")
+                    .doc(chatId)
+                    .delete();
+                customLoader.hideLoader();
+                Get.snackbar(
+                  "Successful!",
+                  "Chat has been deleted successfully!",
+                );
               },
             ),
           ],
