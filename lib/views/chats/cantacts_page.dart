@@ -234,12 +234,20 @@ class _ContactsPageState extends State<ContactsPage> {
                           snapshot.data!.docs[index]["userStatus"] == "online";
 
                       String username = snapshot.data!.docs[index]["userName"];
+                      String mateUid = snapshot.data!.docs[index]["userUid"];
+                      String currentUserUid =
+                          FirebaseAuth.instance.currentUser!.uid;
                       String initials = username[0].toUpperCase() +
                           username[username.length - 1].toUpperCase();
 
                       return ListTile(
                         onTap: () async {
-                          showSendWaveDialog(username);
+                          if (mateUid == currentUserUid) {
+                            Get.snackbar("No no 😊😳",
+                                "You can't send a message to yourself Mate!");
+                          } else {
+                            showSendWaveDialog(username);
+                          }
                         },
                         title: Text(
                           "@${snapshot.data!.docs[index]["userName"]}",
