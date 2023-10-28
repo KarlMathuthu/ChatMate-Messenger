@@ -4,6 +4,7 @@ import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,46 @@ class _ContactsPageState extends State<ContactsPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
   ChatController chatController = Get.put(ChatController());
+
+  void showSendWaveDialog(String mateName) {
+    Get.dialog(
+      CupertinoAlertDialog(
+        title: Text(
+          "Wave at $mateName \n👋",
+          style: GoogleFonts.lato(),
+        ),
+        content: Text(
+          "Do you want to send a wave to mate?",
+          style: GoogleFonts.lato(),
+        ),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text(
+              "Cancel",
+              style: GoogleFonts.lato(
+                color: AppTheme.mainColorLight,
+              ),
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              "Send Wave",
+              style: GoogleFonts.lato(
+                color: AppTheme.mainColor,
+              ),
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,23 +239,7 @@ class _ContactsPageState extends State<ContactsPage> {
 
                       return ListTile(
                         onTap: () async {
-                          Get.off(
-                            () => ChatRoomPage(
-                              mateName: snapshot.data!.docs[index]["userName"],
-                              mateUid: snapshot.data!.docs[index]["userUid"],
-                              chatRoomId: currentUserUid,
-                              isNewChat: true,
-                            ),
-                          );
-                          /*  Get.off(
-                            () => NewChatPage(
-                              mateName: snapshot.data!.docs[index]["userName"],
-                              mateStatus: snapshot.data!.docs[index]
-                                  ["userStatus"],
-                              mateUid: snapshot.data!.docs[index]["userUid"],
-                              chatRoomId: chatRoomId,
-                            ),
-                          ); */
+                          showSendWaveDialog(username);
                         },
                         title: Text(
                           "@${snapshot.data!.docs[index]["userName"]}",
