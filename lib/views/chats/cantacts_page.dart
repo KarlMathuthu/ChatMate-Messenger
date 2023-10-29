@@ -107,58 +107,33 @@ class _ContactsPageState extends State<ContactsPage> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              "assets/icons/search.svg",
-              color: Colors.black,
-              height: 20,
+          InkWell(
+            borderRadius: BorderRadius.circular(6),
+            onTap: () {
+              //Find channels
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              height: 32,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 214, 227, 255),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                child: Text(
+                  "Filter Mates",
+                  style: GoogleFonts.lato(
+                    color: AppTheme.mainColor,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             ),
           ),
-          PopupMenuButton<String>(
-            color: Colors.white,
-            surfaceTintColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            icon: SvgPicture.asset(
-              "assets/icons/cog.svg",
-              color: Colors.black,
-              height: 20,
-            ),
-            onSelected: (String choice) {
-              switch (choice) {
-                case 'newContact':
-                  //handle oncick
-                  break;
-                case 'newGroup':
-                  //handle onclik
-                  break;
-                case 'newBroadcast':
-                  //handle onclick
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'newContact',
-                  child: Text('New Contact'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'newGroup',
-                  child: Text('New Group'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'newBroadcast',
-                  child: Text('New Broadcast'),
-                ),
-              ];
-            },
-          ),
+          const SizedBox(width: 10),
         ],
         title: Text(
-          "Select Contact",
+          "Find Mate",
           style: GoogleFonts.lato(
             color: Colors.black,
             fontSize: 18,
@@ -176,69 +151,34 @@ class _ContactsPageState extends State<ContactsPage> {
         child: Column(
           children: [
             const SizedBox(height: 5),
-            //New group
-            ListTile(
-              onTap: () {},
-              title: Text(
-                "New Group",
-                style: GoogleFonts.lato(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+            //Search
+            Container(
+              height: 40,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245),
+                borderRadius: BorderRadius.circular(10),
               ),
-              leading: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: AppTheme.mainColor,
-                ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: SvgPicture.asset(
-                        "assets/icons/friends.svg",
-                        color: Colors.white,
-                      ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    "assets/icons/search.svg",
+                    height: 18,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Search mates...",
+                    style: GoogleFonts.lato(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
                     ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 5),
-            //New contact
-            ListTile(
-              onTap: () {},
-              title: Text(
-                "New Contact",
-                style: GoogleFonts.lato(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: SvgPicture.asset(
-                "assets/icons/scan.svg",
-                color: AppTheme.mainColor,
-              ),
-              leading: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: AppTheme.mainColor,
-                ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: SvgPicture.asset(
-                        "assets/icons/contact.svg",
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 10),
