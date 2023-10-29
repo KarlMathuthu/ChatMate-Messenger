@@ -1,172 +1,97 @@
-import 'package:chat_mate_messanger/controllers/auth_controller.dart';
-import 'package:chat_mate_messanger/controllers/signaling_controller.dart';
-import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/views/home/calls_page.dart';
+import 'package:chat_mate_messanger/views/home/channels.dart';
 import 'package:chat_mate_messanger/views/home/chats_page.dart';
 import 'package:chat_mate_messanger/views/home/statuses_page.dart';
+import 'package:chat_mate_messanger/views/settings/app_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  AuthController authController = Get.put(AuthController());
-  Signaling signaling = Signaling();
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
+class _HomePageState extends State<HomePage> {
+  double iconSize = 22;
+  int currentIndex = 0;
+
+  void changePage(int index) {
+    setState(() {
+      currentIndex = index;
+    });
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    // Check the app's lifecycle state and update user status accordingly
-    if (state == AppLifecycleState.paused) {
-      await authController.updateUserStatus("${DateTime.now()}");
-    } else if (state == AppLifecycleState.resumed) {
-      await authController.updateUserStatus("online");
-    }
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
+  List<Widget> pages = [
+    ChatsPage(),
+    StatusesPage(),
+    ChannelsPage(),
+    AppSettingsPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor: AppTheme.scaffoldBacgroundColor,
-        appBar: AppBar(
-          backgroundColor: AppTheme.scaffoldBacgroundColor,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                "assets/icons/search.svg",
-                color: Colors.black,
-                height: 20,
+    return Scaffold(
+      body: pages[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        selectedLabelStyle: GoogleFonts.lato(),
+        unselectedLabelStyle: GoogleFonts.lato(),
+        selectedItemColor: AppTheme.mainColor,
+        currentIndex: currentIndex,
+        onTap: (index) {
+          changePage(index);
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              "assets/icons/chat.svg",
+              height: iconSize,
+              colorFilter: ColorFilter.mode(
+                currentIndex == 0 ? AppTheme.mainColor : Colors.black,
+                BlendMode.srcIn,
               ),
             ),
-            PopupMenuButton<String>(
-              color: Colors.white,
-              surfaceTintColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              icon: SvgPicture.asset(
-                "assets/icons/cog.svg",
-                color: Colors.black,
-                height: 20,
-              ),
-              onSelected: (String choice) {
-                switch (choice) {
-                  case 'goLive':
-                    // Handle Go Live action
-                    break;
-                  case 'newBroadcast':
-                    // Handle New Broadcast action
-                    break;
-                  case 'newGroupChat':
-                    // Handle New Group Chat action
-                    break;
-                  case 'starredMessages':
-                    // Handle Starred Messages action
-                    break;
-                  case 'settings':
-                    // Handle Settings action
-                    Get.toNamed(RouteClass.appSettingsPage);
-                    break;
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'goLive',
-                    child: Text('Go Live'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'newBroadcast',
-                    child: Text('New Broadcast'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'newGroupChat',
-                    child: Text('New Group Chat'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'starredMessages',
-                    child: Text('Starred Messages'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'settings',
-                    child: Text('Settings'),
-                  ),
-                ];
-              },
-            ),
-          ],
-          title: Text(
-            "ChatMate",
-            style: GoogleFonts.lato(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            label: "Chats",
           ),
-          bottom: TabBar(
-            tabs: const [
-              //Chats
-              Tab(
-                text: "Chats",
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              "assets/icons/status.svg",
+              height: iconSize,
+              colorFilter: ColorFilter.mode(
+                currentIndex == 1 ? AppTheme.mainColor : Colors.black,
+                BlendMode.srcIn,
               ),
-              //Status
-              Tab(
-                text: "Status",
-              ),
-              //Calls
-              Tab(
-                text: "Calls",
-              ),
-            ],
-            unselectedLabelStyle: GoogleFonts.lato(),
-            labelColor: AppTheme.mainColor,
-            indicatorColor: AppTheme.mainColor,
-            unselectedLabelColor: AppTheme.mainColorLight,
-            labelStyle: GoogleFonts.lato(),
-            indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(color: AppTheme.mainColor, width: 3.0),
             ),
+            label: "Status",
           ),
-        ),
-        body: const Column(
-          children: [
-            Expanded(
-              child: TabBarView(
-                children: [
-                  //Chats
-                  ChatsPage(),
-                  //Status
-                  StatusesPage(),
-                  //Calls.
-                  CallsPage(),
-                ],
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              "assets/icons/channels.svg",
+              height: iconSize,
+              colorFilter: ColorFilter.mode(
+                currentIndex == 2 ? AppTheme.mainColor : Colors.black,
+                BlendMode.srcIn,
               ),
             ),
-          ],
-        ),
+            label: "Channels",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              "assets/icons/cog.svg",
+              height: iconSize,
+              colorFilter: ColorFilter.mode(
+                currentIndex == 3 ? AppTheme.mainColor : Colors.black,
+                BlendMode.srcIn,
+              ),
+            ),
+            label: "Settings",
+          ),
+        ],
       ),
     );
   }
