@@ -5,7 +5,10 @@ import 'package:chat_mate_messanger/views/home/statuses_page.dart';
 import 'package:chat_mate_messanger/views/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../controllers/auth_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +17,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  AuthController authController = Get.put(AuthController());
+
   double iconSize = 22;
   int currentIndex = 0;
 
@@ -32,8 +37,33 @@ class _HomePageState extends State<HomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    // Check the app's lifecycle state and update user status accordingly
+    if (state == AppLifecycleState.paused) {
+      await authController.updateUserStatus("${DateTime.now()}");
+    } else if (state == AppLifecycleState.resumed) {
+      await authController.updateUserStatus("online");
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.scaffoldBacgroundColor,
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

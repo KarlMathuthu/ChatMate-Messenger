@@ -25,14 +25,6 @@ class AppSettingsPage extends StatelessWidget {
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(
-            Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
-          ),
-        ),
         title: Text(
           "Settings",
           style: GoogleFonts.lato(
