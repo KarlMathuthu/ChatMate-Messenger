@@ -73,6 +73,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         unselectedLabelStyle: GoogleFonts.lato(),
         selectedItemColor: AppTheme.mainColor,
         currentIndex: currentIndex,
+        backgroundColor: Colors.white,
         onTap: (index) {
           changePage(index);
         },

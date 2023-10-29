@@ -76,7 +76,7 @@ class AppSettingsPage extends StatelessWidget {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return Text("data");
+                    return SizedBox();
                   } else if (snapshot.connectionState ==
                       ConnectionState.waiting) {
                     return ListTile(
