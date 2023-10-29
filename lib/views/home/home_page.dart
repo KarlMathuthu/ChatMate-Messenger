@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    signaling.listenForCallCollectionChanges(context);
   }
 
   @override
@@ -41,7 +42,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    signaling.listenForCallCollectionChanges(context);
     super.dispose();
   }
 
