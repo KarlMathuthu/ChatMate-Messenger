@@ -1,9 +1,8 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/views/status/status_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -73,6 +72,36 @@ class _StatusesPageState extends State<StatusesPage> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
+            //Search
+            Container(
+              height: 40,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    "assets/icons/search.svg",
+                    height: 18,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Search mate...",
+                    style: GoogleFonts.lato(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             //My Status.
             ListTile(
               onTap: () {},
@@ -80,7 +109,7 @@ class _StatusesPageState extends State<StatusesPage> {
                 "My Status",
                 style: GoogleFonts.lato(
                   color: Colors.black,
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -88,7 +117,7 @@ class _StatusesPageState extends State<StatusesPage> {
                 "Tap to add status updates",
                 style: GoogleFonts.lato(
                   color: Colors.black54,
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
               ),
@@ -238,7 +267,7 @@ class _StatusesPageState extends State<StatusesPage> {
                           userName,
                           style: GoogleFonts.lato(
                             color: Colors.black,
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -246,12 +275,12 @@ class _StatusesPageState extends State<StatusesPage> {
                           statusUpdateTime,
                           style: GoogleFonts.lato(
                             color: Colors.black54,
-                            fontSize: 13,
+                            fontSize: 12,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
                         leading: StatusView(
-                          radius: 28,
+                          radius: 25,
                           spacing: 15,
                           strokeWidth: 2,
                           indexOfSeenStatus: 1,
@@ -278,6 +307,15 @@ class _StatusesPageState extends State<StatusesPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        shape: CircleBorder(),
+        backgroundColor: AppTheme.mainColor,
+        child: SvgPicture.asset(
+          "assets/icons/status.svg",
+          color: Colors.white,
+        ),
+        onPressed: () {},
       ),
     );
   }
