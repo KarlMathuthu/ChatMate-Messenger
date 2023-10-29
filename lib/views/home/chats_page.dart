@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:badges/badges.dart' as badges;
@@ -138,7 +137,7 @@ class _ChatsPageState extends State<ChatsPage> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "Search ...",
+                    "Search chats...",
                     style: GoogleFonts.lato(
                       color: Colors.grey,
                       fontSize: 14,
@@ -148,6 +147,7 @@ class _ChatsPageState extends State<ChatsPage> {
                 ],
               ),
             ),
+            const SizedBox(height: 10),
             //Chats
             StreamBuilder(
               stream: firestore
@@ -402,6 +402,7 @@ class _ChatsPageState extends State<ChatsPage> {
 
       //Create message button
       floatingActionButton: FloatingActionButton(
+        shape: CircleBorder(),
         backgroundColor: AppTheme.mainColor,
         child: SvgPicture.asset(
           "assets/icons/chat.svg",

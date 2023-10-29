@@ -32,6 +32,42 @@ class _StatusesPageState extends State<StatusesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Mates Status",
+          style: GoogleFonts.lato(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          InkWell(
+            borderRadius: BorderRadius.circular(6),
+            onTap: () {
+              //Find mate
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              height: 32,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 214, 227, 255),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                child: Text(
+                  "New Status",
+                  style: GoogleFonts.lato(
+                    color: AppTheme.mainColor,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+        ],
+      ),
       backgroundColor: AppTheme.scaffoldBacgroundColor,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -188,7 +224,6 @@ class _StatusesPageState extends State<StatusesPage> {
                           statusMap["timestamp"].toString(),
                         ),
                       );
-                      
 
                       return ListTile(
                         onTap: () {
