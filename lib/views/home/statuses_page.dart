@@ -44,7 +44,7 @@ class _StatusesPageState extends State<StatusesPage> {
           InkWell(
             borderRadius: BorderRadius.circular(6),
             onTap: () {
-              //Find mate
+              //Find status
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
