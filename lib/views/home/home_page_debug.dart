@@ -2,6 +2,7 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/home/channels.dart';
 import 'package:chat_mate_messanger/views/home/chats_page.dart';
 import 'package:chat_mate_messanger/views/home/statuses_page.dart';
+import 'package:chat_mate_messanger/views/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,11 +28,13 @@ class _HomePageDebugState extends State<HomePageDebug> {
     ChatsPage(),
     StatusesPage(),
     ChannelsPage(),
+    AppSettingsPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 12,
