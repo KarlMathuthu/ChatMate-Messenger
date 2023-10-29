@@ -24,7 +24,6 @@ class AppSettingsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(
           "Settings",
           style: GoogleFonts.lato(
@@ -33,6 +32,32 @@ class AppSettingsPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          InkWell(
+            borderRadius: BorderRadius.circular(6),
+            onTap: () {
+              //Find mate
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              height: 32,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 214, 227, 255),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                child: Text(
+                  "Edit Profile",
+                  style: GoogleFonts.lato(
+                    color: AppTheme.mainColor,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+        ],
       ),
       body: Container(
         width: double.infinity,
@@ -113,7 +138,7 @@ class AppSettingsPage extends StatelessWidget {
                         "@$username",
                         style: GoogleFonts.lato(
                           color: Colors.black,
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -121,7 +146,7 @@ class AppSettingsPage extends StatelessWidget {
                         userbio,
                         style: GoogleFonts.lato(
                           color: Colors.black54,
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
