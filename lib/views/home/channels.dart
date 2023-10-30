@@ -1,6 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChannelsPage extends StatefulWidget {
@@ -11,6 +16,9 @@ class ChannelsPage extends StatefulWidget {
 }
 
 class _ChannelsPageState extends State<ChannelsPage> {
+  ChannelsController channelsController = Get.put(ChannelsController());
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  String currentUser = FirebaseAuth.instance.currentUser!.uid;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +37,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
             borderRadius: BorderRadius.circular(6),
             onTap: () {
               //Settings
+              channelsController.createChannel();
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -109,50 +118,75 @@ class _ChannelsPageState extends State<ChannelsPage> {
               ),
             ),
             const SizedBox(height: 10),
-            ListView.builder(
-              itemCount: 5,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return ListTile(
-                  onTap: () {},
-                  title: Row(
-                    children: [
-                      Text(
-                        "Attack On Titan Fans",
-                        style: GoogleFonts.lato(
-                          fontSize: 14,
-                          color: Colors.black,
+            StreamBuilder(
+              stream: firebaseFirestore
+                  .collection("channels")
+                  .where("channelMembers", arrayContains: currentUser)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return SizedBox();
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return SizedBox();
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        onTap: () {},
+                        title: Row(
+                          children: [
+                            Text(
+                              snapshot.data!.docs[index]["channelName"],
+                              style: GoogleFonts.lato(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            snapshot.data!.docs[index]["channelName"] ==
+                                    "ChatMate Official"
+                                ? const Icon(
+                                    Icons.verified,
+                                    color: AppTheme.mainColor,
+                                    size: 18,
+                                  )
+                                : const SizedBox(),
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: 5),
-                      const Icon(
-                        Icons.verified,
-                        color: AppTheme.mainColor,
-                        size: 18,
-                      ),
-                    ],
-                  ),
-                  subtitle: Text(
-                    "Did you'all see that?",
-                    style: GoogleFonts.lato(
-                      fontSize: 12,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  leading: Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(23),
-                      image: const DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                            "https://i.insider.com/61d775e137afc20019ac9849?width=700"),
-                      ),
-                    ),
-                  ),
-                );
+                        subtitle: snapshot.data!.docs[index]["channelName"] ==
+                                "ChatMate Official"
+                            ? Text(
+                                "Recieve latest updates & news",
+                                style: GoogleFonts.lato(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              )
+                            : Text(
+                                "Did you'all see that?",
+                                style: GoogleFonts.lato(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(23),
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: snapshot.data!.docs[index]
+                                ["channelPhotoUrl"],
+                            height: 45,
+                            width: 45,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
             const SizedBox(height: 10),
