@@ -198,109 +198,33 @@ class AppSettingsPage extends StatelessWidget {
                 color: Colors.grey.shade300,
               ),
             ),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: SvgPicture.asset(
-                "assets/icons/chat.svg",
-                color: Colors.black,
+            Container(
+              height: 50,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10),
               ),
-              title: Text(
-                "Chats",
-                style: GoogleFonts.lato(fontSize: 15),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
-            ),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: SvgPicture.asset(
-                "assets/icons/noti.svg",
-                color: Colors.black,
-              ),
-              title: Text(
-                "Notifications",
-                style: GoogleFonts.lato(fontSize: 15),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
-            ),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: SvgPicture.asset(
-                "assets/icons/file.svg",
-                color: Colors.black,
-              ),
-              title: Text(
-                "Storage & Data",
-                style: GoogleFonts.lato(fontSize: 15),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
-            ),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: SvgPicture.asset(
-                "assets/icons/sec.svg",
-                color: Colors.black,
-              ),
-              title: Text(
-                "Security",
-                style: GoogleFonts.lato(fontSize: 15),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
-            ),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: SvgPicture.asset(
-                "assets/icons/help.svg",
-                color: Colors.black,
-              ),
-              title: Text(
-                "Help Center",
-                style: GoogleFonts.lato(fontSize: 15),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
-            ),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: SvgPicture.asset(
-                "assets/icons/friends.svg",
-                color: Colors.black,
-              ),
-              title: Text(
-                "Invite friends",
-                style: GoogleFonts.lato(fontSize: 15),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-              ),
-            ),
-            //Logout
-            ListTile(
-              splashColor: Colors.grey.shade400,
-              onTap: () {
-                _showLogoutConfirmation(context);
-              },
-              leading: SvgPicture.asset(
-                "assets/icons/logout.svg",
-                color: Colors.redAccent,
-              ),
-              title: Text(
-                "Logout",
-                style: GoogleFonts.lato(color: Colors.redAccent, fontSize: 15),
+              child: Row(
+                children: [
+                  const SizedBox(width: 8.0),
+                  SvgPicture.asset(
+                    "assets/icons/chat.svg",
+                    color: Colors.black,
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    "Chats",
+                    style: GoogleFonts.lato(fontSize: 15),
+                  ),
+                  const Expanded(child: Row()),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 5),
+                ],
               ),
             ),
           ],
