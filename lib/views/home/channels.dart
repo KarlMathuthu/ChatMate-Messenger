@@ -107,7 +107,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
               ),
               child: Center(
                 child: Text(
-                  "My Channels",
+                  "Channels",
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.lato(
                     color: AppTheme.mainColor,
@@ -124,10 +124,10 @@ class _ChannelsPageState extends State<ChannelsPage> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return SizedBox();
+                  return const SizedBox();
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
-                  return SizedBox();
+                  return const SizedBox();
                 } else {
                   return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
@@ -194,14 +194,14 @@ class _ChannelsPageState extends State<ChannelsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               margin: const EdgeInsets.only(left: 8),
               height: 32,
-              width: 130,
+              width: 100,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 214, 227, 255),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
                 child: Text(
-                  "Most popular",
+                  "Popular",
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.lato(
                     color: AppTheme.mainColor,
