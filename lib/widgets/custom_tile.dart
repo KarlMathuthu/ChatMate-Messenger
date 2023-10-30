@@ -22,8 +22,15 @@ class CustomTile extends StatelessWidget {
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade200,
+              offset: const Offset(0.5, 2),
+              blurRadius: 3,
+            ),
+          ],
         ),
         child: Row(
           children: [

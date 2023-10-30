@@ -203,37 +203,37 @@ class AppSettingsPage extends StatelessWidget {
               icon: CustomIcons.chat,
               onTap: () {},
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             CustomTile(
               title: "Notifications",
               icon: CustomIcons.notification,
               onTap: () {},
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             CustomTile(
               title: "Storage & Dat",
               icon: CustomIcons.file,
               onTap: () {},
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             CustomTile(
               title: "Security",
               icon: CustomIcons.security,
               onTap: () {},
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             CustomTile(
               title: "Help Center",
               icon: CustomIcons.help,
               onTap: () {},
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             CustomTile(
               title: "Invite friends",
               icon: CustomIcons.friends,
               onTap: () {},
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             GestureDetector(
               onTap: () {},
               child: Container(
