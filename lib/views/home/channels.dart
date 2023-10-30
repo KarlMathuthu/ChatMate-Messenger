@@ -2,7 +2,6 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:badges/badges.dart' as badges;
 
 class ChannelsPage extends StatefulWidget {
   const ChannelsPage({super.key});
@@ -117,12 +116,22 @@ class _ChannelsPageState extends State<ChannelsPage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   onTap: () {},
-                  title: Text(
-                    "Attack On Titan Fans",
-                    style: GoogleFonts.lato(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Attack On Titan Fans",
+                        style: GoogleFonts.lato(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      const Icon(
+                        Icons.verified,
+                        color: AppTheme.mainColor,
+                        size: 18,
+                      ),
+                    ],
                   ),
                   subtitle: Text(
                     "Did you'all see that?",
@@ -131,18 +140,12 @@ class _ChannelsPageState extends State<ChannelsPage> {
                       color: Colors.black54,
                     ),
                   ),
-                  trailing: badges.Badge(
-                    badgeAnimation: badges.BadgeAnimation.fade(),
-                    badgeStyle: badges.BadgeStyle(
-                      badgeColor: AppTheme.mainColor,
-                    ),
-                  ),
                   leading: Container(
                     height: 45,
                     width: 45,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(23),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                         fit: BoxFit.cover,
                         image: NetworkImage(
                             "https://i.insider.com/61d775e137afc20019ac9849?width=700"),
