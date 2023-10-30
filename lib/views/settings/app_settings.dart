@@ -1,8 +1,8 @@
-import 'dart:io';
-
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
+import 'package:chat_mate_messanger/widgets/custom_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -198,33 +198,77 @@ class AppSettingsPage extends StatelessWidget {
                 color: Colors.grey.shade300,
               ),
             ),
-            Container(
-              height: 50,
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 8.0),
-                  SvgPicture.asset(
-                    "assets/icons/chat.svg",
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 8.0),
-                  Text(
-                    "Chats",
-                    style: GoogleFonts.lato(fontSize: 15),
-                  ),
-                  const Expanded(child: Row()),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 5),
-                ],
+            CustomTile(
+              title: "Chats",
+              icon: CustomIcons.chat,
+              onTap: () {},
+            ),
+            const SizedBox(height: 5),
+            CustomTile(
+              title: "Notifications",
+              icon: CustomIcons.notification,
+              onTap: () {},
+            ),
+            const SizedBox(height: 5),
+            CustomTile(
+              title: "Storage & Dat",
+              icon: CustomIcons.file,
+              onTap: () {},
+            ),
+            const SizedBox(height: 5),
+            CustomTile(
+              title: "Security",
+              icon: CustomIcons.security,
+              onTap: () {},
+            ),
+            const SizedBox(height: 5),
+            CustomTile(
+              title: "Help Center",
+              icon: CustomIcons.help,
+              onTap: () {},
+            ),
+            const SizedBox(height: 5),
+            CustomTile(
+              title: "Invite friends",
+              icon: CustomIcons.friends,
+              onTap: () {},
+            ),
+            const SizedBox(height: 5),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 240, 241),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 8.0),
+                    SvgPicture.asset(
+                      CustomIcons.logout,
+                      color: Colors.red,
+                      height: 22,
+                    ),
+                    const SizedBox(width: 8.0),
+                    Text(
+                      "Logout",
+                      style: GoogleFonts.lato(
+                        fontSize: 14,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const Expanded(child: Row()),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.red,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 5),
+                  ],
+                ),
               ),
             ),
           ],
