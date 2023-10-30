@@ -2,6 +2,7 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:badges/badges.dart' as badges;
 
 class ChannelsPage extends StatefulWidget {
   const ChannelsPage({super.key});
@@ -28,7 +29,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
           InkWell(
             borderRadius: BorderRadius.circular(6),
             onTap: () {
-              //Find channels
+              //Settings
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -39,7 +40,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
               ),
               child: Center(
                 child: Text(
-                  "Join Channels",
+                  "Settings",
                   style: GoogleFonts.lato(
                     color: AppTheme.mainColor,
                     fontSize: 13,
@@ -54,6 +55,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Search
             Container(
@@ -83,6 +85,93 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            //My chanels
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              margin: const EdgeInsets.only(left: 8),
+              height: 32,
+              width: 100,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 214, 227, 255),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                child: Text(
+                  "My Channels",
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.lato(
+                    color: AppTheme.mainColor,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ListView.builder(
+              itemCount: 5,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {},
+                  title: Text(
+                    "Attack On Titan Fans",
+                    style: GoogleFonts.lato(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
+                  subtitle: Text(
+                    "Did you'all see that?",
+                    style: GoogleFonts.lato(
+                      fontSize: 12,
+                      color: Colors.black54,
+                    ),
+                  ),
+                  trailing: badges.Badge(
+                    badgeAnimation: badges.BadgeAnimation.fade(),
+                    badgeStyle: badges.BadgeStyle(
+                      badgeColor: AppTheme.mainColor,
+                    ),
+                  ),
+                  leading: Container(
+                    height: 45,
+                    width: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(23),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(
+                            "https://i.insider.com/61d775e137afc20019ac9849?width=700"),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 10),
+            //All channels
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              margin: const EdgeInsets.only(left: 8),
+              height: 32,
+              width: 130,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 214, 227, 255),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Center(
+                child: Text(
+                  "Other Channels",
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.lato(
+                    color: AppTheme.mainColor,
+                    fontSize: 13,
+                  ),
+                ),
               ),
             ),
           ],
