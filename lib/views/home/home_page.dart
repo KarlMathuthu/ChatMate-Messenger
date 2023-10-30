@@ -1,7 +1,8 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/views/home/channels.dart';
 import 'package:chat_mate_messanger/views/home/chats_page.dart';
-import 'package:chat_mate_messanger/views/home/statuses_page.dart';
+import 'package:chat_mate_messanger/views/home/calls_page.dart';
 import 'package:chat_mate_messanger/views/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,9 +31,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   List<Widget> pages = [
-    ChatsPage(),
-    StatusesPage(),
-    ChannelsPage(),
+    const ChatsPage(),
+    const CallsPage(),
+    const ChannelsPage(),
     AppSettingsPage(),
   ];
 
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         items: [
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              "assets/icons/chat.svg",
+             CustomIcons.chat,
               height: iconSize,
               colorFilter: ColorFilter.mode(
                 currentIndex == 0 ? AppTheme.mainColor : Colors.black,
@@ -89,20 +90,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
             label: "Chats",
           ),
+          //Satuses chaning to Calls
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              "assets/icons/status.svg",
+              CustomIcons.call,
               height: iconSize,
               colorFilter: ColorFilter.mode(
                 currentIndex == 1 ? AppTheme.mainColor : Colors.black,
                 BlendMode.srcIn,
               ),
             ),
-            label: "Status",
+            label: "Calls",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              "assets/icons/channels.svg",
+             CustomIcons.channels,
               height: iconSize,
               colorFilter: ColorFilter.mode(
                 currentIndex == 2 ? AppTheme.mainColor : Colors.black,
@@ -113,7 +115,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              "assets/icons/cog.svg",
+             CustomIcons.cog,
               height: iconSize,
               colorFilter: ColorFilter.mode(
                 currentIndex == 3 ? AppTheme.mainColor : Colors.black,

@@ -37,7 +37,6 @@ class _ChannelsPageState extends State<ChannelsPage> {
             borderRadius: BorderRadius.circular(6),
             onTap: () {
               //Settings
-              channelsController.createChannel();
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -146,13 +145,13 @@ class _ChannelsPageState extends State<ChannelsPage> {
                                 color: Colors.black,
                               ),
                             ),
-                            const SizedBox(width: 5),
+                            const SizedBox(width: 3),
                             snapshot.data!.docs[index]["channelName"] ==
                                     "ChatMate Official"
                                 ? const Icon(
                                     Icons.verified,
                                     color: AppTheme.mainColor,
-                                    size: 18,
+                                    size: 16,
                                   )
                                 : const SizedBox(),
                           ],
@@ -202,7 +201,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
               ),
               child: Center(
                 child: Text(
-                  "Other Channels",
+                  "Most popular",
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.lato(
                     color: AppTheme.mainColor,
