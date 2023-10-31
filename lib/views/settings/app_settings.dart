@@ -211,7 +211,7 @@ class AppSettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             CustomTile(
-              title: "Storage & Dat",
+              title: "Storage & Data",
               icon: CustomIcons.file,
               onTap: () {},
             ),
@@ -235,7 +235,9 @@ class AppSettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                _showLogoutConfirmation(context);
+              },
               child: Container(
                 height: 50,
                 width: double.infinity,
