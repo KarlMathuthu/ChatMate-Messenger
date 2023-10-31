@@ -179,8 +179,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         snapshot.data == null ||
                         snapshot.data!.data() == null) {
                       return const Center(
-                        child: Text("Send your first message"),
-                      );
+                          // child: Text("Send your first message"),
+                          );
                     } else if (snapshot.connectionState ==
                         ConnectionState.waiting) {
                       return const Center(
