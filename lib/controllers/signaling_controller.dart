@@ -1,10 +1,7 @@
 import 'dart:convert';
 
-import 'package:chat_mate_messanger/views/calls/answer_call.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 typedef StreamStateCallback = void Function(MediaStream stream);
@@ -131,31 +128,6 @@ class Signaling {
     // Listen for remote ICE candidates above
 
     return roomId;
-  }
-
-  //Listen for incomming calls.
-  void listenForCallCollectionChanges(BuildContext context) {
-    String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
-    final callCollection = FirebaseFirestore.instance
-        .collection("users")
-        .doc(currentUserUid)
-        .collection("calls");
-
-    callCollection.snapshots().listen((querySnapshot) {
-      if (querySnapshot.docChanges.isNotEmpty) {
-        for (var change in querySnapshot.docChanges) {
-          if (change.type == DocumentChangeType.added) {
-            print("You have an incoming call");
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => AnswerCallPage(),
-              ),
-            );
-          }
-        }
-      }
-    });
   }
 
   Future<void> joinRoom(String roomId, RTCVideoRenderer? remoteVideo) async {
