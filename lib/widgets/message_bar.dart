@@ -142,6 +142,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                       title: widget.mateName,
                     );
                   },
+                  //Send file
                   icon: Transform.rotate(
                     angle: 45 * (3.141592653589793 / 180),
                     child: SvgPicture.asset(
