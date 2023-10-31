@@ -5,4 +5,5 @@ class CallController extends GetxController {
   //Join Call.
   //Close call.
   //Add call history to all mates.
+  //clear history.
 }
