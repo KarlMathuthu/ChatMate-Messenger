@@ -1,5 +1,5 @@
 import 'package:chat_mate_messanger/views/home/home_page.dart';
-import 'package:chat_mate_messanger/views/intro/letsYouInPage.dart';
+import 'package:chat_mate_messanger/views/auth/letsYouInPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

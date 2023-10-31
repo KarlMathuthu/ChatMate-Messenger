@@ -1,8 +1,8 @@
 import 'package:chat_mate_messanger/views/auth/check_user_state.dart';
 import 'package:chat_mate_messanger/views/auth/login_page.dart';
 import 'package:chat_mate_messanger/views/home/home_page.dart';
-import 'package:chat_mate_messanger/views/intro/letsYouInPage.dart';
-import 'package:chat_mate_messanger/views/intro/splashPage.dart';
+import 'package:chat_mate_messanger/views/auth/letsYouInPage.dart';
+import 'package:chat_mate_messanger/views/auth/splashPage.dart';
 import 'package:chat_mate_messanger/views/settings/app_settings.dart';
 import 'package:get/get.dart';
 
