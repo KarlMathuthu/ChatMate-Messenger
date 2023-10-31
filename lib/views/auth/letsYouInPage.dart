@@ -18,12 +18,15 @@ class LetsYouInPage extends StatelessWidget {
       appBar: AppBar(backgroundColor: AppTheme.scaffoldBacgroundColor),
       body: Column(
         children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Image.asset(
-              Images.splashImage2,
-              height: 160,
-              width: 160,
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Image.asset(
+                Images.splashImage2,
+                height: 160,
+                width: 160,
+              ),
             ),
           ),
           Text(
