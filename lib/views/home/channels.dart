@@ -118,10 +118,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
             ),
             const SizedBox(height: 10),
             StreamBuilder(
-              stream: firebaseFirestore
-                  .collection("channels")
-                  .where("channelMembers", arrayContains: currentUser)
-                  .snapshots(),
+              stream: firebaseFirestore.collection("channels").snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const SizedBox();
@@ -129,8 +126,21 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     ConnectionState.waiting) {
                   return const SizedBox();
                 } else {
+                  List<QueryDocumentSnapshot> channels = snapshot.data!.docs;
+
+                  // Custom sorting function
+                  channels.sort((a, b) {
+                    if (a["channelName"] == "ChatMate Official") {
+                      return -1; // "ChatMate" channel comes first
+                    } else if (b["channelName"] == "ChatMate Official") {
+                      return 1; // "ChatMate" channel comes first
+                    } else {
+                      return 0; // No preference for other channels
+                    }
+                  });
+
                   return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
+                    itemCount: channels.length,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
@@ -139,14 +149,14 @@ class _ChannelsPageState extends State<ChannelsPage> {
                         title: Row(
                           children: [
                             Text(
-                              snapshot.data!.docs[index]["channelName"],
+                              channels[index]["channelName"],
                               style: GoogleFonts.lato(
                                 fontSize: 14,
                                 color: Colors.black,
                               ),
                             ),
                             const SizedBox(width: 3),
-                            snapshot.data!.docs[index]["channelName"] ==
+                            channels[index]["channelName"] ==
                                     "ChatMate Official"
                                 ? const Icon(
                                     Icons.verified,
@@ -156,17 +166,17 @@ class _ChannelsPageState extends State<ChannelsPage> {
                                 : const SizedBox(),
                           ],
                         ),
-                        subtitle: snapshot.data!.docs[index]["channelName"] ==
+                        subtitle: channels[index]["channelName"] ==
                                 "ChatMate Official"
                             ? Text(
-                                "Recieve latest updates & news",
+                                "Receive latest updates & news",
                                 style: GoogleFonts.lato(
                                   fontSize: 12,
                                   color: Colors.black54,
                                 ),
                               )
                             : Text(
-                                "Did you'all see that?",
+                                "Did you all see that?",
                                 style: GoogleFonts.lato(
                                   fontSize: 12,
                                   color: Colors.black54,
@@ -176,8 +186,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                           borderRadius: BorderRadius.circular(23),
                           child: CachedNetworkImage(
                             fit: BoxFit.cover,
-                            imageUrl: snapshot.data!.docs[index]
-                                ["channelPhotoUrl"],
+                            imageUrl: channels[index]["channelPhotoUrl"],
                             height: 45,
                             width: 45,
                           ),
