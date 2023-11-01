@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
@@ -9,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChannelRoomPage extends StatefulWidget {
-  const ChannelRoomPage({
+  ChannelRoomPage({
     super.key,
     required this.isAdmin,
     required this.isMateFllowing,
@@ -20,7 +21,7 @@ class ChannelRoomPage extends StatefulWidget {
     required this.followersText,
   });
   final bool isAdmin;
-  final bool isMateFllowing;
+  bool isMateFllowing;
   final bool isChannelVerified;
   final String channelName;
   final String channelUid;
@@ -52,8 +53,14 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
                 Icons.arrow_back,
               ),
             ),
-            CircleAvatar(
-              backgroundImage: NetworkImage(widget.channelPhotoUrl),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(23),
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: widget.channelPhotoUrl,
+                height: 45,
+                width: 45,
+              ),
             ),
             const SizedBox(width: 5),
             Expanded(
@@ -97,8 +104,8 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
               ?
               //Unfollow button
               IconButton(
-                  onPressed: () {
-                    channelsController.unfollowChannel(widget.channelUid);
+                  onPressed: () async {
+                    await channelsController.unfollowChannel(widget.channelUid);
                   },
                   icon: SvgPicture.asset(
                     CustomIcons.logout,
@@ -110,8 +117,8 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
               //Follow channel
               InkWell(
                   borderRadius: BorderRadius.circular(6),
-                  onTap: () {
-                    channelsController.followChannel(widget.channelUid);
+                  onTap: () async {
+                    await channelsController.followChannel(widget.channelUid);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),

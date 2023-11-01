@@ -161,10 +161,14 @@ class _ChannelsPageState extends State<ChannelsPage> {
                       bool isChannelVerified =
                           snapshot.data!.docs[index]["channelVerified"];
                       bool isMateFollwingChannel() {
-                        List<String> channelMembers = List<String>.from(
-                            snapshot.data!.docs[index]["channelMembers"]);
+                        List channelMembers = snapshot.data!.docs[index]
+                            ["channelMembers"] as List;
 
-                        return channelMembers.contains(currentUser);
+                        if (channelMembers.contains(currentUser)) {
+                          return true;
+                        } else {
+                          return false;
+                        }
                       }
 
                       return ListTile(
@@ -300,6 +304,17 @@ class _ChannelsPageState extends State<ChannelsPage> {
                       bool isChannelVerified =
                           channels[index]["channelVerified"];
                       String channelAdmin = channels[index]["channelAdmin"];
+                      bool isMateFollwingChannel() {
+                        List channelMembers = snapshot.data!.docs[index]
+                            ["channelMembers"] as List;
+
+                        if (channelMembers.contains(currentUser)) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      }
+
                       if (channelAdmin == currentUser) {
                         // Hide the current user channels.
                         return const SizedBox();
@@ -309,7 +324,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                           Get.to(
                             () => ChannelRoomPage(
                               isAdmin: isAdmin,
-                              isMateFllowing: false,
+                              isMateFllowing: isMateFollwingChannel(),
                               isChannelVerified: isChannelVerified,
                               channelName: channelName,
                               channelUid: channelUid,
