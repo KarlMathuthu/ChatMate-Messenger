@@ -5,6 +5,7 @@ class ChannelsModel {
   final String channelAdmin;
   final String channelTopic;
   final bool channelVerified;
+  final String createDate;
   final List<String> channelMembers;
 
   ChannelsModel({
@@ -15,6 +16,7 @@ class ChannelsModel {
     required this.channelVerified,
     required this.channelMembers,
     required this.channelAdmin,
+    required this.createDate,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +28,7 @@ class ChannelsModel {
       "channelAdmin": channelAdmin,
       "channelVerified": channelVerified,
       "channelMembers": channelMembers,
+      "createDate": createDate,
     };
   }
 }

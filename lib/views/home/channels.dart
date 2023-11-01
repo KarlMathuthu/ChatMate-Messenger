@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/channels/create_channel.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -20,6 +22,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
   ChannelsController channelsController = Get.put(ChannelsController());
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   String currentUser = FirebaseAuth.instance.currentUser!.uid;
+  CustomLoader customLoader = CustomLoader();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +115,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
               ),
               child: Center(
                 child: Text(
-                  "Channels",
+                  "Following",
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.lato(
                     color: AppTheme.mainColor,
@@ -123,7 +126,10 @@ class _ChannelsPageState extends State<ChannelsPage> {
             ),
             const SizedBox(height: 10),
             StreamBuilder(
-              stream: firebaseFirestore.collection("channels").snapshots(),
+              stream: firebaseFirestore
+                  .collection("channels")
+                  .where("channelMembers", arrayContains: currentUser)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const SizedBox();
@@ -151,6 +157,10 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: () {},
+                        onLongPress: () {
+                          //delete channel
+                          deleteChannel(channels[index].id);
+                        },
                         title: Row(
                           children: [
                             Text(
@@ -168,7 +178,13 @@ class _ChannelsPageState extends State<ChannelsPage> {
                                     color: AppTheme.mainColor,
                                     size: 16,
                                   )
-                                : const SizedBox(),
+                                : channels[index]["channelVerified"] == true
+                                    ? const Icon(
+                                        Icons.verified,
+                                        color: AppTheme.mainColor,
+                                        size: 16,
+                                      )
+                                    : const SizedBox(),
                           ],
                         ),
                         subtitle: channels[index]["channelName"] ==
@@ -227,6 +243,61 @@ class _ChannelsPageState extends State<ChannelsPage> {
           ],
         ),
       ),
+    );
+  }
+
+  //Delete channel
+  Future<void> deleteChannel(String channelIndex) {
+    return showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            'Delete Channel',
+            style: GoogleFonts.lato(),
+          ),
+          content: Text(
+            "Are you sure you want to delete this channel?, You won't be able to recover it mate!",
+            style: GoogleFonts.lato(),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                'Cancel',
+                style: GoogleFonts.lato(
+                  fontSize: 14,
+                  color: AppTheme.mainColorLight,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                'Delete',
+                style: GoogleFonts.lato(
+                  color: Colors.red,
+                  fontSize: 14,
+                ),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                customLoader.showLoader(context);
+                //Delete chat.
+                channelsController.deleteChannel(
+                  channelIndex: channelIndex,
+                  customLoader: customLoader,
+                );
+                Get.snackbar(
+                  "Successful!",
+                  "Channel has been deleted successfully!",
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

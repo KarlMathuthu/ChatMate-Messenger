@@ -5,6 +5,7 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/constants.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -52,6 +53,8 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   FocusNode channelNameNode = FocusNode();
   CustomLoader customLoader = CustomLoader();
 
+  String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+
   pickImage() async {
     Uint8List? im = await getPickedImage(ImageSource.gallery);
     setState(() {
@@ -93,6 +96,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
           actions: [
             IconButton(
               onPressed: () {
+                channelNameNode.hasFocus ? channelNameNode.unfocus() : null;
                 //Create channel
                 if (selectedImage == null) {
                   Get.snackbar("Warning", "Select image mate!");
@@ -246,6 +250,15 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 customLoader.showLoader(context);
+                channelsController.createChannel(
+                  channelName: channelNameController.text.trim(),
+                  channelTopic: topicsList[selectedTopic],
+                  imageFilePath: selectedImage!,
+                  channelMembers: [
+                    currentUserUid,
+                  ],
+                  customLoader: customLoader,
+                );
               },
             ),
           ],

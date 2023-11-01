@@ -32,12 +32,14 @@ class ChannelsController extends GetxController {
       channelMembers: channelMembers,
       channelAdmin: auth.currentUser!.uid,
       channelTopic: channelTopic,
+      createDate: DateTime.now().toString(),
     );
     await firebaseFirestore
         .collection("channels")
         .doc(channelUid)
         .set(channelModel.toMap());
     customLoader.hideLoader();
+    Get.back();
     print("Channel id $channelUid has been created!");
   }
 
@@ -50,6 +52,15 @@ class ChannelsController extends GetxController {
         ],
       },
     );
+  }
+
+  //Delete channel.
+  void deleteChannel({
+    required String channelIndex,
+    required CustomLoader customLoader,
+  }) async {
+    await firebaseFirestore.collection("channels").doc(channelIndex).delete();
+    customLoader.hideLoader();
   }
 
   //Upload channel logo/image

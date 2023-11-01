@@ -34,6 +34,7 @@ class AuthController extends GetxController {
           fcmToken: fcmToken ?? "",
           userBio: "I'm new to ChatMate!",
           userStatus: 'online',
+          strikes: 0,
         );
 
         // Add user data to Cloud Firestore
