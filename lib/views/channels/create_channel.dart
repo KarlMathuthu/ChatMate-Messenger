@@ -13,6 +13,7 @@ class CreateChannelPage extends StatefulWidget {
 }
 
 class _CreateChannelPageState extends State<CreateChannelPage> {
+  List<String> topicsList = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +55,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
         margin: const EdgeInsets.only(top: 0.8),
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //Pick Picture & TextField.
             Row(
@@ -87,13 +89,13 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
               ],
             ),
             const SizedBox(height: 15),
-            //Description
-            Expanded(
-              child: TextField(
-                style: GoogleFonts.lato(fontSize: 15),
-                decoration: const InputDecoration(
-                  hintText: "Description",
-                ),
+            //Topics
+            Text(
+              "Choose Channel Topics",
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.lato(
+                color: Colors.black,
+                fontSize: 13,
               ),
             ),
           ],

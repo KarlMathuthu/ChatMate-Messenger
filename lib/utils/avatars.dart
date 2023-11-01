@@ -1,4 +1,4 @@
-class Memojis {
+class Avatars {
   // Man Memojis
   static const man_1 = "assets/memoji/man_1.svg";
   static const man_2 = "assets/memoji/man_2.svg";
