@@ -145,8 +145,36 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     itemBuilder: (context, index) {
                       Map<String, dynamic> lastMessage =
                           snapshot.data!.docs[index]["lastMessage"];
+                      int channelFollowers =
+                          (snapshot.data!.docs[index]["channelMembers"] as List)
+                              .length;
+                      String followersText = formatFollowers(channelFollowers);
+                      String channelPhotoUrl =
+                          snapshot.data!.docs[index]["channelPhotoUrl"];
+                      String channelUid =
+                          snapshot.data!.docs[index]["channelUid"];
+                      String channelName =
+                          snapshot.data!.docs[index]["channelName"];
+                      bool isAdmin = snapshot.data!.docs[index]
+                              ["channelAdmin"] ==
+                          currentUser;
+                      bool isChannelVerified =
+                          snapshot.data!.docs[index]["channelVerified"];
+
                       return ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(
+                            () => ChannelRoomPage(
+                              isAdmin: isAdmin,
+                              isMateFllowing: true,
+                              isChannelVerified: isChannelVerified,
+                              channelName: channelName,
+                              channelUid: channelUid,
+                              channelPhotoUrl: channelPhotoUrl,
+                              followersText: followersText,
+                            ),
+                          );
+                        },
                         title: Row(
                           children: [
                             Text(
@@ -257,20 +285,32 @@ class _ChannelsPageState extends State<ChannelsPage> {
                       int channelFollowers =
                           (channels[index]["channelMembers"] as List).length;
                       String followersText = formatFollowers(channelFollowers);
-                      String channelPhotoUrl = channels[index]["channelPhotoUrl"];
+                      String channelPhotoUrl =
+                          channels[index]["channelPhotoUrl"];
                       String channelUid = channels[index]["channelUid"];
                       String channelName = channels[index]["channelName"];
-                      bool isAdmin = channels[index]["channelAdmin"] == currentUser;
+                      bool isAdmin =
+                          channels[index]["channelAdmin"] == currentUser;
+                      bool isChannelVerified =
+                          channels[index]["channelVerified"];
+                      String channelAdmin = channels[index]["channelAdmin"];
+                      if (channelAdmin == currentUser) {
+                        // Hide the current user channels.
+                        return const SizedBox();
+                      }
                       return ListTile(
                         onTap: () {
                           Get.to(
                             () => ChannelRoomPage(
                               isAdmin: isAdmin,
+                              isMateFllowing: false,
+                              isChannelVerified: isChannelVerified,
                               channelName: channelName,
                               channelUid: channelUid,
                               channelPhotoUrl: channelPhotoUrl,
                               followersText: followersText,
                             ),
+                            transition: Transition.cupertino,
                           );
                         },
                         title: Row(
