@@ -1,5 +1,6 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
+import 'package:chat_mate_messanger/widgets/channel_chat_bubble.dart';
 import 'package:chat_mate_messanger/widgets/channel_message_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -139,7 +140,14 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
             const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
-                itemBuilder: (context, index) {},
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return ChannelChatBubble(
+                    message: "hi",
+                    isAdmin: widget.isAdmin,
+                    type: "text",
+                  );
+                },
               ),
             ),
 
@@ -151,27 +159,7 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
                     focusNode: focusNode,
                     messageBarHintStyle: GoogleFonts.lato(fontSize: 15),
                   )
-                : InkWell(
-                    onTap: () {
-                      //Follow channel
-                    },
-                    child: Container(
-                      height: 45,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: AppTheme.mainColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Follow channel",
-                          style: GoogleFonts.lato(
-                            color: Colors.white,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                : const SizedBox(),
           ],
         ),
       ),
