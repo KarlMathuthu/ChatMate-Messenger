@@ -52,6 +52,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
         width: double.infinity,
         height: double.infinity,
         margin: const EdgeInsets.only(top: 0.8),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             //Pick Picture & TextField.
@@ -63,16 +64,38 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
                   child: Center(
                     child: SvgPicture.asset(
                       CustomIcons.camera,
-                      colorFilter: ColorFilter.mode(
+                      colorFilter: const ColorFilter.mode(
                         Colors.white,
                         BlendMode.srcIn,
                       ),
                     ),
                   ),
                 ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: TextField(
+                    style: GoogleFonts.lato(fontSize: 15),
+                    decoration: const InputDecoration(
+                      hintText: "Channel name",
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: SvgPicture.asset(CustomIcons.emoji),
+                ),
               ],
             ),
+            const SizedBox(height: 15),
             //Description
+            Expanded(
+              child: TextField(
+                style: GoogleFonts.lato(fontSize: 15),
+                decoration: const InputDecoration(
+                  hintText: "Description",
+                ),
+              ),
+            ),
           ],
         ),
       ),
