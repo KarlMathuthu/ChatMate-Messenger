@@ -21,8 +21,13 @@ class ChannelsController extends GetxController {
     required CustomLoader customLoader,
   }) async {
     String channelUid = const Uuid().v1();
+    Map<String, dynamic> lastMessage = {
+      "messageText": "$channelName was created",
+      "timestamp": DateTime.now().toString(),
+      "type": "text",
+    };
     String channelPhotoUrl =
-        await uploadImageToStorage(imageFilePath, "channelLogos");
+        await uploadImageToStorage(imageFilePath, channelUid);
 
     final channelModel = ChannelsModel(
       channelName: channelName,
@@ -33,6 +38,7 @@ class ChannelsController extends GetxController {
       channelAdmin: auth.currentUser!.uid,
       channelTopic: channelTopic,
       createDate: DateTime.now().toString(),
+      lastMessage: lastMessage,
     );
     await firebaseFirestore
         .collection("channels")
@@ -59,6 +65,9 @@ class ChannelsController extends GetxController {
     required String channelIndex,
     required CustomLoader customLoader,
   }) async {
+    //Delete channel image
+    await firebaseStorage.ref("channelLogos").child(channelIndex).delete();
+    //Delete channel data
     await firebaseFirestore.collection("channels").doc(channelIndex).delete();
     customLoader.hideLoader();
   }
@@ -66,12 +75,9 @@ class ChannelsController extends GetxController {
   //Upload channel logo/image
   Future<String> uploadImageToStorage(
     Uint8List imagefile,
-    String childRef,
+    String imageName,
   ) async {
-    // creating location to our firebase storage
-    final String imageName = const Uuid().v1();
-    Reference ref =
-        firebaseStorage.ref("channels").child(childRef).child(imageName);
+    Reference ref = firebaseStorage.ref("channelLogos").child(imageName);
     UploadTask uploadTask = ref.putData(imagefile);
     TaskSnapshot snapshot = await uploadTask;
     //Getting downloadUrl.

@@ -7,6 +7,7 @@ class ChannelsModel {
   final bool channelVerified;
   final String createDate;
   final List<String> channelMembers;
+  final Map<String, dynamic> lastMessage;
 
   ChannelsModel({
     required this.channelName,
@@ -17,6 +18,7 @@ class ChannelsModel {
     required this.channelMembers,
     required this.channelAdmin,
     required this.createDate,
+    required this.lastMessage,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class ChannelsModel {
       "channelVerified": channelVerified,
       "channelMembers": channelMembers,
       "createDate": createDate,
+      "lastMessage": lastMessage,
     };
   }
 }

@@ -137,48 +137,35 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     ConnectionState.waiting) {
                   return const SizedBox();
                 } else {
-                  List<QueryDocumentSnapshot> channels = snapshot.data!.docs;
-
-                  // Custom sorting function
-                  channels.sort((a, b) {
-                    if (a["channelName"] == "ChatMate Official") {
-                      return -1; // "ChatMate" channel comes first
-                    } else if (b["channelName"] == "ChatMate Official") {
-                      return 1; // "ChatMate" channel comes first
-                    } else {
-                      return 0; // No preference for other channels
-                    }
-                  });
-
                   return ListView.builder(
-                    itemCount: channels.length,
+                    itemCount: snapshot.data!.docs.length,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
+                      Map<String, dynamic> lastMessage =
+                          snapshot.data!.docs[index]["lastMessage"];
                       return ListTile(
                         onTap: () {},
-                        onLongPress: () {
-                          //delete channel
-                          deleteChannel(channels[index].id);
-                        },
                         title: Row(
                           children: [
                             Text(
-                              channels[index]["channelName"],
+                              snapshot.data!.docs[index]["channelName"],
                               style: GoogleFonts.lato(
                                 fontSize: 14,
                                 color: Colors.black,
                               ),
                             ),
                             const SizedBox(width: 3),
-                            channels[index]["channelName"] ==
+                            snapshot.data!.docs[index]["channelName"] ==
                                     "ChatMate Official"
                                 ? const Icon(
                                     Icons.verified,
                                     color: AppTheme.mainColor,
                                     size: 16,
                                   )
-                                : channels[index]["channelVerified"] == true
+                                : snapshot.data!.docs[index]
+                                            ["channelVerified"] ==
+                                        true
                                     ? const Icon(
                                         Icons.verified,
                                         color: AppTheme.mainColor,
@@ -187,17 +174,18 @@ class _ChannelsPageState extends State<ChannelsPage> {
                                     : const SizedBox(),
                           ],
                         ),
-                        subtitle: channels[index]["channelName"] ==
+                        subtitle: snapshot.data!.docs[index]["channelName"] ==
                                 "ChatMate Official"
                             ? Text(
-                                "Receive latest updates & news",
+                                "Recieve latest updates & news",
                                 style: GoogleFonts.lato(
                                   fontSize: 12,
                                   color: Colors.black54,
                                 ),
                               )
                             : Text(
-                                "Did you all see that?",
+                                lastMessage["messageText"],
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.lato(
                                   fontSize: 12,
                                   color: Colors.black54,
@@ -207,7 +195,8 @@ class _ChannelsPageState extends State<ChannelsPage> {
                           borderRadius: BorderRadius.circular(23),
                           child: CachedNetworkImage(
                             fit: BoxFit.cover,
-                            imageUrl: channels[index]["channelPhotoUrl"],
+                            imageUrl: snapshot.data!.docs[index]
+                                ["channelPhotoUrl"],
                             height: 45,
                             width: 45,
                           ),
