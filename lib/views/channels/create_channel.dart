@@ -1,11 +1,19 @@
+import 'dart:typed_data';
+
+import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/utils/constants.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../widgets/chip_list.dart';
+import '../../widgets/image_picker.dart';
 
 class CreateChannelPage extends StatefulWidget {
   const CreateChannelPage({super.key});
@@ -38,8 +46,18 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
     "News",
   ];
   int selectedTopic = 0;
+  Uint8List? selectedImage;
   TextEditingController channelNameController = TextEditingController();
+  ChannelsController channelsController = Get.put(ChannelsController());
   FocusNode channelNameNode = FocusNode();
+  CustomLoader customLoader = CustomLoader();
+
+  pickImage() async {
+    Uint8List? im = await getPickedImage(ImageSource.gallery);
+    setState(() {
+      selectedImage = im;
+    });
+  }
 
   @override
   void dispose() {
@@ -76,6 +94,14 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
             IconButton(
               onPressed: () {
                 //Create channel
+                if (selectedImage == null) {
+                  Get.snackbar("Warning", "Select image mate!");
+                } else if (channelNameController.text.trim().isEmpty) {
+                  Get.snackbar("Warning", "Put channel name mate!");
+                } else {
+                  //show note dialog
+                  createChannel();
+                }
               },
               icon: const Icon(
                 Icons.done,
@@ -97,19 +123,31 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
                 //Pick Picture & TextField.
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: AppTheme.mainColor,
-                      child: Center(
-                        child: SvgPicture.asset(
-                          CustomIcons.camera,
-                          colorFilter: const ColorFilter.mode(
-                            Colors.white,
-                            BlendMode.srcIn,
+                    selectedImage != null
+                        ? GestureDetector(
+                            onTap: () => pickImage(),
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: AppTheme.mainColor,
+                              backgroundImage: MemoryImage(selectedImage!),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () => pickImage(),
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: AppTheme.mainColor,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  CustomIcons.camera,
+                                  colorFilter: const ColorFilter.mode(
+                                    Colors.white,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(width: 5),
                     Expanded(
                       child: TextField(
@@ -167,6 +205,52 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
           ),
         ),
       ),
+    );
+  }
+
+  //Create channel
+  void createChannel() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            "Notice Mate!",
+            style: GoogleFonts.lato(),
+          ),
+          content: Text(
+            AppConstants.createChannelDescription,
+            style: GoogleFonts.lato(),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                "Cancel",
+                style: GoogleFonts.lato(
+                  fontSize: 14,
+                  color: AppTheme.mainColorLight,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                "Continue",
+                style: GoogleFonts.lato(
+                  color: AppTheme.mainColor,
+                  fontSize: 14,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                customLoader.showLoader(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
