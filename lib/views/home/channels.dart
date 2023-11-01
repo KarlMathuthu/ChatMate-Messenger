@@ -208,7 +208,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
               },
             ),
             const SizedBox(height: 10),
-            //All channels
+            //Popular
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               margin: const EdgeInsets.only(left: 8),
@@ -229,6 +229,93 @@ class _ChannelsPageState extends State<ChannelsPage> {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            StreamBuilder(
+              stream: firebaseFirestore.collection("channels").snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox();
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const SizedBox();
+                } else {
+                  List<QueryDocumentSnapshot> channels = snapshot.data!.docs;
+                  //Sort channels accroding the one which has more followers/ channelMembers
+
+                  channels.sort((a, b) {
+                    int membersA = (a["channelMembers"] as List).length;
+                    int membersB = (b["channelMembers"] as List).length;
+                    return membersB
+                        .compareTo(membersA);
+                  });
+
+                  return ListView.builder(
+                    itemCount: channels.length,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> lastMessage =
+                          channels[index]["lastMessage"];
+                      return ListTile(
+                        onTap: () {},
+                        title: Row(
+                          children: [
+                            Text(
+                              channels[index]["channelName"],
+                              style: GoogleFonts.lato(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(width: 3),
+                            channels[index]["channelName"] ==
+                                    "ChatMate Official"
+                                ? const Icon(
+                                    Icons.verified,
+                                    color: AppTheme.mainColor,
+                                    size: 16,
+                                  )
+                                : channels[index]["channelVerified"] == true
+                                    ? const Icon(
+                                        Icons.verified,
+                                        color: AppTheme.mainColor,
+                                        size: 16,
+                                      )
+                                    : const SizedBox(),
+                          ],
+                        ),
+                        subtitle: channels[index]["channelName"] ==
+                                "ChatMate Official"
+                            ? Text(
+                                "Receive latest updates & news",
+                                style: GoogleFonts.lato(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              )
+                            : Text(
+                                lastMessage["messageText"],
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.lato(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(23),
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: channels[index]["channelPhotoUrl"],
+                            height: 45,
+                            width: 45,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            )
           ],
         ),
       ),
