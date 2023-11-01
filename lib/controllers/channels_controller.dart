@@ -11,6 +11,7 @@ class ChannelsController extends GetxController {
   void createChannel({
     required String channelPhotoUrl,
     required String channelName,
+    required String channelTopic,
     required List<String> channelMembers,
   }) async {
     String channelUid = const Uuid().v1();
@@ -21,6 +22,7 @@ class ChannelsController extends GetxController {
       channelVerified: false,
       channelMembers: channelMembers,
       channelAdmin: auth.currentUser!.uid,
+      channelTopic: channelTopic,
     );
     await firebaseFirestore
         .collection("channels")

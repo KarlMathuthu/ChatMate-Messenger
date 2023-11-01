@@ -3,6 +3,7 @@ class ChannelsModel {
   final String channelUid;
   final String channelPhotoUrl;
   final String channelAdmin;
+  final String channelTopic;
   final bool channelVerified;
   final List<String> channelMembers;
 
@@ -10,6 +11,7 @@ class ChannelsModel {
     required this.channelName,
     required this.channelUid,
     required this.channelPhotoUrl,
+    required this.channelTopic,
     required this.channelVerified,
     required this.channelMembers,
     required this.channelAdmin,
@@ -20,6 +22,7 @@ class ChannelsModel {
       "channelName": channelName,
       "channelUid": channelUid,
       "channelPhotoUrl": channelPhotoUrl,
+      "channelTopic": channelTopic,
       "channelAdmin": channelAdmin,
       "channelVerified": channelVerified,
       "channelMembers": channelMembers,

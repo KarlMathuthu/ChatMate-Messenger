@@ -448,6 +448,7 @@ class _ChipListState extends State<ChipList> {
                   checkmarkColor: Colors.white,
                   showCheckmark: false,
                   labelStyle: GoogleFonts.lato(fontSize: 13),
+                  selectedShadowColor: AppTheme.mainColorLight,
                   label: Text(
                     widget.listOfChipNames[index],
                     style: widget.style != null
