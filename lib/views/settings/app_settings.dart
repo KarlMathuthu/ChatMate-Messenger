@@ -76,7 +76,7 @@ class AppSettingsPage extends StatelessWidget {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return SizedBox();
+                    return const SizedBox();
                   } else if (snapshot.connectionState ==
                       ConnectionState.waiting) {
                     return ListTile(
@@ -123,7 +123,8 @@ class AppSettingsPage extends StatelessWidget {
                       ),
                       trailing: SvgPicture.asset(
                         "assets/icons/qr.svg",
-                        color: Colors.black,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.black, BlendMode.srcIn),
                       ),
                     );
                   } else {
@@ -186,7 +187,8 @@ class AppSettingsPage extends StatelessWidget {
                       ),
                       trailing: SvgPicture.asset(
                         "assets/icons/qr.svg",
-                        color: Colors.black,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.black, BlendMode.srcIn),
                       ),
                     );
                   }
@@ -251,7 +253,8 @@ class AppSettingsPage extends StatelessWidget {
                     const SizedBox(width: 8.0),
                     SvgPicture.asset(
                       CustomIcons.logout,
-                      color: Colors.red,
+                      colorFilter:
+                          const ColorFilter.mode(Colors.red, BlendMode.srcIn),
                       height: 22,
                     ),
                     const SizedBox(width: 8.0),

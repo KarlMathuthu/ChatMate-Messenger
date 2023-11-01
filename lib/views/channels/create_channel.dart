@@ -1,5 +1,7 @@
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,8 +16,9 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.scaffoldBacgroundColor,
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
+        backgroundColor: AppTheme.scaffoldBacgroundColor,
         title: Text(
           "Create Channel",
           style: GoogleFonts.lato(
@@ -31,6 +34,46 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
           icon: const Icon(
             Icons.arrow_back,
           ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              //Create channel
+            },
+            icon: const Icon(
+              Icons.done,
+              color: AppTheme.mainColor,
+            ),
+          ),
+        ],
+      ),
+      body: Container(
+        color: AppTheme.scaffoldBacgroundColor,
+        width: double.infinity,
+        height: double.infinity,
+        margin: const EdgeInsets.only(top: 0.8),
+        child: Column(
+          children: [
+            //Pick Picture & TextField.
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: AppTheme.mainColor,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      CustomIcons.camera,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            //Description
+          ],
         ),
       ),
     );
