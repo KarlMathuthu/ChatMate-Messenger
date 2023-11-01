@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/channels/channel_room.dart';
 import 'package:chat_mate_messanger/views/channels/create_channel.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -256,8 +257,22 @@ class _ChannelsPageState extends State<ChannelsPage> {
                       int channelFollowers =
                           (channels[index]["channelMembers"] as List).length;
                       String followersText = formatFollowers(channelFollowers);
+                      String channelPhotoUrl = channels[index]["channelPhotoUrl"];
+                      String channelUid = channels[index]["channelUid"];
+                      String channelName = channels[index]["channelName"];
+                      bool isAdmin = channels[index]["channelAdmin"] == currentUser;
                       return ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(
+                            () => ChannelRoomPage(
+                              isAdmin: isAdmin,
+                              channelName: channelName,
+                              channelUid: channelUid,
+                              channelPhotoUrl: channelPhotoUrl,
+                              followersText: followersText,
+                            ),
+                          );
+                        },
                         title: Row(
                           children: [
                             Text(
