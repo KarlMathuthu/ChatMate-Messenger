@@ -245,8 +245,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                   channels.sort((a, b) {
                     int membersA = (a["channelMembers"] as List).length;
                     int membersB = (b["channelMembers"] as List).length;
-                    return membersB
-                        .compareTo(membersA);
+                    return membersB.compareTo(membersA);
                   });
 
                   return ListView.builder(
@@ -254,8 +253,9 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      Map<String, dynamic> lastMessage =
-                          channels[index]["lastMessage"];
+                      int channelFollowers =
+                          (channels[index]["channelMembers"] as List).length;
+                      String followersText = formatFollowers(channelFollowers);
                       return ListTile(
                         onTap: () {},
                         title: Row(
@@ -294,7 +294,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                                 ),
                               )
                             : Text(
-                                lastMessage["messageText"],
+                                followersText,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.lato(
                                   fontSize: 12,
@@ -315,7 +315,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                   );
                 }
               },
-            )
+            ),
           ],
         ),
       ),
@@ -375,5 +375,19 @@ class _ChannelsPageState extends State<ChannelsPage> {
         );
       },
     );
+  }
+
+  String formatFollowers(int followersCount) {
+    if (followersCount >= 1000000) {
+      double count = followersCount / 1000000;
+      return '${count.toStringAsFixed(count.truncateToDouble() == count ? 0 : 1)}M followers';
+    } else if (followersCount >= 1000) {
+      double count = followersCount / 1000;
+      return '${count.toStringAsFixed(count.truncateToDouble() == count ? 0 : 1)}K followers';
+    } else if (followersCount == 1) {
+      return '1 follower';
+    } else {
+      return '$followersCount followers';
+    }
   }
 }
