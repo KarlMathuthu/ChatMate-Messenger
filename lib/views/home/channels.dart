@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/channels/create_channel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,11 @@ class _ChannelsPageState extends State<ChannelsPage> {
           InkWell(
             borderRadius: BorderRadius.circular(6),
             onTap: () {
-              //Settings
+              //Create channel
+              Get.to(
+                () => const CreateChannelPage(),
+                transition: Transition.cupertino,
+              );
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -47,7 +52,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
               ),
               child: Center(
                 child: Text(
-                  "Settings",
+                  "Create Channel",
                   style: GoogleFonts.lato(
                     color: AppTheme.mainColor,
                     fontSize: 13,
