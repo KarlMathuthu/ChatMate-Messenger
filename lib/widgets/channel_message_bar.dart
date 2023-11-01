@@ -4,6 +4,7 @@ import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChannelMessageBar extends StatefulWidget {
   final Color messageBarColor;
@@ -65,7 +66,9 @@ class _ChannelMessageBarState extends State<ChannelMessageBar> {
               },
               style: widget.textFieldTextStyle,
               cursorColor: AppTheme.mainColor,
+              
               decoration: InputDecoration(
+                labelStyle: GoogleFonts.lato(fontSize: 15),
                 hintText: widget.messageBarHintText,
                 hintMaxLines: 1,
                 contentPadding:

@@ -12,7 +12,7 @@ class ChannelsController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-  //Create Channel.
+
   void createChannel({
     required String channelName,
     required String channelTopic,
@@ -49,30 +49,83 @@ class ChannelsController extends GetxController {
     print("Channel id $channelUid has been created!");
   }
 
-  //Join Channel.
-  void joinChannel({required String channelUid}) async {
-    await firebaseFirestore.collection("channels").doc(channelUid).update(
-      {
-        "channelMembers": [
-          auth.currentUser!.uid,
-        ],
-      },
-    );
+  Future<void> unfollowChannel(String channelUid) async {
+    try {
+      final currentUserUid = auth.currentUser!.uid;
+
+      final channelDoc =
+          await firebaseFirestore.collection("channels").doc(channelUid).get();
+
+      if (channelDoc.exists) {
+        final Map<String, dynamic> channelData =
+            channelDoc.data() as Map<String, dynamic>;
+        List<String> channelMembers =
+            List<String>.from(channelData["channelMembers"]);
+
+        if (channelMembers.contains(currentUserUid)) {
+          channelMembers.remove(currentUserUid);
+
+          await firebaseFirestore
+              .collection("channels")
+              .doc(channelUid)
+              .update({
+            "channelMembers": channelMembers,
+          });
+          print("You have unfollowed the channel.");
+        } else {
+          print("You are not a member of this channel.");
+        }
+      } else {
+        print("Channel not found.");
+      }
+    } catch (e) {
+      print("Error unfollowing the channel: $e");
+    }
   }
 
-  //Delete channel.
+  Future<void> followChannel(String channelUid) async {
+    try {
+      final currentUserUid = auth.currentUser!.uid;
+
+      final channelDoc =
+          await firebaseFirestore.collection("channels").doc(channelUid).get();
+
+      if (channelDoc.exists) {
+        final Map<String, dynamic> channelData =
+            channelDoc.data() as Map<String, dynamic>;
+        List<String> channelMembers =
+            List<String>.from(channelData["channelMembers"]);
+
+        if (!channelMembers.contains(currentUserUid)) {
+          channelMembers.add(currentUserUid);
+
+          await firebaseFirestore
+              .collection("channels")
+              .doc(channelUid)
+              .update({
+            "channelMembers": channelMembers,
+          });
+          print("You have joined the channel.");
+        } else {
+          print("You are already a member of this channel.");
+        }
+      } else {
+        print("Channel not found.");
+      }
+    } catch (e) {
+      print("Error joining the channel: $e");
+    }
+  }
+
   void deleteChannel({
     required String channelIndex,
     required CustomLoader customLoader,
   }) async {
-    //Delete channel image
     await firebaseStorage.ref("channelLogos").child(channelIndex).delete();
-    //Delete channel data
     await firebaseFirestore.collection("channels").doc(channelIndex).delete();
     customLoader.hideLoader();
   }
 
-  //Upload channel logo/image
   Future<String> uploadImageToStorage(
     Uint8List imagefile,
     String imageName,
@@ -80,11 +133,7 @@ class ChannelsController extends GetxController {
     Reference ref = firebaseStorage.ref("channelLogos").child(imageName);
     UploadTask uploadTask = ref.putData(imagefile);
     TaskSnapshot snapshot = await uploadTask;
-    //Getting downloadUrl.
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
-
-  //Like Post in channel.
-  //Turn on Noitifications for channel.
 }

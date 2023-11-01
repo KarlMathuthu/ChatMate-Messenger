@@ -1,3 +1,4 @@
+import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/widgets/channel_chat_bubble.dart';
@@ -32,6 +33,7 @@ class ChannelRoomPage extends StatefulWidget {
 
 class _ChannelRoomPageState extends State<ChannelRoomPage> {
   FocusNode focusNode = FocusNode();
+  ChannelsController channelsController = Get.put(ChannelsController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +97,9 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
               ?
               //Unfollow button
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    channelsController.unfollowChannel(widget.channelUid);
+                  },
                   icon: SvgPicture.asset(
                     CustomIcons.logout,
                     colorFilter:
@@ -107,7 +111,7 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
               InkWell(
                   borderRadius: BorderRadius.circular(6),
                   onTap: () {
-                    //Find mate
+                    channelsController.followChannel(widget.channelUid);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),

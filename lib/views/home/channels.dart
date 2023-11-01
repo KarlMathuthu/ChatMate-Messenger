@@ -160,13 +160,19 @@ class _ChannelsPageState extends State<ChannelsPage> {
                           currentUser;
                       bool isChannelVerified =
                           snapshot.data!.docs[index]["channelVerified"];
+                      bool isMateFollwingChannel() {
+                        List<String> channelMembers = List<String>.from(
+                            snapshot.data!.docs[index]["channelMembers"]);
+
+                        return channelMembers.contains(currentUser);
+                      }
 
                       return ListTile(
                         onTap: () {
                           Get.to(
                             () => ChannelRoomPage(
                               isAdmin: isAdmin,
-                              isMateFllowing: true,
+                              isMateFllowing: isMateFollwingChannel(),
                               isChannelVerified: isChannelVerified,
                               channelName: channelName,
                               channelUid: channelUid,
