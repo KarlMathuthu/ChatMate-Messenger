@@ -269,19 +269,16 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                               .isEmpty || // Check for Name
                           passController.text.trim().isEmpty ||
                           !acceptedTcs) {
-                        String errorMessage = emailController.text
-                                .trim()
-                                .isEmpty
-                            ? "Enter your email"
-                            : !isValidEmail(emailController.text)
-                                ? "Enter a valid email"
-                                : nameController.text
-                                        .trim()
-                                        .isEmpty // Update error message for Name
-                                    ? "Enter your name" // Update error message for Name
-                                    : passController.text.trim().isEmpty
-                                        ? "Enter your password"
-                                        : "Accept Ts & Cs";
+                        String errorMessage =
+                            emailController.text.trim().isEmpty
+                                ? "Enter your email"
+                                : !isValidEmail(emailController.text)
+                                    ? "Enter a valid email"
+                                    : nameController.text.trim().isEmpty
+                                        ? "Enter your name"
+                                        : passController.text.trim().isEmpty
+                                            ? "Enter your password"
+                                            : "Accept Ts & Cs";
 
                         Get.snackbar("Error", errorMessage);
                       } else if (isWeakPassword(passController.text)) {
@@ -315,7 +312,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       ),
                     ),
                     TextSpan(
-                      text: " Our terms & conditions",
+                      text: " our terms & conditions",
                       style: GoogleFonts.lato(
                         color: AppTheme.mainColor,
                         fontWeight: FontWeight.bold,

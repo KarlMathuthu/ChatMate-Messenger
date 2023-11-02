@@ -18,6 +18,15 @@ class LetsYouInPage extends StatelessWidget {
       appBar: AppBar(backgroundColor: AppTheme.scaffoldBacgroundColor),
       body: Column(
         children: [
+          Text(
+            AppConstants.introText,
+            style: GoogleFonts.lato(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Align(
@@ -29,12 +38,13 @@ class LetsYouInPage extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 20),
           Text(
-            AppConstants.introText,
+            "Join other mates today!",
             style: GoogleFonts.lato(
               color: Colors.black,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
             ),
           ),
           const Expanded(child: SizedBox()),
@@ -107,11 +117,11 @@ class LetsYouInPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 color: AppTheme.mainColor,
                 child: Text(
-                  "Signin with email",
+                  "Login with email",
                   style: GoogleFonts.lato(
                     color: Colors.white,
                     fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
                 onPressed: () {

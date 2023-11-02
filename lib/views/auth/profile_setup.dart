@@ -116,14 +116,18 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: AppTheme.mainColor,
                   onPressed: () {
-                    // Continue sign-up.
-                    customLoader.showLoader(context);
-                    authController.createAccount(
-                      email: widget.email,
-                      password: widget.password,
-                      userName: widget.userName,
-                      customLoader: customLoader,
-                    );
+                    if (selectedTopics.isEmpty) {
+                      Get.snackbar("Error", "Select one topic mate!");
+                    } else {
+                      // Continue sign-up.
+                      customLoader.showLoader(context);
+                      authController.createAccount(
+                        email: widget.email,
+                        password: widget.password,
+                        userName: widget.userName,
+                        customLoader: customLoader,
+                      );
+                    }
                   },
                   child: Text(
                     "Create Account",
