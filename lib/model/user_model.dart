@@ -7,6 +7,7 @@ class UserModel {
   final String userStatus;
   final String fcmToken;
   final int strikes;
+  final List<String> userTopics;
 
   UserModel({
     required this.userName,
@@ -17,6 +18,7 @@ class UserModel {
     required this.userBio,
     required this.userStatus,
     required this.strikes,
+    required this.userTopics,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class UserModel {
       'userBio': userBio,
       'userStatus': userStatus,
       'strikes': strikes,
+      'userTopics': userTopics,
     };
   }
 }

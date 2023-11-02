@@ -18,6 +18,7 @@ class AuthController extends GetxController {
     required String password,
     required String userName,
     required CustomLoader customLoader,
+    required List<String> userTopics,
   }) async {
     try {
       final UserCredential userCredential = await _auth
@@ -35,6 +36,7 @@ class AuthController extends GetxController {
           userBio: "I'm new to ChatMate!",
           userStatus: 'online',
           strikes: 0,
+          userTopics: userTopics,
         );
 
         // Add user data to Cloud Firestore

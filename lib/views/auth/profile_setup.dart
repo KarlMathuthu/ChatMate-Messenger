@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../utils/constants.dart';
 import '../../widgets/chip_list.dart';
 import '../../widgets/custom_loader.dart';
 
@@ -56,94 +57,134 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     "News",
   ];
   List<int> selectedTopics = [];
-  void printSelectedItems() {
-    for (int index in selectedTopics) {
-      print(topicsList[index]);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => printSelectedItems(),
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: AppTheme.scaffoldBacgroundColor,
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: AppTheme.scaffoldBacgroundColor,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: AppTheme.scaffoldBacgroundColor,
-          title: Text(
-            "Choose your interests mate!",
-            style: GoogleFonts.lato(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+        title: Text(
+          "Choose your interests mate!",
+          style: GoogleFonts.lato(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ),
-        body: Column(
-          children: [
-            const SizedBox(height: 10),
-            ChipList(
-              listOfChipNames: topicsList,
-              activeBgColorList: const [AppTheme.mainColor],
-              inactiveBgColorList: const [Colors.white],
-              activeTextColorList: const [Colors.white],
-              inactiveTextColorList: const [AppTheme.mainColor],
-              listOfChipIndicesCurrentlySeclected: selectedTopics,
-              activeBorderColorList: const [AppTheme.mainColor],
-              inactiveBorderColorList: const [AppTheme.mainColor],
-              shouldWrap: true,
-              style: GoogleFonts.lato(fontSize: 13),
-              supportsMultiSelect: true,
-              wrapAlignment: WrapAlignment.start,
-              borderRadiiList: const [20],
-            ),
-            const Expanded(child: Column()),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: CupertinoButton(
-                  borderRadius: BorderRadius.circular(10),
-                  color: AppTheme.mainColor,
-                  onPressed: () {
-                    if (selectedTopics.isEmpty) {
-                      Get.snackbar("Error", "Select one topic mate!");
-                    } else {
-                      // Continue sign-up.
-                      customLoader.showLoader(context);
-                      authController.createAccount(
-                        email: widget.email,
-                        password: widget.password,
-                        userName: widget.userName,
-                        customLoader: customLoader,
-                      );
-                    }
-                  },
-                  child: Text(
-                    "Create Account",
-                    style: GoogleFonts.lato(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                    ),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios),
+        ),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          ChipList(
+            listOfChipNames: topicsList,
+            activeBgColorList: const [AppTheme.mainColor],
+            inactiveBgColorList: const [Colors.white],
+            activeTextColorList: const [Colors.white],
+            inactiveTextColorList: const [AppTheme.mainColor],
+            listOfChipIndicesCurrentlySeclected: selectedTopics,
+            activeBorderColorList: const [AppTheme.mainColor],
+            inactiveBorderColorList: const [AppTheme.mainColor],
+            shouldWrap: true,
+            style: GoogleFonts.lato(fontSize: 13),
+            supportsMultiSelect: true,
+            wrapAlignment: WrapAlignment.start,
+            borderRadiiList: const [20],
+          ),
+          const Expanded(child: Column()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: CupertinoButton(
+                borderRadius: BorderRadius.circular(10),
+                color: AppTheme.mainColor,
+                onPressed: () {
+                  if (selectedTopics.isEmpty) {
+                    Get.snackbar("Error", "Select one topic mate!");
+                  } else {
+                    createAccountDialog([""]);
+                  }
+                },
+                child: Text(
+                  "Create Account",
+                  style: GoogleFonts.lato(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-          ],
-        ),
+          ),
+          const SizedBox(height: 10),
+        ],
       ),
+    );
+  }
+
+  //Create account dialog.
+  void createAccountDialog(List<String> userTopics) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext __) {
+        return CupertinoAlertDialog(
+          title: Text(
+            "Create Account?",
+            style: GoogleFonts.lato(),
+          ),
+          content: Text(
+            AppConstants.createAccountDescritpion,
+            style: GoogleFonts.lato(),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                "Cancel",
+                style: GoogleFonts.lato(
+                  fontSize: 14,
+                  color: AppTheme.mainColorLight,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(__).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                "Continue",
+                style: GoogleFonts.lato(
+                  color: AppTheme.mainColor,
+                  fontSize: 14,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(__).pop();
+                // Continue sign-up.
+
+                // customLoader.showLoader(context);
+                // authController.createAccount(
+                //   email: widget.email,
+                //   password: widget.password,
+                //   userName: widget.userName,
+                //   customLoader: customLoader,
+                //   userTopics: userTopics,
+                // );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
