@@ -248,7 +248,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   ],
                 ),
               ),
-              // Signup button
+              // Continue button
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SizedBox(
@@ -300,12 +300,37 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         //   customLoader: customLoader,
                         // );
                         Get.to(
-                          () => ProfileSetupPage(),
+                          () => const ProfileSetupPage(),
                           transition: Transition.rightToLeft,
                         );
                       }
                     },
                   ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              //Terms & conditions.
+              RichText(
+                textAlign: TextAlign.start,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "By clicking continue you agree to",
+                      style: GoogleFonts.lato(
+                        color: Colors.grey,
+                        fontSize: 13,
+                      ),
+                    ),
+                    TextSpan(
+                      text: " Our terms & conditions",
+                      style: GoogleFonts.lato(
+                        color: AppTheme.mainColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
