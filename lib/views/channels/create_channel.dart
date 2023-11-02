@@ -144,6 +144,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
                               child: Center(
                                 child: SvgPicture.asset(
                                   CustomIcons.camera,
+                                  height: 22,
                                   colorFilter: const ColorFilter.mode(
                                     Colors.white,
                                     BlendMode.srcIn,
