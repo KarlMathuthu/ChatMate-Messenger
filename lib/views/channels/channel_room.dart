@@ -4,6 +4,7 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/widgets/channel_chat_bubble.dart';
 import 'package:chat_mate_messanger/widgets/channel_message_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -105,7 +106,7 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
               //Unfollow button
               IconButton(
                   onPressed: () async {
-                    await channelsController.unfollowChannel(widget.channelUid);
+                    unfollowChannel(widget.channelName);
                   },
                   icon: SvgPicture.asset(
                     CustomIcons.logout,
@@ -174,6 +175,53 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
           ],
         ),
       ),
+    );
+  }
+
+  //Unfollow channel.
+  void unfollowChannel(String channelName) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            "Unfollow channel $channelName",
+            style: GoogleFonts.lato(),
+          ),
+          content: Text(
+            "Are you sure you want to unfollow $channelName mate?",
+            style: GoogleFonts.lato(),
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                "Cancel",
+                style: GoogleFonts.lato(
+                  fontSize: 14,
+                  color: AppTheme.mainColorLight,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                "unfollow",
+                style: GoogleFonts.lato(
+                  color: Colors.redAccent,
+                  fontSize: 14,
+                ),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                //Unfollow function.
+                await channelsController.unfollowChannel(widget.channelUid);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
