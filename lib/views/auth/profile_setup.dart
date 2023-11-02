@@ -171,6 +171,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
               onPressed: () {
                 Navigator.of(__).pop();
                 // Continue sign-up.
+                print(topicsList);
 
                 // customLoader.showLoader(context);
                 // authController.createAccount(
