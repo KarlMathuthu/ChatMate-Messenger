@@ -49,7 +49,10 @@ class ChannelsController extends GetxController {
     print("Channel id $channelUid has been created!");
   }
 
-  Future<void> unfollowChannel(String channelUid) async {
+  Future<void> unfollowChannel(
+    String channelUid,
+    CustomLoader customLoader,
+  ) async {
     try {
       final currentUserUid = auth.currentUser!.uid;
 
@@ -72,6 +75,8 @@ class ChannelsController extends GetxController {
             "channelMembers": channelMembers,
           });
           print("You have unfollowed the channel.");
+          customLoader.hideLoader();
+          Get.back();
         } else {
           print("You are not a member of this channel.");
         }

@@ -4,6 +4,7 @@ import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/widgets/channel_chat_bubble.dart';
 import 'package:chat_mate_messanger/widgets/channel_message_bar.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,6 +37,7 @@ class ChannelRoomPage extends StatefulWidget {
 class _ChannelRoomPageState extends State<ChannelRoomPage> {
   FocusNode focusNode = FocusNode();
   ChannelsController channelsController = Get.put(ChannelsController());
+  CustomLoader customLoader = CustomLoader();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +108,7 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
               //Unfollow button
               IconButton(
                   onPressed: () async {
-                    unfollowChannel(widget.channelName);
+                    unfollowChannel(widget.channelName, customLoader);
                   },
                   icon: SvgPicture.asset(
                     CustomIcons.logout,
@@ -179,7 +181,10 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
   }
 
   //Unfollow channel.
-  void unfollowChannel(String channelName) {
+  void unfollowChannel(
+    String channelName,
+    CustomLoader customLoader,
+  ) {
     showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
@@ -215,8 +220,12 @@ class _ChannelRoomPageState extends State<ChannelRoomPage> {
               ),
               onPressed: () async {
                 Navigator.of(context).pop();
+                customLoader.showLoader(context);
                 //Unfollow function.
-                await channelsController.unfollowChannel(widget.channelUid);
+                await channelsController.unfollowChannel(
+                  widget.channelUid,
+                  customLoader,
+                );
               },
             ),
           ],
