@@ -1,9 +1,11 @@
 import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/constants.dart';
+import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/utils/images.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,13 +64,13 @@ class LetsYouInPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  FontAwesomeIcons.facebook,
-                  color: AppTheme.mainColor,
+                SvgPicture.asset(
+                  CustomIcons.googleIcon,
+                  height: 22,
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  "Continue with Facebook",
+                  "Continue with Google",
                   style: GoogleFonts.lato(
                     color: Colors.black,
                     fontSize: 15,

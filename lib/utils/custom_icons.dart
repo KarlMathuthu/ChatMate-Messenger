@@ -27,5 +27,6 @@ class CustomIcons {
   static const video = "assets/icons/video.svg";
   static const joinCall = "assets/icons/joinCall.svg";
   static const camera = "assets/icons/camera.svg";
-   static const selectImage = "assets/icons/selectImage.svg";
+  static const selectImage = "assets/icons/selectImage.svg";
+  static const googleIcon = "assets/icons/google.svg";
 }
