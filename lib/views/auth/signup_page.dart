@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/views/auth/profile_setup.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -257,7 +258,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     borderRadius: BorderRadius.circular(10),
                     color: AppTheme.mainColor,
                     child: Text(
-                      "Signup", // Change button text to "Signup"
+                      "Continue",
                       style: GoogleFonts.lato(
                         color: Colors.white,
                         fontSize: 15,
@@ -291,12 +292,16 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         Get.snackbar("Warning", "Password is too weak");
                       } else {
                         // Continue sign-up.
-                        customLoader.showLoader(context);
-                        authController.createAccount(
-                          email: emailController.text.trim(),
-                          password: passController.text.trim(),
-                          userName: nameController.text.trim(),
-                          customLoader: customLoader,
+                        // customLoader.showLoader(context);
+                        // authController.createAccount(
+                        //   email: emailController.text.trim(),
+                        //   password: passController.text.trim(),
+                        //   userName: nameController.text.trim(),
+                        //   customLoader: customLoader,
+                        // );
+                        Get.to(
+                          () => ProfileSetupPage(),
+                          transition: Transition.rightToLeft,
                         );
                       }
                     },
