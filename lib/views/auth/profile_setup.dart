@@ -6,16 +6,28 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../controllers/auth_controller.dart';
 import '../../widgets/chip_list.dart';
+import '../../widgets/custom_loader.dart';
 
 class ProfileSetupPage extends StatefulWidget {
-  const ProfileSetupPage({super.key});
+  const ProfileSetupPage({
+    super.key,
+    required this.email,
+    required this.password,
+    required this.userName,
+  });
+  final String email;
+  final String password;
+  final String userName;
 
   @override
   State<ProfileSetupPage> createState() => _ProfileSetupPageState();
 }
 
 class _ProfileSetupPageState extends State<ProfileSetupPage> {
+  CustomLoader customLoader = CustomLoader();
+  AuthController authController = Get.put(AuthController());
   List<String> topicsList = [
     "Anime",
     "Movies",
@@ -103,7 +115,16 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                 child: CupertinoButton(
                   borderRadius: BorderRadius.circular(10),
                   color: AppTheme.mainColor,
-                  onPressed: () {},
+                  onPressed: () {
+                    // Continue sign-up.
+                    customLoader.showLoader(context);
+                    authController.createAccount(
+                      email: widget.email,
+                      password: widget.password,
+                      userName: widget.userName,
+                      customLoader: customLoader,
+                    );
+                  },
                   child: Text(
                     "Create Account",
                     style: GoogleFonts.lato(
