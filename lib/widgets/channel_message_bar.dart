@@ -66,7 +66,6 @@ class _ChannelMessageBarState extends State<ChannelMessageBar> {
               },
               style: widget.textFieldTextStyle,
               cursorColor: AppTheme.mainColor,
-              
               decoration: InputDecoration(
                 labelStyle: GoogleFonts.lato(fontSize: 15),
                 hintText: widget.messageBarHintText,
@@ -101,7 +100,7 @@ class _ChannelMessageBarState extends State<ChannelMessageBar> {
                     }
                   },
                   icon: SvgPicture.asset(
-                   CustomIcons.selectImage,
+                    CustomIcons.selectImage,
                     colorFilter: const ColorFilter.mode(
                         AppTheme.mainColor, BlendMode.srcIn),
                   ),
@@ -115,7 +114,7 @@ class _ChannelMessageBarState extends State<ChannelMessageBar> {
                   icon: Transform.rotate(
                     angle: 45 * (3.141592653589793 / 180),
                     child: SvgPicture.asset(
-                    CustomIcons.send,
+                      CustomIcons.send,
                       colorFilter: const ColorFilter.mode(
                           AppTheme.mainColor, BlendMode.srcIn),
                     ),
