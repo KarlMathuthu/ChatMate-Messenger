@@ -43,7 +43,7 @@ class LetsYouInPage extends StatelessWidget {
             "Join other mates today!",
             style: GoogleFonts.lato(
               color: Colors.black,
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: FontWeight.normal,
             ),
           ),
