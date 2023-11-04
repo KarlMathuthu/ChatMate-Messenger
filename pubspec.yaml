@@ -49,6 +49,6 @@ flutter:
   assets:
         - assets/images/
         - assets/icons/
-        - assets/memoji/
+        - assets/avatars/
         - .env
         - assets/audio/
