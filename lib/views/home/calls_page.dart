@@ -161,9 +161,8 @@ class _CallsPageState extends State<CallsPage> {
                           "You haven't made a call yet mate!",
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.lato(
-                            color: Colors.black,
-                            fontSize: 13,
-                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                            color: Colors.black54,
                           ),
                         ),
                       ),

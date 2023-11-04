@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ChannelsPage extends StatefulWidget {
   const ChannelsPage({super.key});
@@ -64,65 +65,42 @@ class _ChannelsPageState extends State<ChannelsPage> {
           const SizedBox(width: 10),
         ],
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //Search
-            Container(
-              height: 40,
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 245, 245, 245),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 8),
-                  SvgPicture.asset(
-                    "assets/icons/search.svg",
-                    height: 18,
-                    colorFilter:
-                        const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Search channels...",
-                    style: GoogleFonts.lato(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //Search
+          Container(
+            height: 40,
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 245, 245, 245),
+              borderRadius: BorderRadius.circular(10),
             ),
-            const SizedBox(height: 10),
-            //My chanels
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              margin: const EdgeInsets.only(left: 8),
-              height: 32,
-              width: 100,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 214, 227, 255),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Center(
-                child: Text(
-                  "Following",
-                  overflow: TextOverflow.ellipsis,
+            child: Row(
+              children: [
+                const SizedBox(width: 8),
+                SvgPicture.asset(
+                  "assets/icons/search.svg",
+                  height: 18,
+                  colorFilter:
+                      const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "Search channels...",
                   style: GoogleFonts.lato(
-                    color: AppTheme.mainColor,
-                    fontSize: 13,
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 10),
-            StreamBuilder(
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: StreamBuilder(
               stream: firebaseFirestore
                   .collection("channels")
                   .where("channelMembers", arrayContains: currentUser)
@@ -132,264 +110,310 @@ class _ChannelsPageState extends State<ChannelsPage> {
                   return const SizedBox();
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
-                  return const SizedBox();
+                  return Center(
+                    child: LoadingAnimationWidget.fourRotatingDots(
+                      color: AppTheme.loaderColor,
+                      size: 50,
+                    ),
+                  );
+                } else if (snapshot.data!.docs.isEmpty) {
+                  // Display a message when there are no channels.
+                  return Center(
+                    child: Text(
+                      "No followed channels yet, mate",
+                      style: GoogleFonts.lato(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  );
                 } else {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      Map<String, dynamic> lastMessage =
-                          snapshot.data!.docs[index]["lastMessage"];
-                      int channelFollowers =
-                          (snapshot.data!.docs[index]["channelMembers"] as List)
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //My chanels
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        margin: const EdgeInsets.only(left: 8),
+                        height: 32,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 214, 227, 255),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Following",
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.lato(
+                              color: AppTheme.mainColor,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> lastMessage =
+                              snapshot.data!.docs[index]["lastMessage"];
+                          int channelFollowers = (snapshot.data!.docs[index]
+                                  ["channelMembers"] as List)
                               .length;
-                      String followersText = formatFollowers(channelFollowers);
-                      String channelPhotoUrl =
-                          snapshot.data!.docs[index]["channelPhotoUrl"];
-                      String channelUid =
-                          snapshot.data!.docs[index]["channelUid"];
-                      String channelName =
-                          snapshot.data!.docs[index]["channelName"];
-                      bool isAdmin = snapshot.data!.docs[index]
-                              ["channelAdmin"] ==
-                          currentUser;
-                      bool isChannelVerified =
-                          snapshot.data!.docs[index]["channelVerified"];
-                      bool isMateFollwingChannel() {
-                        List channelMembers = snapshot.data!.docs[index]
-                            ["channelMembers"] as List;
+                          String followersText =
+                              formatFollowers(channelFollowers);
+                          String channelPhotoUrl =
+                              snapshot.data!.docs[index]["channelPhotoUrl"];
+                          String channelUid =
+                              snapshot.data!.docs[index]["channelUid"];
+                          String channelName =
+                              snapshot.data!.docs[index]["channelName"];
+                          bool isAdmin = snapshot.data!.docs[index]
+                                  ["channelAdmin"] ==
+                              currentUser;
+                          bool isChannelVerified =
+                              snapshot.data!.docs[index]["channelVerified"];
+                          bool isMateFollwingChannel() {
+                            List channelMembers = snapshot.data!.docs[index]
+                                ["channelMembers"] as List;
 
-                        if (channelMembers.contains(currentUser)) {
-                          return true;
-                        } else {
-                          return false;
-                        }
-                      }
+                            if (channelMembers.contains(currentUser)) {
+                              return true;
+                            } else {
+                              return false;
+                            }
+                          }
 
-                      return ListTile(
-                        onTap: () {
-                          Get.to(
-                            () => ChannelRoomPage(
-                              isAdmin: isAdmin,
-                              isMateFllowing: isMateFollwingChannel(),
-                              isChannelVerified: isChannelVerified,
-                              channelName: channelName,
-                              channelUid: channelUid,
-                              channelPhotoUrl: channelPhotoUrl,
-                              followersText: followersText,
-                            ),
-                          );
-                        },
-                        title: Row(
-                          children: [
-                            Text(
-                              snapshot.data!.docs[index]["channelName"],
-                              style: GoogleFonts.lato(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(width: 3),
-                            snapshot.data!.docs[index]["channelName"] ==
-                                    "ChatMate Official"
-                                ? const Icon(
-                                    Icons.verified,
-                                    color: AppTheme.mainColor,
-                                    size: 16,
-                                  )
-                                : snapshot.data!.docs[index]
-                                            ["channelVerified"] ==
-                                        true
+                          return ListTile(
+                            onTap: () {
+                              Get.to(
+                                () => ChannelRoomPage(
+                                  isAdmin: isAdmin,
+                                  isMateFllowing: isMateFollwingChannel(),
+                                  isChannelVerified: isChannelVerified,
+                                  channelName: channelName,
+                                  channelUid: channelUid,
+                                  channelPhotoUrl: channelPhotoUrl,
+                                  followersText: followersText,
+                                ),
+                              );
+                            },
+                            title: Row(
+                              children: [
+                                Text(
+                                  snapshot.data!.docs[index]["channelName"],
+                                  style: GoogleFonts.lato(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(width: 3),
+                                snapshot.data!.docs[index]["channelName"] ==
+                                        "ChatMate Official"
                                     ? const Icon(
                                         Icons.verified,
                                         color: AppTheme.mainColor,
                                         size: 16,
                                       )
-                                    : const SizedBox(),
-                          ],
-                        ),
-                        subtitle: snapshot.data!.docs[index]["channelName"] ==
-                                "ChatMate Official"
-                            ? Text(
-                                "Recieve latest updates & news",
-                                style: GoogleFonts.lato(
-                                  fontSize: 12,
-                                  color: Colors.black54,
-                                ),
-                              )
-                            : Text(
-                                lastMessage["messageText"],
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.lato(
-                                  fontSize: 12,
-                                  color: Colors.black54,
-                                ),
+                                    : snapshot.data!.docs[index]
+                                                ["channelVerified"] ==
+                                            true
+                                        ? const Icon(
+                                            Icons.verified,
+                                            color: AppTheme.mainColor,
+                                            size: 16,
+                                          )
+                                        : const SizedBox(),
+                              ],
+                            ),
+                            subtitle: snapshot.data!.docs[index]
+                                        ["channelName"] ==
+                                    "ChatMate Official"
+                                ? Text(
+                                    "Recieve latest updates & news",
+                                    style: GoogleFonts.lato(
+                                      fontSize: 12,
+                                      color: Colors.black54,
+                                    ),
+                                  )
+                                : Text(
+                                    lastMessage["messageText"],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.lato(
+                                      fontSize: 12,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(23),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: snapshot.data!.docs[index]
+                                    ["channelPhotoUrl"],
+                                height: 45,
+                                width: 45,
                               ),
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(23),
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: snapshot.data!.docs[index]
-                                ["channelPhotoUrl"],
-                            height: 45,
-                            width: 45,
-                          ),
-                        ),
-                      );
-                    },
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                    ],
                   );
                 }
               },
             ),
-            const SizedBox(height: 10),
-            //Popular
-            // Container(
-            //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            //   margin: const EdgeInsets.only(left: 8),
-            //   height: 32,
-            //   width: 100,
-            //   decoration: BoxDecoration(
-            //     color: const Color.fromARGB(255, 214, 227, 255),
-            //     borderRadius: BorderRadius.circular(6),
-            //   ),
-            //   child: Center(
-            //     child: Text(
-            //       "Popular",
-            //       overflow: TextOverflow.ellipsis,
-            //       style: GoogleFonts.lato(
-            //         color: AppTheme.mainColor,
-            //         fontSize: 13,
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(height: 10),
-            // StreamBuilder(
-            //   stream: firebaseFirestore.collection("channels").snapshots(),
-            //   builder: (context, snapshot) {
-            //     if (!snapshot.hasData) {
-            //       return const SizedBox();
-            //     } else if (snapshot.connectionState ==
-            //         ConnectionState.waiting) {
-            //       return const SizedBox();
-            //     } else {
-            //       List<QueryDocumentSnapshot> channels = snapshot.data!.docs;
-            //       //Sort channels accroding the one which has more followers/ channelMembers
+          ),
 
-            //       channels.sort((a, b) {
-            //         int membersA = (a["channelMembers"] as List).length;
-            //         int membersB = (b["channelMembers"] as List).length;
-            //         return membersB.compareTo(membersA);
-            //       });
+          const SizedBox(height: 10),
+          //Popular
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          //   margin: const EdgeInsets.only(left: 8),
+          //   height: 32,
+          //   width: 100,
+          //   decoration: BoxDecoration(
+          //     color: const Color.fromARGB(255, 214, 227, 255),
+          //     borderRadius: BorderRadius.circular(6),
+          //   ),
+          //   child: Center(
+          //     child: Text(
+          //       "Popular",
+          //       overflow: TextOverflow.ellipsis,
+          //       style: GoogleFonts.lato(
+          //         color: AppTheme.mainColor,
+          //         fontSize: 13,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(height: 10),
+          // StreamBuilder(
+          //   stream: firebaseFirestore.collection("channels").snapshots(),
+          //   builder: (context, snapshot) {
+          //     if (!snapshot.hasData) {
+          //       return const SizedBox();
+          //     } else if (snapshot.connectionState ==
+          //         ConnectionState.waiting) {
+          //       return const SizedBox();
+          //     } else {
+          //       List<QueryDocumentSnapshot> channels = snapshot.data!.docs;
+          //       //Sort channels accroding the one which has more followers/ channelMembers
 
-            //       return ListView.builder(
-            //         itemCount: channels.length,
-            //         shrinkWrap: true,
-            //         physics: const ClampingScrollPhysics(),
-            //         itemBuilder: (context, index) {
-            //           int channelFollowers =
-            //               (channels[index]["channelMembers"] as List).length;
-            //           String followersText = formatFollowers(channelFollowers);
-            //           String channelPhotoUrl =
-            //               channels[index]["channelPhotoUrl"];
-            //           String channelUid = channels[index]["channelUid"];
-            //           String channelName = channels[index]["channelName"];
-            //           bool isAdmin =
-            //               channels[index]["channelAdmin"] == currentUser;
-            //           bool isChannelVerified =
-            //               channels[index]["channelVerified"];
-            //           String channelAdmin = channels[index]["channelAdmin"];
-            //           bool isMateFollwingChannel() {
-            //             List channelMembers = snapshot.data!.docs[index]
-            //                 ["channelMembers"] as List;
+          //       channels.sort((a, b) {
+          //         int membersA = (a["channelMembers"] as List).length;
+          //         int membersB = (b["channelMembers"] as List).length;
+          //         return membersB.compareTo(membersA);
+          //       });
 
-            //             if (channelMembers.contains(currentUser)) {
-            //               return true;
-            //             } else {
-            //               return false;
-            //             }
-            //           }
+          //       return ListView.builder(
+          //         itemCount: channels.length,
+          //         shrinkWrap: true,
+          //         physics: const ClampingScrollPhysics(),
+          //         itemBuilder: (context, index) {
+          //           int channelFollowers =
+          //               (channels[index]["channelMembers"] as List).length;
+          //           String followersText = formatFollowers(channelFollowers);
+          //           String channelPhotoUrl =
+          //               channels[index]["channelPhotoUrl"];
+          //           String channelUid = channels[index]["channelUid"];
+          //           String channelName = channels[index]["channelName"];
+          //           bool isAdmin =
+          //               channels[index]["channelAdmin"] == currentUser;
+          //           bool isChannelVerified =
+          //               channels[index]["channelVerified"];
+          //           String channelAdmin = channels[index]["channelAdmin"];
+          //           bool isMateFollwingChannel() {
+          //             List channelMembers = snapshot.data!.docs[index]
+          //                 ["channelMembers"] as List;
 
-            //           if (channelAdmin == currentUser) {
-            //             // Hide the current user channels.
-            //             return const SizedBox();
-            //           }
-            //           return ListTile(
-            //             onTap: () {
-            //               Get.to(
-            //                 () => ChannelRoomPage(
-            //                   isAdmin: isAdmin,
-            //                   isMateFllowing: isMateFollwingChannel(),
-            //                   isChannelVerified: isChannelVerified,
-            //                   channelName: channelName,
-            //                   channelUid: channelUid,
-            //                   channelPhotoUrl: channelPhotoUrl,
-            //                   followersText: followersText,
-            //                 ),
-            //                 transition: Transition.cupertino,
-            //               );
-            //             },
-            //             title: Row(
-            //               children: [
-            //                 Text(
-            //                   channels[index]["channelName"],
-            //                   style: GoogleFonts.lato(
-            //                     fontSize: 14,
-            //                     color: Colors.black,
-            //                   ),
-            //                 ),
-            //                 const SizedBox(width: 3),
-            //                 channels[index]["channelName"] ==
-            //                         "ChatMate Official"
-            //                     ? const Icon(
-            //                         Icons.verified,
-            //                         color: AppTheme.mainColor,
-            //                         size: 16,
-            //                       )
-            //                     : channels[index]["channelVerified"] == true
-            //                         ? const Icon(
-            //                             Icons.verified,
-            //                             color: AppTheme.mainColor,
-            //                             size: 16,
-            //                           )
-            //                         : const SizedBox(),
-            //               ],
-            //             ),
-            //             subtitle: channels[index]["channelName"] ==
-            //                     "ChatMate Official"
-            //                 ? Text(
-            //                     "Receive latest updates & news",
-            //                     style: GoogleFonts.lato(
-            //                       fontSize: 12,
-            //                       color: Colors.black54,
-            //                     ),
-            //                   )
-            //                 : Text(
-            //                     followersText,
-            //                     overflow: TextOverflow.ellipsis,
-            //                     style: GoogleFonts.lato(
-            //                       fontSize: 12,
-            //                       color: Colors.black54,
-            //                     ),
-            //                   ),
-            //             leading: ClipRRect(
-            //               borderRadius: BorderRadius.circular(23),
-            //               child: CachedNetworkImage(
-            //                 fit: BoxFit.cover,
-            //                 imageUrl: channels[index]["channelPhotoUrl"],
-            //                 height: 45,
-            //                 width: 45,
-            //               ),
-            //             ),
-            //           );
-            //         },
-            //       );
-            //     }
-            //   },
-            // ),
-          ],
-        ),
+          //             if (channelMembers.contains(currentUser)) {
+          //               return true;
+          //             } else {
+          //               return false;
+          //             }
+          //           }
+
+          //           if (channelAdmin == currentUser) {
+          //             // Hide the current user channels.
+          //             return const SizedBox();
+          //           }
+          //           return ListTile(
+          //             onTap: () {
+          //               Get.to(
+          //                 () => ChannelRoomPage(
+          //                   isAdmin: isAdmin,
+          //                   isMateFllowing: isMateFollwingChannel(),
+          //                   isChannelVerified: isChannelVerified,
+          //                   channelName: channelName,
+          //                   channelUid: channelUid,
+          //                   channelPhotoUrl: channelPhotoUrl,
+          //                   followersText: followersText,
+          //                 ),
+          //                 transition: Transition.cupertino,
+          //               );
+          //             },
+          //             title: Row(
+          //               children: [
+          //                 Text(
+          //                   channels[index]["channelName"],
+          //                   style: GoogleFonts.lato(
+          //                     fontSize: 14,
+          //                     color: Colors.black,
+          //                   ),
+          //                 ),
+          //                 const SizedBox(width: 3),
+          //                 channels[index]["channelName"] ==
+          //                         "ChatMate Official"
+          //                     ? const Icon(
+          //                         Icons.verified,
+          //                         color: AppTheme.mainColor,
+          //                         size: 16,
+          //                       )
+          //                     : channels[index]["channelVerified"] == true
+          //                         ? const Icon(
+          //                             Icons.verified,
+          //                             color: AppTheme.mainColor,
+          //                             size: 16,
+          //                           )
+          //                         : const SizedBox(),
+          //               ],
+          //             ),
+          //             subtitle: channels[index]["channelName"] ==
+          //                     "ChatMate Official"
+          //                 ? Text(
+          //                     "Receive latest updates & news",
+          //                     style: GoogleFonts.lato(
+          //                       fontSize: 12,
+          //                       color: Colors.black54,
+          //                     ),
+          //                   )
+          //                 : Text(
+          //                     followersText,
+          //                     overflow: TextOverflow.ellipsis,
+          //                     style: GoogleFonts.lato(
+          //                       fontSize: 12,
+          //                       color: Colors.black54,
+          //                     ),
+          //                   ),
+          //             leading: ClipRRect(
+          //               borderRadius: BorderRadius.circular(23),
+          //               child: CachedNetworkImage(
+          //                 fit: BoxFit.cover,
+          //                 imageUrl: channels[index]["channelPhotoUrl"],
+          //                 height: 45,
+          //                 width: 45,
+          //               ),
+          //             ),
+          //           );
+          //         },
+          //       );
+          //     }
+          //   },
+          // ),
+        ],
       ),
     );
   }

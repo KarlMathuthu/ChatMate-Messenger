@@ -159,11 +159,12 @@ class _ChatsPageState extends State<ChatsPage> {
                   return const SizedBox();
                 } else if (chatSnapshot.connectionState ==
                     ConnectionState.waiting) {
-                  return const SizedBox(); /* Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
-                      color: AppTheme.loaderColor,
-                      size: 50,
-                    ), */
+                      return Center();
+                  // return Center(
+                  //   child: LoadingAnimationWidget.fourRotatingDots(
+                  //     color: AppTheme.loaderColor,
+                  //     size: 50,
+                  //   ), 
                   // );
                 } else {
                   return ListView.builder(
