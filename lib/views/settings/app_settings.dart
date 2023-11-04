@@ -13,12 +13,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppSettingsPage extends StatelessWidget {
+class AppSettingsPage extends StatefulWidget {
   AppSettingsPage({super.key});
 
+  @override
+  State<AppSettingsPage> createState() => _AppSettingsPageState();
+}
+
+class _AppSettingsPageState extends State<AppSettingsPage> {
   AuthController authController = Get.put(AuthController());
+
   CustomLoader customLoader = CustomLoader();
+
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
 
   List<String> avatarsList = [
@@ -29,6 +37,7 @@ class AppSettingsPage extends StatelessWidget {
     Avatars.girl_2,
     Avatars.girl_3,
   ];
+
   int selectedAvatar = 0;
 
   @override
@@ -144,16 +153,29 @@ class AppSettingsPage extends StatelessWidget {
                     String userbio = snapshot.data!.get("userBio");
                     bool hasProfilePicture =
                         snapshot.data!.get("photoUrl") != "none";
+                    bool isVerified = snapshot.data!.get("isVerified");
 
                     return ListTile(
                       onTap: () {},
-                      title: Text(
-                        "@$username",
-                        style: GoogleFonts.lato(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      title: Row(
+                        children: [
+                          Text(
+                            "@$username",
+                            style: GoogleFonts.lato(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+                          isVerified
+                              ? const Icon(
+                                  Icons.verified,
+                                  color: AppTheme.mainColor,
+                                  size: 16,
+                                )
+                              : const SizedBox(),
+                        ],
                       ),
                       subtitle: Text(
                         userbio,
@@ -340,21 +362,59 @@ class AppSettingsPage extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8.0),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
                     itemCount: avatarsList.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        height: 50,
-                        width: 50,
-                        margin: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          image: DecorationImage(
-                            image: AssetImage(
-                              avatarsList[index],
-                            ),
-                          ),
-                        ),
-                      );
+                      return selectedAvatar == index
+                          ? GestureDetector(
+                              onTap: () {
+                                selectedAvatar = index;
+                                setState(() {});
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppTheme.mainColor,
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                height: 80,
+                                width: 80,
+                                padding: const EdgeInsets.all(2),
+                                margin: const EdgeInsets.all(4),
+                                child: Container(
+                                  height: 80,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                        avatarsList[index],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                selectedAvatar = index;
+                                setState(() {});
+                              },
+                              child: Container(
+                                height: 80,
+                                width: 80,
+                                margin: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(
+                                      avatarsList[index],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
                     },
                   ),
                 ),
