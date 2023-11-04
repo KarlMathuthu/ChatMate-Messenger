@@ -113,7 +113,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                   return Center(
                     child: LoadingAnimationWidget.fourRotatingDots(
                       color: AppTheme.loaderColor,
-                      size: 50,
+                      size: 40,
                     ),
                   );
                 } else if (snapshot.data!.docs.isEmpty) {
@@ -154,8 +154,8 @@ class _ChannelsPageState extends State<ChannelsPage> {
                       ),
                       ListView.builder(
                         itemCount: snapshot.data!.docs.length,
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
+                        // shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           Map<String, dynamic> lastMessage =
                               snapshot.data!.docs[index]["lastMessage"];

@@ -10,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../model/message_model.dart';
 import '../chats/cantacts_page.dart';
@@ -113,43 +114,42 @@ class _ChatsPageState extends State<ChatsPage> {
           const SizedBox(width: 10),
         ],
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            //Search chats/mate
-            Container(
-              height: 40,
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 245, 245, 245),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 8),
-                  SvgPicture.asset(
-                    "assets/icons/search.svg",
-                    height: 18,
-                    colorFilter:
-                        const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Search chats...",
-                    style: GoogleFonts.lato(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
+      body: Column(
+        children: [
+          //Search chats/mate
+          Container(
+            height: 40,
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 245, 245, 245),
+              borderRadius: BorderRadius.circular(10),
             ),
-            const SizedBox(height: 10),
-            //Chats
-            StreamBuilder(
+            child: Row(
+              children: [
+                const SizedBox(width: 8),
+                SvgPicture.asset(
+                  "assets/icons/search.svg",
+                  height: 18,
+                  colorFilter:
+                      const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "Search chats...",
+                  style: GoogleFonts.lato(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          //Chats
+          Expanded(
+            child: StreamBuilder(
               stream: firestore
                   .collection("chats")
                   .where("members", arrayContains: currentUserId)
@@ -159,18 +159,29 @@ class _ChatsPageState extends State<ChatsPage> {
                   return const SizedBox();
                 } else if (chatSnapshot.connectionState ==
                     ConnectionState.waiting) {
-                      return Center();
-                  // return Center(
-                  //   child: LoadingAnimationWidget.fourRotatingDots(
-                  //     color: AppTheme.loaderColor,
-                  //     size: 50,
-                  //   ), 
-                  // );
+                  // return Center();
+                  return Center(
+                    child: LoadingAnimationWidget.fourRotatingDots(
+                      color: AppTheme.loaderColor,
+                      size: 40,
+                    ),
+                  );
+                } else if (chatSnapshot.data!.docs.isEmpty) {
+                  // Display a message when there are no chats.
+                  return Center(
+                    child: Text(
+                      "Wave at mates by clicking the icon",
+                      style: GoogleFonts.lato(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  );
                 } else {
                   return ListView.builder(
                     itemCount: chatSnapshot.data!.docs.length,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
+                    // shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       List<dynamic> messages =
                           chatSnapshot.data!.docs[index]["messages"];
@@ -397,8 +408,8 @@ class _ChatsPageState extends State<ChatsPage> {
                 }
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
 
       //Create message button
