@@ -92,6 +92,7 @@ class _ChatsPageState extends State<ChatsPage> {
             borderRadius: BorderRadius.circular(6),
             onTap: () {
               //Find mate
+               Get.to(() => const ContactsPage(), transition: Transition.cupertino);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -170,7 +171,7 @@ class _ChatsPageState extends State<ChatsPage> {
                   // Display a message when there are no chats.
                   return Center(
                     child: Text(
-                      "Wave at mates by clicking the icon",
+                      "Wave at mates by clicking the Find Mate",
                       style: GoogleFonts.lato(
                         fontSize: 14,
                         color: Colors.black54,
@@ -413,17 +414,17 @@ class _ChatsPageState extends State<ChatsPage> {
       ),
 
       //Create message button
-      floatingActionButton: FloatingActionButton(
-        shape: CircleBorder(),
-        backgroundColor: AppTheme.mainColor,
-        child: SvgPicture.asset(
-          "assets/icons/chat.svg",
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Get.to(() => const ContactsPage(), transition: Transition.cupertino);
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   shape: CircleBorder(),
+      //   backgroundColor: AppTheme.mainColor,
+      //   child: SvgPicture.asset(
+      //     "assets/icons/chat.svg",
+      //     color: Colors.white,
+      //   ),
+      //   onPressed: () {
+      //     Get.to(() => const ContactsPage(), transition: Transition.cupertino);
+      //   },
+      // ),
     );
   }
 }
