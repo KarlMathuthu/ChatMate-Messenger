@@ -36,6 +36,7 @@ class AuthController extends GetxController {
           userBio: "I'm new to ChatMate!",
           userStatus: 'online',
           strikes: 0,
+          isVerified: false,
           userTopics: userTopics,
         );
 

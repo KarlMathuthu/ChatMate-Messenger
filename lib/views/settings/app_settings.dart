@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
@@ -130,8 +131,8 @@ class AppSettingsPage extends StatelessWidget {
                   } else {
                     String username = snapshot.data!.get("userName");
                     String userbio = snapshot.data!.get("userBio");
-                    String initials = username[0].toUpperCase() +
-                        username[username.length - 1].toUpperCase();
+                    bool hasProfilePicture =
+                        snapshot.data!.get("photoUrl") != "none";
 
                     return ListTile(
                       onTap: () {},
@@ -151,38 +152,56 @@ class AppSettingsPage extends StatelessWidget {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      leading: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: AppTheme.loaderColor,
-                        ),
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: Text(
-                                initials,
-                                style: GoogleFonts.lato(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                      leading: GestureDetector(
+                        onTap: () {
+                          showChooseProfilePicture(context);
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: AppTheme.loaderColor,
+                          ),
+                          child: Stack(
+                            children: [
+                              hasProfilePicture
+                                  ? CachedNetworkImage(
+                                      imageUrl: snapshot.data!.get("photoUrl"))
+                                  : Center(
+                                      child: SvgPicture.asset(
+                                        CustomIcons.camera,
+                                        height: 22,
+                                        colorFilter: const ColorFilter.mode(
+                                          Colors.white,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ),
+                              // Center(
+                              //   child: Text(
+                              //     initials,
+                              //     style: GoogleFonts.lato(
+                              //       fontSize: 16,
+                              //       color: Colors.white,
+                              //       fontWeight: FontWeight.bold,
+                              //     ),
+                              //   ),
+                              // ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  width: 15,
+                                  height: 15,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.greenAccent,
+                                    shape: BoxShape.circle,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                width: 15,
-                                height: 15,
-                                decoration: const BoxDecoration(
-                                  color: Colors.greenAccent,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       trailing: SvgPicture.asset(
@@ -279,6 +298,30 @@ class AppSettingsPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void showChooseProfilePicture(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              'This is a Bottom Sheet!',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        );
+      },
     );
   }
 

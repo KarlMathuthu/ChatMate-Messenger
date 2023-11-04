@@ -7,6 +7,7 @@ class UserModel {
   final String userStatus;
   final String fcmToken;
   final int strikes;
+  final bool isVerified;
   final List<String> userTopics;
 
   UserModel({
@@ -18,6 +19,7 @@ class UserModel {
     required this.userBio,
     required this.userStatus,
     required this.strikes,
+    required this.isVerified,
     required this.userTopics,
   });
 
@@ -31,6 +33,7 @@ class UserModel {
       'userBio': userBio,
       'userStatus': userStatus,
       'strikes': strikes,
+      'isVerified': isVerified,
       'userTopics': userTopics,
     };
   }
