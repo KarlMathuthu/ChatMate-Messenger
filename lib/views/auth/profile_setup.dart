@@ -58,6 +58,21 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
   ];
   List<int> selectedTopics = [];
 
+  void continueSignup(List<int> selectedIndices) {
+    List<String> userTopics = [];
+    for (int index in selectedIndices) {
+      userTopics.add(topicsList[index]);
+    }
+    customLoader.showLoader(context);
+    authController.createAccount(
+      email: widget.email,
+      password: widget.password,
+      userName: widget.userName,
+      customLoader: customLoader,
+      userTopics: userTopics,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,16 +186,15 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
               onPressed: () {
                 Navigator.of(__).pop();
                 // Continue sign-up.
-                print(topicsList);
-
                 // customLoader.showLoader(context);
                 // authController.createAccount(
                 //   email: widget.email,
                 //   password: widget.password,
                 //   userName: widget.userName,
                 //   customLoader: customLoader,
-                //   userTopics: userTopics,
+                //   userTopics: ,
                 // );
+                continueSignup(selectedTopics);
               },
             ),
           ],
