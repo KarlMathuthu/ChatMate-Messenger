@@ -41,11 +41,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
           InkWell(
             borderRadius: BorderRadius.circular(6),
             onTap: () {
-              //Create channel
-              Get.to(
-                () => const CreateChannelPage(),
-                transition: Transition.cupertino,
-              );
+              //discover channels
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -56,7 +52,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
               ),
               child: Center(
                 child: Text(
-                  "Create Channel",
+                  "Discover",
                   style: GoogleFonts.lato(
                     color: AppTheme.mainColor,
                     fontSize: 13,
@@ -248,150 +244,150 @@ class _ChannelsPageState extends State<ChannelsPage> {
             ),
             const SizedBox(height: 10),
             //Popular
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              margin: const EdgeInsets.only(left: 8),
-              height: 32,
-              width: 100,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 214, 227, 255),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Center(
-                child: Text(
-                  "Popular",
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.lato(
-                    color: AppTheme.mainColor,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            StreamBuilder(
-              stream: firebaseFirestore.collection("channels").snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox();
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const SizedBox();
-                } else {
-                  List<QueryDocumentSnapshot> channels = snapshot.data!.docs;
-                  //Sort channels accroding the one which has more followers/ channelMembers
+            // Container(
+            //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            //   margin: const EdgeInsets.only(left: 8),
+            //   height: 32,
+            //   width: 100,
+            //   decoration: BoxDecoration(
+            //     color: const Color.fromARGB(255, 214, 227, 255),
+            //     borderRadius: BorderRadius.circular(6),
+            //   ),
+            //   child: Center(
+            //     child: Text(
+            //       "Popular",
+            //       overflow: TextOverflow.ellipsis,
+            //       style: GoogleFonts.lato(
+            //         color: AppTheme.mainColor,
+            //         fontSize: 13,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: 10),
+            // StreamBuilder(
+            //   stream: firebaseFirestore.collection("channels").snapshots(),
+            //   builder: (context, snapshot) {
+            //     if (!snapshot.hasData) {
+            //       return const SizedBox();
+            //     } else if (snapshot.connectionState ==
+            //         ConnectionState.waiting) {
+            //       return const SizedBox();
+            //     } else {
+            //       List<QueryDocumentSnapshot> channels = snapshot.data!.docs;
+            //       //Sort channels accroding the one which has more followers/ channelMembers
 
-                  channels.sort((a, b) {
-                    int membersA = (a["channelMembers"] as List).length;
-                    int membersB = (b["channelMembers"] as List).length;
-                    return membersB.compareTo(membersA);
-                  });
+            //       channels.sort((a, b) {
+            //         int membersA = (a["channelMembers"] as List).length;
+            //         int membersB = (b["channelMembers"] as List).length;
+            //         return membersB.compareTo(membersA);
+            //       });
 
-                  return ListView.builder(
-                    itemCount: channels.length,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      int channelFollowers =
-                          (channels[index]["channelMembers"] as List).length;
-                      String followersText = formatFollowers(channelFollowers);
-                      String channelPhotoUrl =
-                          channels[index]["channelPhotoUrl"];
-                      String channelUid = channels[index]["channelUid"];
-                      String channelName = channels[index]["channelName"];
-                      bool isAdmin =
-                          channels[index]["channelAdmin"] == currentUser;
-                      bool isChannelVerified =
-                          channels[index]["channelVerified"];
-                      String channelAdmin = channels[index]["channelAdmin"];
-                      bool isMateFollwingChannel() {
-                        List channelMembers = snapshot.data!.docs[index]
-                            ["channelMembers"] as List;
+            //       return ListView.builder(
+            //         itemCount: channels.length,
+            //         shrinkWrap: true,
+            //         physics: const ClampingScrollPhysics(),
+            //         itemBuilder: (context, index) {
+            //           int channelFollowers =
+            //               (channels[index]["channelMembers"] as List).length;
+            //           String followersText = formatFollowers(channelFollowers);
+            //           String channelPhotoUrl =
+            //               channels[index]["channelPhotoUrl"];
+            //           String channelUid = channels[index]["channelUid"];
+            //           String channelName = channels[index]["channelName"];
+            //           bool isAdmin =
+            //               channels[index]["channelAdmin"] == currentUser;
+            //           bool isChannelVerified =
+            //               channels[index]["channelVerified"];
+            //           String channelAdmin = channels[index]["channelAdmin"];
+            //           bool isMateFollwingChannel() {
+            //             List channelMembers = snapshot.data!.docs[index]
+            //                 ["channelMembers"] as List;
 
-                        if (channelMembers.contains(currentUser)) {
-                          return true;
-                        } else {
-                          return false;
-                        }
-                      }
+            //             if (channelMembers.contains(currentUser)) {
+            //               return true;
+            //             } else {
+            //               return false;
+            //             }
+            //           }
 
-                      if (channelAdmin == currentUser) {
-                        // Hide the current user channels.
-                        return const SizedBox();
-                      }
-                      return ListTile(
-                        onTap: () {
-                          Get.to(
-                            () => ChannelRoomPage(
-                              isAdmin: isAdmin,
-                              isMateFllowing: isMateFollwingChannel(),
-                              isChannelVerified: isChannelVerified,
-                              channelName: channelName,
-                              channelUid: channelUid,
-                              channelPhotoUrl: channelPhotoUrl,
-                              followersText: followersText,
-                            ),
-                            transition: Transition.cupertino,
-                          );
-                        },
-                        title: Row(
-                          children: [
-                            Text(
-                              channels[index]["channelName"],
-                              style: GoogleFonts.lato(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(width: 3),
-                            channels[index]["channelName"] ==
-                                    "ChatMate Official"
-                                ? const Icon(
-                                    Icons.verified,
-                                    color: AppTheme.mainColor,
-                                    size: 16,
-                                  )
-                                : channels[index]["channelVerified"] == true
-                                    ? const Icon(
-                                        Icons.verified,
-                                        color: AppTheme.mainColor,
-                                        size: 16,
-                                      )
-                                    : const SizedBox(),
-                          ],
-                        ),
-                        subtitle: channels[index]["channelName"] ==
-                                "ChatMate Official"
-                            ? Text(
-                                "Receive latest updates & news",
-                                style: GoogleFonts.lato(
-                                  fontSize: 12,
-                                  color: Colors.black54,
-                                ),
-                              )
-                            : Text(
-                                followersText,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.lato(
-                                  fontSize: 12,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(23),
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: channels[index]["channelPhotoUrl"],
-                            height: 45,
-                            width: 45,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+            //           if (channelAdmin == currentUser) {
+            //             // Hide the current user channels.
+            //             return const SizedBox();
+            //           }
+            //           return ListTile(
+            //             onTap: () {
+            //               Get.to(
+            //                 () => ChannelRoomPage(
+            //                   isAdmin: isAdmin,
+            //                   isMateFllowing: isMateFollwingChannel(),
+            //                   isChannelVerified: isChannelVerified,
+            //                   channelName: channelName,
+            //                   channelUid: channelUid,
+            //                   channelPhotoUrl: channelPhotoUrl,
+            //                   followersText: followersText,
+            //                 ),
+            //                 transition: Transition.cupertino,
+            //               );
+            //             },
+            //             title: Row(
+            //               children: [
+            //                 Text(
+            //                   channels[index]["channelName"],
+            //                   style: GoogleFonts.lato(
+            //                     fontSize: 14,
+            //                     color: Colors.black,
+            //                   ),
+            //                 ),
+            //                 const SizedBox(width: 3),
+            //                 channels[index]["channelName"] ==
+            //                         "ChatMate Official"
+            //                     ? const Icon(
+            //                         Icons.verified,
+            //                         color: AppTheme.mainColor,
+            //                         size: 16,
+            //                       )
+            //                     : channels[index]["channelVerified"] == true
+            //                         ? const Icon(
+            //                             Icons.verified,
+            //                             color: AppTheme.mainColor,
+            //                             size: 16,
+            //                           )
+            //                         : const SizedBox(),
+            //               ],
+            //             ),
+            //             subtitle: channels[index]["channelName"] ==
+            //                     "ChatMate Official"
+            //                 ? Text(
+            //                     "Receive latest updates & news",
+            //                     style: GoogleFonts.lato(
+            //                       fontSize: 12,
+            //                       color: Colors.black54,
+            //                     ),
+            //                   )
+            //                 : Text(
+            //                     followersText,
+            //                     overflow: TextOverflow.ellipsis,
+            //                     style: GoogleFonts.lato(
+            //                       fontSize: 12,
+            //                       color: Colors.black54,
+            //                     ),
+            //                   ),
+            //             leading: ClipRRect(
+            //               borderRadius: BorderRadius.circular(23),
+            //               child: CachedNetworkImage(
+            //                 fit: BoxFit.cover,
+            //                 imageUrl: channels[index]["channelPhotoUrl"],
+            //                 height: 45,
+            //                 width: 45,
+            //               ),
+            //             ),
+            //           );
+            //         },
+            //       );
+            //     }
+            //   },
+            // ),
           ],
         ),
       ),
