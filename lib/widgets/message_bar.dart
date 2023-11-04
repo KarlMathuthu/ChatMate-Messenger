@@ -1,6 +1,7 @@
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/controllers/notifications_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -108,8 +109,9 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
                     }
                   },
                   icon: SvgPicture.asset(
-                    "assets/icons/record.svg",
-                    color: AppTheme.mainColor,
+                    CustomIcons.camera,
+                    colorFilter: const ColorFilter.mode(
+                        AppTheme.mainColor, BlendMode.srcIn),
                   ),
                 )
               : IconButton(
