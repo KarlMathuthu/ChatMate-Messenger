@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/utils/avatars.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:chat_mate_messanger/widgets/custom_tile.dart';
@@ -19,6 +20,16 @@ class AppSettingsPage extends StatelessWidget {
   CustomLoader customLoader = CustomLoader();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
+
+  List<String> avatarsList = [
+    Avatars.boy_1,
+    Avatars.boy_2,
+    Avatars.boy_3,
+    Avatars.girl_1,
+    Avatars.girl_2,
+    Avatars.girl_3,
+  ];
+  int selectedAvatar = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -306,19 +317,70 @@ class AppSettingsPage extends StatelessWidget {
       context: context,
       builder: (context) {
         return Container(
-          height: 200,
-          decoration: BoxDecoration(
+          height: 180,
+          width: double.infinity,
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
             ),
           ),
-          child: Center(
-            child: Text(
-              'This is a Bottom Sheet!',
-              style: TextStyle(fontSize: 20),
-            ),
+          child: Column(
+            children: [
+              const SizedBox(height: 5),
+              Text(
+                "Choose your avatar",
+                style: GoogleFonts.lato(
+                  fontSize: 14,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: avatarsList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 50,
+                        width: 50,
+                        margin: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          image: DecorationImage(
+                            image: AssetImage(
+                              avatarsList[index],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              //Save profile picture button.
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: CupertinoButton(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppTheme.mainColor,
+                    child: Text(
+                      "Update Profile Picture",
+                      style: GoogleFonts.lato(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
