@@ -16,10 +16,12 @@ class CallPage extends StatefulWidget {
     required this.mateUid,
     required this.callType,
     required this.mateName,
+    required this.chatRoomId,
   });
   final String mateUid;
   final String mateName;
   final String callType;
+  final String chatRoomId;
 
   @override
   State<CallPage> createState() => _CallPageState();

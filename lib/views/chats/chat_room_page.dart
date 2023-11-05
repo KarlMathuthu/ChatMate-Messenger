@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../widgets/chat_buble.dart';
@@ -221,6 +222,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     mateUid: widget.mateUid,
                     callType: "audio",
                     mateName: widget.mateName,
+                    chatRoomId: widget.chatRoomId,
                   ),
                 );
               },
@@ -236,6 +238,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     mateUid: widget.mateUid,
                     callType: "video",
                     mateName: widget.mateName,
+                    chatRoomId: widget.chatRoomId,
                   ),
                 );
               },
@@ -271,8 +274,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           );
                     } else if (snapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return const Center(
-                        child: Text("Loading"),
+                      return Center(
+                        child: LoadingAnimationWidget.fourRotatingDots(
+                          color: AppTheme.loaderColor,
+                          size: 40,
+                        ),
                       );
                     } else {
                       List<dynamic> messages =

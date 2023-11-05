@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class StatusView extends StatelessWidget {
@@ -13,7 +12,8 @@ class StatusView extends StatelessWidget {
   final Color unSeenColor;
   final Widget child;
 
-  StatusView({
+  const StatusView({
+    super.key,
     this.numberOfStatus = 10,
     this.indexOfSeenStatus = 0,
     this.spacing = 10.0,
@@ -27,30 +27,28 @@ class StatusView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: radius * 2,
-            height: radius * 2,
-            child: CustomPaint(
-              painter: Arc(
-                  alreadyWatch: indexOfSeenStatus,
-                  numberOfArc: numberOfStatus,
-                  spacing: spacing,
-                  strokeWidth: strokeWidth,
-                  seenColor: seenColor,
-                  unSeenColor: unSeenColor),
-            ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: radius * 2,
+          height: radius * 2,
+          child: CustomPaint(
+            painter: Arc(
+                alreadyWatch: indexOfSeenStatus,
+                numberOfArc: numberOfStatus,
+                spacing: spacing,
+                strokeWidth: strokeWidth,
+                seenColor: seenColor,
+                unSeenColor: unSeenColor),
           ),
-          CircleAvatar(
-            radius: radius - padding,
-            backgroundColor: const Color.fromARGB(255, 96, 149, 255),
-            child: child,
-          ),
-        ],
-      ),
+        ),
+        CircleAvatar(
+          radius: radius - padding,
+          backgroundColor: const Color.fromARGB(255, 96, 149, 255),
+          child: child,
+        ),
+      ],
     );
   }
 }
