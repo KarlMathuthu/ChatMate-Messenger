@@ -1,7 +1,7 @@
 import 'dart:io';
-
-import 'package:chat_mate_messanger/controllers/signaling_controller.dart';
+import 'package:chat_mate_messanger/controllers/call_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +26,10 @@ class CallPage extends StatefulWidget {
 }
 
 class _CallPageState extends State<CallPage> {
-  Signaling signaling = Signaling();
+  CallController signaling = CallController();
   RTCVideoRenderer localRenderer = RTCVideoRenderer();
   RTCVideoRenderer remoteRenderer = RTCVideoRenderer();
+  CustomLoader customLoader = CustomLoader();
 
   @override
   void initState() {
@@ -48,10 +49,11 @@ class _CallPageState extends State<CallPage> {
   }
 
   void initializeCall() async {
-    await signaling.createRoom(
-      remoteRenderer,
-      widget.mateUid,
-      widget.callType,
+    await signaling.createCallRoom(
+      remoteRenderer: remoteRenderer,
+      mateUid: widget.mateUid,
+      callType: widget.callType,
+      customLoader: customLoader,
     );
     setState(() {});
   }
@@ -82,6 +84,7 @@ class _CallPageState extends State<CallPage> {
                     widget.mateUid,
                     signaling,
                     localRenderer,
+                    customLoader,
                   ),
                 )
               : videoCallLayout(
@@ -91,6 +94,7 @@ class _CallPageState extends State<CallPage> {
                   context,
                   widget.mateUid,
                   signaling,
+                  customLoader,
                 ),
         ],
       ),
@@ -134,7 +138,8 @@ Widget videoCallLayout(
   String mateName,
   BuildContext context,
   String mateUid,
-  Signaling signaling,
+  CallController signaling,
+  CustomLoader customLoader,
 ) {
   return Stack(
     children: [
@@ -272,7 +277,8 @@ Widget videoCallLayout(
                                 ),
                               ),
                               onPressed: () async {
-                                signaling.hangUp(localRenderer);
+                                signaling.closeCall(
+                                    localRenderer, customLoader);
                                 await FirebaseFirestore.instance
                                     .collection("calls")
                                     .doc(mateUid)
@@ -306,8 +312,9 @@ Widget audioCallLayout(
   String mateName,
   BuildContext context,
   String mateUid,
-  Signaling signaling,
+  CallController signaling,
   RTCVideoRenderer localRenderer,
+  CustomLoader customLoader,
 ) {
   return Stack(
     children: [
@@ -451,12 +458,10 @@ Widget audioCallLayout(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              onPressed: () async {
-                                signaling.hangUp(localRenderer);
-                                await FirebaseFirestore.instance
-                                    .collection("calls")
-                                    .doc(mateUid)
-                                    .delete();
+                              onPressed: () {
+                                signaling.closeCall(
+                                    localRenderer, customLoader);
+
                                 print("Call ended");
                                 Get.back();
                                 Navigator.of(context).pop();

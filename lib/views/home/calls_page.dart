@@ -81,7 +81,7 @@ class _CallsPageState extends State<CallsPage> {
                 children: [
                   Center(
                     child: Text(
-                      "You haven't made a call yet mate!",
+                      "No recent calls",
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.lato(
                         fontSize: 14,
