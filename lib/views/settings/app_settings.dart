@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
@@ -337,7 +339,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
   void showChooseProfilePicture(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) {
+      builder: (____) {
         return Container(
           height: 180,
           width: double.infinity,
@@ -440,7 +442,15 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(____);
+                      // Update profile Avatar.
+                      customLoader.showLoader(context);
+                      authController.updateUserProfilePcture(
+                        assetPath: avatarsList[selectedAvatar],
+                        customLoader: customLoader,
+                      );
+                    },
                   ),
                 ),
               ),
