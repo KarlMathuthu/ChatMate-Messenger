@@ -34,7 +34,7 @@ class _ContactsPageState extends State<ContactsPage> {
     Get.dialog(
       CupertinoAlertDialog(
         title: Text(
-          "Wave at $mateName \n\n👋\n",
+          "Hi to $mateName \n\n👋\n",
           style: GoogleFonts.lato(
             fontWeight: FontWeight.normal,
           ),

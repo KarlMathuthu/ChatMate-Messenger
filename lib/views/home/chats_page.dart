@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/controllers/sharedPref_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
@@ -74,6 +75,23 @@ class _ChatsPageState extends State<ChatsPage> {
     });
   }
 
+  Stream<String> getUserProfilePic(String uid) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map((userDoc) {
+      if (userDoc.exists) {
+        String profilePic = userDoc.data()?['photoUrl'];
+        return profilePic;
+      } else {
+        return "none";
+      }
+    }).handleError((error) {
+      return "none";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +110,8 @@ class _ChatsPageState extends State<ChatsPage> {
             borderRadius: BorderRadius.circular(6),
             onTap: () {
               //Find mate
-               Get.to(() => const ContactsPage(), transition: Transition.cupertino);
+              Get.to(() => const ContactsPage(),
+                  transition: Transition.cupertino);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -358,45 +377,70 @@ class _ChatsPageState extends State<ChatsPage> {
                                       bool isUserOnline =
                                           userStatusSnap.data! == "online";
 
-                                      return Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          color: AppTheme.mainColorLight,
-                                        ),
-                                        child: Stack(
-                                          children: [
-                                            Center(
-                                              child: Text(
-                                                initials,
-                                                style: GoogleFonts.lato(
-                                                  fontSize: 16,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                      return StreamBuilder<String>(
+                                        stream: getUserProfilePic(
+                                            getFriendUid(chatSnapshot, index)),
+                                        builder: (context, profileSnap) {
+                                          if (!profileSnap.hasData) {
+                                            return const SizedBox();
+                                          } else {
+                                            bool hasProfilePicture =
+                                                profileSnap.data! != "none";
+                                            return Container(
+                                              height: 50,
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                color: AppTheme.mainColorLight,
                                               ),
-                                            ),
-                                            if (isUserOnline) ...{
-                                              Positioned(
-                                                bottom: 0,
-                                                right: 0,
-                                                child: Container(
-                                                  width: 15,
-                                                  height: 15,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color.fromARGB(
-                                                        255, 73, 255, 167),
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              )
-                                            } else
-                                              const SizedBox()
-                                          ],
-                                        ),
+                                              child: Stack(
+                                                children: [
+                                                  hasProfilePicture
+                                                      ? CachedNetworkImage(
+                                                          imageUrl:
+                                                              profileSnap.data!,
+                                                        )
+                                                      : Center(
+                                                          child: Text(
+                                                            initials,
+                                                            style: GoogleFonts
+                                                                .lato(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                  if (isUserOnline) ...{
+                                                    Positioned(
+                                                      bottom: 0,
+                                                      right: 0,
+                                                      child: Container(
+                                                        width: 15,
+                                                        height: 15,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              73,
+                                                              255,
+                                                              167),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  } else
+                                                    const SizedBox()
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        },
                                       );
                                     }
                                   }),
