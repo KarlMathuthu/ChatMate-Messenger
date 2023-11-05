@@ -360,61 +360,65 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: avatarsList.length,
-                    itemBuilder: (context, index) {
-                      return selectedAvatar == index
-                          ? GestureDetector(
-                              onTap: () {
-                                selectedAvatar = index;
-                                setState(() {});
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: AppTheme.mainColor,
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                                height: 80,
-                                width: 80,
-                                padding: const EdgeInsets.all(2),
-                                margin: const EdgeInsets.all(4),
-                                child: Container(
-                                  height: 80,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: AssetImage(
-                                        avatarsList[index],
+                  child: StatefulBuilder(
+                    builder: (context, state) {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: avatarsList.length,
+                        itemBuilder: (context, index) {
+                          return selectedAvatar == index
+                              ? GestureDetector(
+                                  onTap: () {
+                                    selectedAvatar = index;
+                                    state(() {});
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.mainColor,
+                                      borderRadius: BorderRadius.circular(40),
+                                    ),
+                                    height: 80,
+                                    width: 80,
+                                    padding: const EdgeInsets.all(2),
+                                    margin: const EdgeInsets.all(4),
+                                    child: Container(
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(40),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                            avatarsList[index],
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                selectedAvatar = index;
-                                setState(() {});
-                              },
-                              child: Container(
-                                height: 80,
-                                width: 80,
-                                margin: const EdgeInsets.all(4.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(40),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: AssetImage(
-                                      avatarsList[index],
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    selectedAvatar = index;
+                                    state(() {});
+                                  },
+                                  child: Container(
+                                    height: 80,
+                                    width: 80,
+                                    margin: const EdgeInsets.all(4.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                          avatarsList[index],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
+                                );
+                        },
+                      );
                     },
                   ),
                 ),
