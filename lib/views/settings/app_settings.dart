@@ -388,7 +388,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
       context: context,
       builder: (____) {
         return Container(
-          height: 180,
+          height: 230,
           width: double.infinity,
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -501,6 +501,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 50),
             ],
           ),
         );

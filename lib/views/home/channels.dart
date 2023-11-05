@@ -120,7 +120,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                   // Display a message when there are no channels.
                   return Center(
                     child: Text(
-                      "No followed channels yet, mate",
+                      "No followed channels",
                       style: GoogleFonts.lato(
                         fontSize: 14,
                         color: Colors.black54,

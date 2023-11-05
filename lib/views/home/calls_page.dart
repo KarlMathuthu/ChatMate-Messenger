@@ -48,14 +48,14 @@ class _CallsPageState extends State<CallsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               height: 32,
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 234, 234),
+                color: const Color.fromARGB(255, 214, 227, 255),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Center(
                 child: Text(
-                  "Clear Hisotry",
+                  "Join Call",
                   style: GoogleFonts.lato(
-                    color: Colors.red,
+                    color: AppTheme.mainColor,
                     fontSize: 13,
                   ),
                 ),
@@ -69,11 +69,40 @@ class _CallsPageState extends State<CallsPage> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        margin: const EdgeInsets.only(top: 0.8),
+        margin: const EdgeInsets.only(top: 0),
         color: AppTheme.scaffoldBacgroundColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              height: 40,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    "assets/icons/search.svg",
+                    height: 18,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Search calls...",
+                    style: GoogleFonts.lato(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 10),
             //Call History
             Expanded(
@@ -95,25 +124,25 @@ class _CallsPageState extends State<CallsPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text(
-          "Join Call",
-          style: GoogleFonts.lato(
-            color: Colors.white,
-            fontSize: 14,
-          ),
-        ),
-        backgroundColor: AppTheme.mainColor,
-        onPressed: () {},
-        icon: SvgPicture.asset(
-          CustomIcons.joinCall,
-          height: 18,
-          colorFilter: const ColorFilter.mode(
-            Colors.white,
-            BlendMode.srcIn,
-          ),
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   label: Text(
+      //     "Join Call",
+      //     style: GoogleFonts.lato(
+      //       color: Colors.white,
+      //       fontSize: 14,
+      //     ),
+      //   ),
+      //   backgroundColor: AppTheme.mainColor,
+      //   onPressed: () {},
+      //   icon: SvgPicture.asset(
+      //     CustomIcons.joinCall,
+      //     height: 18,
+      //     colorFilter: const ColorFilter.mode(
+      //       Colors.white,
+      //       BlendMode.srcIn,
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
