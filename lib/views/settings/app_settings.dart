@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/auth_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
@@ -386,7 +388,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
       context: context,
       builder: (____) {
         return Container(
-          height: 230,
+          height: Platform.isAndroid ? 190 : 230,
           width: double.infinity,
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -499,7 +501,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
+              SizedBox(height: Platform.isAndroid ? 10 : 50),
             ],
           ),
         );

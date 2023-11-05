@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/views/home/channels.dart';
@@ -64,38 +66,103 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      backgroundColor: AppTheme.scaffoldBacgroundColor,
-      tabBar: CupertinoTabBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.chat_bubble, size: iconSize),
-            label: "Chats",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.phone, size: iconSize),
-            label: "Calls",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_2, size: iconSize),
-            label: "Channels",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.gear, size: iconSize),
-            label: "Settings",
-          ),
-        ],
-        currentIndex: currentIndex,
-        onTap: (index) {
-          changePage(index);
-        },
-        activeColor: AppTheme.mainColor,
-      ),
-      tabBuilder: (context, index) {
-        return CupertinoTabView(builder: (context) {
-          return pages[index];
-        });
-      },
-    );
+    return Platform.isAndroid
+        ? Scaffold(
+            backgroundColor: AppTheme.scaffoldBacgroundColor,
+            body: pages[currentIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              selectedFontSize: 12,
+              unselectedFontSize: 12,
+              selectedLabelStyle: GoogleFonts.lato(),
+              unselectedLabelStyle: GoogleFonts.lato(),
+              selectedItemColor: AppTheme.mainColor,
+              currentIndex: currentIndex,
+              backgroundColor: Colors.white,
+              onTap: (index) {
+                changePage(index);
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    CustomIcons.chat,
+                    height: iconSize,
+                    colorFilter: ColorFilter.mode(
+                      currentIndex == 0 ? AppTheme.mainColor : Colors.black,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  label: "Chats",
+                ),
+                //Satuses chaning to Calls
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    CustomIcons.call,
+                    height: iconSize,
+                    colorFilter: ColorFilter.mode(
+                      currentIndex == 1 ? AppTheme.mainColor : Colors.black,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  label: "Calls",
+                ),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    CustomIcons.channels,
+                    height: iconSize,
+                    colorFilter: ColorFilter.mode(
+                      currentIndex == 2 ? AppTheme.mainColor : Colors.black,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  label: "Channels",
+                ),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    CustomIcons.cog,
+                    height: iconSize,
+                    colorFilter: ColorFilter.mode(
+                      currentIndex == 3 ? AppTheme.mainColor : Colors.black,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  label: "Settings",
+                ),
+              ],
+            ),
+          )
+        : CupertinoTabScaffold(
+            backgroundColor: AppTheme.scaffoldBacgroundColor,
+            tabBar: CupertinoTabBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.chat_bubble, size: iconSize),
+                  label: "Chats",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.phone, size: iconSize),
+                  label: "Calls",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.person_2, size: iconSize),
+                  label: "Channels",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.gear, size: iconSize),
+                  label: "Settings",
+                ),
+              ],
+              currentIndex: currentIndex,
+              onTap: (index) {
+                changePage(index);
+              },
+              activeColor: AppTheme.mainColor,
+            ),
+            tabBuilder: (context, index) {
+              return CupertinoTabView(builder: (context) {
+                return pages[index];
+              });
+            },
+          );
   }
 }
