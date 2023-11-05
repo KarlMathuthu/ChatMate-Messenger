@@ -224,15 +224,45 @@ class _ContactsPageState extends State<ContactsPage> {
                             snapshot.data!.docs[index]["isVerified"];
                         String initials = username[0].toUpperCase() +
                             username[username.length - 1].toUpperCase();
-                        // if (mateUid == currentUserUid) {
-                        //   return const SizedBox();
-                        // }
+                        if (mateUid == currentUserUid) {
+                          return const SizedBox();
+                        }
 
                         return ListTile(
                           onTap: () async {
                             if (mateUid == currentUserUid) {
                               Get.snackbar("No no 😳",
                                   "You can't send a message to yourself Mate!");
+                            } else if (username == "chatmate") {
+                              Get.dialog(
+                                CupertinoAlertDialog(
+                                  title: Text(
+                                    "Note Mate!",
+                                    style: GoogleFonts.lato(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    "You can't send a wave at the chatMate's official account!",
+                                    style: GoogleFonts.lato(
+                                        color: CupertinoColors.black),
+                                  ),
+                                  actions: <Widget>[
+                                    CupertinoDialogAction(
+                                      child: Text(
+                                        "Understood!",
+                                        style: GoogleFonts.lato(
+                                          color: AppTheme.mainColor,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
                             } else {
                               showSendWaveDialog(
                                 username,
