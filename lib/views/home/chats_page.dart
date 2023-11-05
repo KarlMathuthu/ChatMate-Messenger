@@ -41,8 +41,6 @@ class _ChatsPageState extends State<ChatsPage> {
     return 'No friend found';
   }
 
-
-
   Stream<String> getUserNameByUID(String uid) {
     return FirebaseFirestore.instance
         .collection("users")
@@ -116,12 +114,24 @@ class _ChatsPageState extends State<ChatsPage> {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBacgroundColor,
       appBar: AppBar(
-        title: Text(
-          "ChatMate",
-          style: GoogleFonts.lato(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        title: RichText(
+          text: const TextSpan(
+            text: "Chat",
+            style: TextStyle(
+              color: AppTheme.mainColor,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+            children: <TextSpan>[
+              TextSpan(
+                text: " Mate",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
         actions: [

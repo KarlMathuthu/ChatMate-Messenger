@@ -99,7 +99,54 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return const SizedBox();
+                    return ListTile(
+                      onTap: () {},
+                      title: Text(
+                        "@username",
+                        style: GoogleFonts.lato(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "loading...",
+                        style: GoogleFonts.lato(
+                          color: Colors.black54,
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      leading: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: AppTheme.mainColor,
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                width: 15,
+                                height: 15,
+                                decoration: const BoxDecoration(
+                                  color: Colors.greenAccent,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      trailing: SvgPicture.asset(
+                        "assets/icons/qr.svg",
+                        colorFilter: const ColorFilter.mode(
+                            Colors.black, BlendMode.srcIn),
+                      ),
+                    );
                   } else if (snapshot.connectionState ==
                       ConnectionState.waiting) {
                     return ListTile(
