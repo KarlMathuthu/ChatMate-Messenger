@@ -231,7 +231,7 @@ class _ContactsPageState extends State<ContactsPage> {
                         return ListTile(
                           onTap: () async {
                             if (mateUid == currentUserUid) {
-                              Get.snackbar("No no 😊😳",
+                              Get.snackbar("No no 😳",
                                   "You can't send a message to yourself Mate!");
                             } else {
                               showSendWaveDialog(
