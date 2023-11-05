@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/views/calls/call_page.dart';
@@ -60,6 +61,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -70,58 +72,144 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // leading: IconButton(
+          //   onPressed: () {
+          //     Get.back();
+          //   },
+          //   icon: Icon(
+          //     Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+          //   ),
+          // ),
+          automaticallyImplyLeading: false,
+          leadingWidth: 5,
+          title: Row(
             children: [
-              Text(
-                widget.mateName,
-                style: GoogleFonts.lato(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: () {
+                  Get.back();
+                },
+                child: Icon(
+                  Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
                 ),
               ),
-              FutureBuilder(
-                future: chatController.getUserStatus(widget.mateUid),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Text(
-                      "connecting...",
-                      style: GoogleFonts.lato(
-                        color: Colors.black54,
-                        fontSize: 13,
-                      ),
-                    );
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Text(
-                      "connecting...",
-                      style: GoogleFonts.lato(
-                        color: Colors.black54,
-                        fontSize: 13,
+              const SizedBox(width: 10),
+              // User Profile Pic
+              StreamBuilder<String>(
+                stream: chatController.getUserProfilePic(widget.mateUid),
+                builder: (context, profileSnap) {
+                  if (!profileSnap.hasData) {
+                    return Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: AppTheme.mainColorLight,
                       ),
                     );
                   } else {
-                    String lastSeen = timeago.format(getTime(snapshot.data!));
-                    return Text(
-                      snapshot.data! == "online"
-                          ? snapshot.data!
-                          : "last seen $lastSeen",
-                      style: GoogleFonts.lato(
-                        color: Colors.black54,
-                        fontSize: 13,
+                    bool hasProfilePicture = profileSnap.data! != "none";
+                    String initials = widget.mateName[0].toUpperCase() +
+                        widget.mateName[widget.mateName.length - 1]
+                            .toUpperCase();
+                    return Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: AppTheme.mainColorLight,
+                      ),
+                      child: Stack(
+                        children: [
+                          hasProfilePicture
+                              ? CachedNetworkImage(
+                                  imageUrl: profileSnap.data!,
+                                )
+                              : Center(
+                                  child: Text(
+                                    initials,
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                        ],
                       ),
                     );
                   }
                 },
+              ),
+              const SizedBox(width: 5),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        widget.mateName,
+                        style: GoogleFonts.lato(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 3),
+                      // Verification badge
+                      StreamBuilder(
+                        stream:
+                            chatController.getUserVerification(widget.mateUid),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const SizedBox();
+                          } else {
+                            return const Icon(
+                              Icons.verified,
+                              color: AppTheme.mainColor,
+                              size: 16,
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  FutureBuilder(
+                    future: chatController.getUserStatus(widget.mateUid),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text(
+                          "connecting...",
+                          style: GoogleFonts.lato(
+                            color: Colors.black54,
+                            fontSize: 13,
+                          ),
+                        );
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Text(
+                          "connecting...",
+                          style: GoogleFonts.lato(
+                            color: Colors.black54,
+                            fontSize: 13,
+                          ),
+                        );
+                      } else {
+                        String lastSeen =
+                            timeago.format(getTime(snapshot.data!));
+                        return Text(
+                          snapshot.data! == "online"
+                              ? snapshot.data!
+                              : "seen $lastSeen",
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.lato(
+                            color: Colors.black54,
+                            fontSize: 13,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
             ],
           ),

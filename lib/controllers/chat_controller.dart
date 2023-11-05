@@ -248,6 +248,41 @@ class ChatController extends GetxController {
     }
   }
 
+  // Get user profile pic
+   Stream<String> getUserProfilePic(String uid) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map((userDoc) {
+      if (userDoc.exists) {
+        String profilePic = userDoc.data()?['photoUrl'];
+        return profilePic;
+      } else {
+        return "none";
+      }
+    }).handleError((error) {
+      return "none";
+    });
+  }
+  // Get user verification badge.
+   Stream<String> getUserVerification(String uid) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map((userDoc) {
+      if (userDoc.exists) {
+        String isVerified = userDoc.data()!['isVerified'].toString();
+        return isVerified;
+      } else {
+        return "false";
+      }
+    }).handleError((error) {
+      return "false";
+    });
+  }
+
   //Delete message dialog
   Future<void> showCustomDialog({
     required BuildContext context,

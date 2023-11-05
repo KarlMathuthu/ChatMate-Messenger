@@ -58,7 +58,7 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
             onTap: () async {},
             child: SvgPicture.asset(
               "assets/icons/emoji.svg",
-              color: Colors.grey,
+              colorFilter:const ColorFilter.mode(AppTheme.mainColor, BlendMode.srcIn),
             ),
           ),
           const SizedBox(width: 5),
