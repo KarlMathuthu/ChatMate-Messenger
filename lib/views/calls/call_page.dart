@@ -86,29 +86,31 @@ class _CallPageState extends State<CallPage> {
   }
 
   void sendCalMessageInvitationCode() async {
-    Future.delayed(const Duration(seconds: 5)).then((value) => {
-          //send message
-          if (callRoom != "none")
-            {
-              chatController.sendMessage(
-                chatId: widget.chatRoomId,
-                senderId: currentUser,
-                messageText:
-                    "Hey ${widget.mateName}, Join my call room now & let's talk!",
-                type: "call",
-              ),
-              //send notifcation
-              if (mateToken != null)
-                {
-                  NotificationsController.sendMessageNotification(
-                    userToken: mateToken!,
-                    body:
-                        "Hey ${widget.mateName}, Join my call room now & let's talk!, This is my code $callRoom",
-                    title: widget.mateName,
-                  ),
-                }
-            }
-        });
+    Future.delayed(const Duration(seconds: 5)).then(
+      (value) => {
+        //send message
+        if (callRoom != "none")
+          {
+            chatController.sendMessage(
+              chatId: widget.chatRoomId,
+              senderId: currentUser,
+              messageText:
+                  "Hey ${widget.mateName}, Join my call room now & let's talk!, This is my code $callRoom",
+              type: "call",
+            ),
+            //send notifcation
+            if (mateToken != null)
+              {
+                NotificationsController.sendMessageNotification(
+                  userToken: mateToken!,
+                  body:
+                      "Hey ${widget.mateName}, Join my call room now & let's talk!",
+                  title: "Hey ${widget.mateName}",
+                ),
+              }
+          }
+      },
+    );
   }
 
   @override
