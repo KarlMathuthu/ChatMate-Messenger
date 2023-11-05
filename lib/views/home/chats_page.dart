@@ -92,6 +92,23 @@ class _ChatsPageState extends State<ChatsPage> {
     });
   }
 
+  Stream<String> getUserVerification(String uid) {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .snapshots()
+        .map((userDoc) {
+      if (userDoc.exists) {
+        String isVerified = userDoc.data()!['isVerified'].toString();
+        return isVerified;
+      } else {
+        return "false";
+      }
+    }).handleError((error) {
+      return "false";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,13 +295,35 @@ class _ChatsPageState extends State<ChatsPage> {
                                   transition: Transition.cupertino,
                                 );
                               },
-                              title: Text(
-                                friendUsername,
-                                style: GoogleFonts.lato(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              title: Row(
+                                children: [
+                                  // Friend name
+                                  Text(
+                                    friendUsername,
+                                    style: GoogleFonts.lato(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 3),
+                                  // Verification badge
+                                  StreamBuilder(
+                                    stream: getUserVerification(
+                                        getFriendUid(chatSnapshot, index)),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return const SizedBox();
+                                      } else {
+                                        return const Icon(
+                                          Icons.verified,
+                                          color: AppTheme.mainColor,
+                                          size: 16,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
                               ),
                               subtitle: isAWave
                                   ? Text(
@@ -382,7 +421,25 @@ class _ChatsPageState extends State<ChatsPage> {
                                             getFriendUid(chatSnapshot, index)),
                                         builder: (context, profileSnap) {
                                           if (!profileSnap.hasData) {
-                                            return const SizedBox();
+                                            return Container(
+                                              height: 50,
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                color: AppTheme.mainColorLight,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  initials,
+                                                  style: GoogleFonts.lato(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
                                           } else {
                                             bool hasProfilePicture =
                                                 profileSnap.data! != "none";
