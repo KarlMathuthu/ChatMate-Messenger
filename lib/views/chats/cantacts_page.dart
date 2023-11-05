@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/controllers/notifications_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -217,11 +218,15 @@ class _ContactsPageState extends State<ContactsPage> {
                             snapshot.data!.docs[index]["fcmToken"];
                         String currentUserUid =
                             FirebaseAuth.instance.currentUser!.uid;
+                        bool hasProfilePicture =
+                            snapshot.data!.docs[index]["photoUrl"] != "none";
+                        bool isVerified =
+                            snapshot.data!.docs[index]["isVerified"];
                         String initials = username[0].toUpperCase() +
                             username[username.length - 1].toUpperCase();
-                        if (mateUid == currentUserUid) {
-                          return const SizedBox();
-                        }
+                        // if (mateUid == currentUserUid) {
+                        //   return const SizedBox();
+                        // }
 
                         return ListTile(
                           onTap: () async {
@@ -236,13 +241,25 @@ class _ContactsPageState extends State<ContactsPage> {
                               );
                             }
                           },
-                          title: Text(
-                            "@${snapshot.data!.docs[index]["userName"]}",
-                            style: GoogleFonts.lato(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          title: Row(
+                            children: [
+                              Text(
+                                "@${snapshot.data!.docs[index]["userName"]}",
+                                style: GoogleFonts.lato(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(width: 3),
+                              isVerified
+                                  ? const Icon(
+                                      Icons.verified,
+                                      color: AppTheme.mainColor,
+                                      size: 16,
+                                    )
+                                  : const SizedBox(),
+                            ],
                           ),
                           subtitle: Text(
                             snapshot.data!.docs[index]["userBio"],
@@ -261,16 +278,21 @@ class _ContactsPageState extends State<ContactsPage> {
                             ),
                             child: Stack(
                               children: [
-                                Center(
-                                  child: Text(
-                                    initials,
-                                    style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
+                                hasProfilePicture
+                                    ? CachedNetworkImage(
+                                        imageUrl: snapshot.data!.docs[index]
+                                            ["photoUrl"],
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          initials,
+                                          style: GoogleFonts.lato(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                                 if (isUserOnline) ...{
                                   Positioned(
                                     bottom: 0,
