@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../theme/app_theme.dart';
 
@@ -133,7 +134,7 @@ class _ContactsPageState extends State<ContactsPage> {
           const SizedBox(width: 10),
         ],
         title: Text(
-          "Find Mate",
+          "Find Mates",
           style: GoogleFonts.lato(
             color: Colors.black,
             fontSize: 18,
@@ -182,105 +183,119 @@ class _ContactsPageState extends State<ContactsPage> {
               ),
             ),
             const SizedBox(height: 10),
-            StreamBuilder(
-              stream: firestore
-                  .collection("users")
-                  .orderBy("userStatus", descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center();
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return Center();
-                } else {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      bool isUserOnline =
-                          snapshot.data!.docs[index]["userStatus"] == "online";
+            Expanded(
+              child: StreamBuilder(
+                stream: firestore
+                    .collection("users")
+                    .orderBy("userStatus", descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center();
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                      child: LoadingAnimationWidget.fourRotatingDots(
+                        color: AppTheme.loaderColor,
+                        size: 40,
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        bool isUserOnline = snapshot.data!.docs[index]
+                                ["userStatus"] ==
+                            "online";
 
-                      String username = snapshot.data!.docs[index]["userName"];
-                      String mateUid = snapshot.data!.docs[index]["userUid"];
-                      String mateToken = snapshot.data!.docs[index]["fcmToken"];
-                      String currentUserUid =
-                          FirebaseAuth.instance.currentUser!.uid;
-                      String initials = username[0].toUpperCase() +
-                          username[username.length - 1].toUpperCase();
+                        String username =
+                            snapshot.data!.docs[index]["userName"];
+                        String mateUid = snapshot.data!.docs[index]["userUid"];
+                        String mateToken =
+                            snapshot.data!.docs[index]["fcmToken"];
+                        String currentUserUid =
+                            FirebaseAuth.instance.currentUser!.uid;
+                        String initials = username[0].toUpperCase() +
+                            username[username.length - 1].toUpperCase();
+                        if (mateUid == currentUserUid) {
+                          return const SizedBox();
+                        }
 
-                      return ListTile(
-                        onTap: () async {
-                          if (mateUid == currentUserUid) {
-                            Get.snackbar("No no 😊😳",
-                                "You can't send a message to yourself Mate!");
-                          } else {
-                            showSendWaveDialog(
-                              username,
-                              mateUid,
-                              mateToken,
-                            );
-                          }
-                        },
-                        title: Text(
-                          "@${snapshot.data!.docs[index]["userName"]}",
-                          style: GoogleFonts.lato(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                        return ListTile(
+                          onTap: () async {
+                            if (mateUid == currentUserUid) {
+                              Get.snackbar("No no 😊😳",
+                                  "You can't send a message to yourself Mate!");
+                            } else {
+                              showSendWaveDialog(
+                                username,
+                                mateUid,
+                                mateToken,
+                              );
+                            }
+                          },
+                          title: Text(
+                            "@${snapshot.data!.docs[index]["userName"]}",
+                            style: GoogleFonts.lato(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          snapshot.data!.docs[index]["userBio"],
-                          style: GoogleFonts.lato(
-                            color: Colors.black54,
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
+                          subtitle: Text(
+                            snapshot.data!.docs[index]["userBio"],
+                            style: GoogleFonts.lato(
+                              color: Colors.black54,
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
-                        ),
-                        leading: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: AppTheme.loaderColor,
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Text(
-                                  initials,
-                                  style: GoogleFonts.lato(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              if (isUserOnline) ...{
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    width: 15,
-                                    height: 15,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromARGB(255, 73, 255, 167),
-                                      shape: BoxShape.circle,
+                          leading: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: AppTheme.loaderColor,
+                            ),
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Text(
+                                    initials,
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                )
-                              } else
-                                const SizedBox()
-                            ],
+                                ),
+                                if (isUserOnline) ...{
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      width: 15,
+                                      height: 15,
+                                      decoration: const BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 73, 255, 167),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  )
+                                } else
+                                  const SizedBox()
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
           ],
         ),
