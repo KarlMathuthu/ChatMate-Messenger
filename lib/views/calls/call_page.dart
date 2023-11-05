@@ -1,14 +1,18 @@
 import 'dart:io';
 import 'package:chat_mate_messanger/controllers/call_controller.dart';
+import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../controllers/notifications_controller.dart';
 
 class CallPage extends StatefulWidget {
   const CallPage({
@@ -29,9 +33,13 @@ class CallPage extends StatefulWidget {
 
 class _CallPageState extends State<CallPage> {
   CallController signaling = CallController();
+  ChatController chatController = Get.put(ChatController());
   RTCVideoRenderer localRenderer = RTCVideoRenderer();
   RTCVideoRenderer remoteRenderer = RTCVideoRenderer();
   CustomLoader customLoader = CustomLoader();
+  String currentUser = FirebaseAuth.instance.currentUser!.uid;
+  String? mateToken;
+  String? callRoom;
 
   @override
   void initState() {
@@ -47,17 +55,52 @@ class _CallPageState extends State<CallPage> {
       widget.callType,
     );
     initializeCall();
+    getMateToken();
+    sendCalMessageInvitationCode();
     super.initState();
   }
 
+  void getMateToken() async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(widget.mateUid)
+        .get()
+        .then(
+          (snapshot) => {
+            mateToken = snapshot["fcmToken"],
+          },
+        );
+  }
+
   void initializeCall() async {
-    await signaling.createCallRoom(
+    String callRoomId = await signaling.createCallRoom(
       remoteRenderer: remoteRenderer,
       mateUid: widget.mateUid,
       callType: widget.callType,
       customLoader: customLoader,
     );
+    callRoom = callRoomId;
     setState(() {});
+  }
+
+  void sendCalMessageInvitationCode() async {
+    //send message
+    await chatController.sendMessage(
+      chatId: widget.chatRoomId,
+      senderId: currentUser,
+      messageText:
+          "Hey ${widget.mateName}, Join my call room now & let's talk!",
+      type: "call",
+    );
+    //send notifcation
+    if (mateToken != null) {
+      await NotificationsController.sendMessageNotification(
+        userToken: mateToken!,
+        body:
+            "Hey ${widget.mateName}, Join my call room now & let's talk!, This is my code ",
+        title: widget.mateName,
+      );
+    }
   }
 
   @override
@@ -87,6 +130,7 @@ class _CallPageState extends State<CallPage> {
                     signaling,
                     localRenderer,
                     customLoader,
+                    callRoom!,
                   ),
                 )
               : videoCallLayout(
@@ -97,6 +141,7 @@ class _CallPageState extends State<CallPage> {
                   widget.mateUid,
                   signaling,
                   customLoader,
+                  callRoom!,
                 ),
         ],
       ),
@@ -142,6 +187,7 @@ Widget videoCallLayout(
   String mateUid,
   CallController signaling,
   CustomLoader customLoader,
+  String callRoomId,
 ) {
   return Stack(
     children: [
@@ -170,14 +216,14 @@ Widget videoCallLayout(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
-                "05:46 minutes",
-                style: GoogleFonts.lato(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
+              // Text(
+              //   "05:46 minutes",
+              //   style: GoogleFonts.lato(
+              //     color: Colors.white,
+              //     fontSize: 13,
+              //     fontWeight: FontWeight.normal,
+              //   ),
+              // ),
             ],
           ),
           centerTitle: true,
@@ -279,16 +325,11 @@ Widget videoCallLayout(
                                 ),
                               ),
                               onPressed: () async {
-                                signaling.closeCall(
-                                    localRenderer, customLoader);
-                                await FirebaseFirestore.instance
-                                    .collection("calls")
-                                    .doc(mateUid)
-                                    .delete();
-                                print("Call ended");
+                                customLoader.showLoader(context);
+                                await signaling.closeCall(
+                                    localRenderer, customLoader, callRoomId);
+                                Navigator.pop(context);
                                 Get.back();
-                                // Add your logic to end the call here
-                                Navigator.of(context).pop();
                               },
                             ),
                           ],
@@ -317,6 +358,7 @@ Widget audioCallLayout(
   CallController signaling,
   RTCVideoRenderer localRenderer,
   CustomLoader customLoader,
+  String callRoom,
 ) {
   return Stack(
     children: [
@@ -462,7 +504,10 @@ Widget audioCallLayout(
                               ),
                               onPressed: () {
                                 signaling.closeCall(
-                                    localRenderer, customLoader);
+                                  localRenderer,
+                                  customLoader,
+                                  callRoom,
+                                );
 
                                 print("Call ended");
                                 Get.back();

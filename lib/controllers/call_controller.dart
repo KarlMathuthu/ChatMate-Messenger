@@ -214,7 +214,10 @@ class CallController {
 
   // Close call.
   Future<void> closeCall(
-      RTCVideoRenderer localVideo, CustomLoader customLoader) async {
+    RTCVideoRenderer localVideo,
+    CustomLoader customLoader,
+    String callRoomId,
+  ) async {
     List<MediaStreamTrack> tracks = localVideo.srcObject!.getTracks();
     for (var track in tracks) {
       track.stop();
@@ -225,22 +228,10 @@ class CallController {
     }
     if (peerConnection != null) peerConnection!.close();
 
-    if (roomId != null) {
-      var db = FirebaseFirestore.instance;
-      var roomRef = db.collection('callRooms').doc(roomId);
-      var calleeCandidates = await roomRef.collection('calleeCandidates').get();
-      for (var document in calleeCandidates.docs) {
-        document.reference.delete();
-      }
-
-      var callerCandidates = await roomRef.collection('callerCandidates').get();
-      for (var document in callerCandidates.docs) {
-        document.reference.delete();
-      }
-
-      await roomRef.delete();
-      customLoader.hideLoader();
-    }
+    var db = FirebaseFirestore.instance;
+    var roomRef = db.collection('callRooms').doc(callRoomId);
+    await roomRef.delete();
+    customLoader.hideLoader();
 
     localStream!.dispose();
     remoteStream?.dispose();

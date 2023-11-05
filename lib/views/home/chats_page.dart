@@ -263,6 +263,7 @@ class _ChatsPageState extends State<ChatsPage> {
                             String messageType = lastMessage["type"];
                             bool isAWave = messageType == "wave" ||
                                 lastMessage["messageText"] == null;
+                            bool isACall = messageType == "call";
 
                             bool isLastMessageRead() {
                               if (lastMessageSenderId != currentUserId &&
@@ -334,23 +335,34 @@ class _ChatsPageState extends State<ChatsPage> {
                                         color: Colors.black54,
                                       ),
                                     )
-                                  : Text(
-                                      lastMessageSenderId == currentUserId
-                                          ? "Me : ${lastMessage["messageText"]}"
-                                          : lastMessage["messageText"],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.lato(
-                                        color: isLastMessageRead() == false &&
-                                                lastMessageSenderId !=
-                                                    currentUserId
-                                            ? AppTheme.loaderColor
-                                            : Colors.black54,
-                                        fontSize: 12,
-                                        fontWeight: isLastMessageRead() == false
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                      ),
-                                    ),
+                                  : isACall
+                                      ? Text(
+                                          "Call room",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.lato(
+                                            fontSize: 12,
+                                            color: Colors.black54,
+                                          ),
+                                        )
+                                      : Text(
+                                          lastMessageSenderId == currentUserId
+                                              ? "Me : ${lastMessage["messageText"]}"
+                                              : lastMessage["messageText"],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.lato(
+                                            color:
+                                                isLastMessageRead() == false &&
+                                                        lastMessageSenderId !=
+                                                            currentUserId
+                                                    ? AppTheme.loaderColor
+                                                    : Colors.black54,
+                                            fontSize: 12,
+                                            fontWeight:
+                                                isLastMessageRead() == false
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                          ),
+                                        ),
                               trailing: unreadMessageCount > 0
                                   ? badges.Badge(
                                       badgeAnimation:
