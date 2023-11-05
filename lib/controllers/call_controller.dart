@@ -28,9 +28,11 @@ class CallController {
     RTCVideoRenderer? remoteRenderer,
     required String mateUid,
     required String callType,
+    required CustomLoader customLoader,
   }) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference roomRef = db.collection('callRooms').doc();
+    // String currentUser = FirebaseAuth.instance.currentUser!.uid;
 
     peerConnection = await createPeerConnection(configuration);
 
