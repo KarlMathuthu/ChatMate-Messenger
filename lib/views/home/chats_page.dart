@@ -372,7 +372,9 @@ class _ChatsPageState extends State<ChatsPage> {
                                                     : Colors.black54,
                                             fontSize: 12,
                                             fontWeight:
-                                                isLastMessageRead() == false
+                                                isLastMessageRead() == false &&
+                                                        lastMessageSenderId !=
+                                                            currentUserId
                                                     ? FontWeight.bold
                                                     : FontWeight.normal,
                                           ),

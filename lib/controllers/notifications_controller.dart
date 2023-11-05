@@ -67,7 +67,7 @@ class NotificationsController {
       priority: Priority.high,
       ticker: 'ticker',
       enableVibration: true,
-      sound: RawResourceAndroidNotificationSound('notification'),
+      // sound: RawResourceAndroidNotificationSound('notification'),
       playSound: true,
       icon: "@drawable/applogo",
       largeIcon: DrawableResourceAndroidBitmap("applogo"),
