@@ -171,7 +171,7 @@ class _ChatsPageState extends State<ChatsPage> {
                   // Display a message when there are no chats.
                   return Center(
                     child: Text(
-                      "Wave at mates by clicking the Find Mate",
+                      "No recent chats",
                       style: GoogleFonts.lato(
                         fontSize: 14,
                         color: Colors.black54,
