@@ -327,12 +327,14 @@ class _ChatsPageState extends State<ChatsPage> {
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return const SizedBox();
-                                      } else {
+                                      } else if (snapshot.data == "true") {
                                         return const Icon(
                                           Icons.verified,
                                           color: AppTheme.mainColor,
                                           size: 16,
                                         );
+                                      } else {
+                                        return const SizedBox();
                                       }
                                     },
                                   ),
@@ -505,11 +507,8 @@ class _ChatsPageState extends State<ChatsPage> {
                                                         height: 15,
                                                         decoration:
                                                             const BoxDecoration(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              73,
-                                                              255,
-                                                              167),
+                                                          color: AppTheme
+                                                              .onlineStatus,
                                                           shape:
                                                               BoxShape.circle,
                                                         ),

@@ -11,4 +11,5 @@ class AppTheme {
   static const endCallButtonColor = Color.fromARGB(255, 247, 85, 85);
   static const callButtonsColor = Color.fromARGB(255, 98, 91, 94);
   static const callScaffoldColor = Color.fromARGB(255, 22, 20, 24);
+  static const onlineStatus = Colors.greenAccent;
 }

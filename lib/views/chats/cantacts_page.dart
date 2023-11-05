@@ -331,8 +331,7 @@ class _ContactsPageState extends State<ContactsPage> {
                                       width: 15,
                                       height: 15,
                                       decoration: const BoxDecoration(
-                                        color:
-                                            Color.fromARGB(255, 73, 255, 167),
+                                        color: AppTheme.onlineStatus,
                                         shape: BoxShape.circle,
                                       ),
                                     ),
