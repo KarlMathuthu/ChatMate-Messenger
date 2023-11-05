@@ -65,18 +65,6 @@ class _CallsPageState extends State<CallsPage> {
           const SizedBox(width: 10),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.mainColor,
-        onPressed: () {},
-        child: SvgPicture.asset(
-          CustomIcons.joinCall,
-          height: 18,
-          colorFilter: const ColorFilter.mode(
-            Colors.white,
-            BlendMode.srcIn,
-          ),
-        ),
-      ),
       backgroundColor: Colors.grey.shade300,
       body: Container(
         width: double.infinity,
@@ -86,104 +74,44 @@ class _CallsPageState extends State<CallsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const SizedBox(height: 20),
-            //Create & Join Calls
-            // Row(
-            //   children: [
-            //     //Create call
-            //     Expanded(
-            //       child: Container(
-            //         height: 45,
-            //         margin: const EdgeInsets.only(left: 8.0),
-            //         decoration: BoxDecoration(
-            //           color: AppTheme.mainColor,
-            //           borderRadius: BorderRadius.circular(10),
-            //         ),
-            //         child: Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             const SizedBox(width: 8),
-            //             SvgPicture.asset(
-            //               CustomIcons.call,
-            //               height: 18,
-            //               colorFilter: const ColorFilter.mode(
-            //                 Colors.white,
-            //                 BlendMode.srcIn,
-            //               ),
-            //             ),
-            //             const SizedBox(width: 8),
-            //             Text(
-            //               "Create Call",
-            //               style: GoogleFonts.lato(
-            //                 color: Colors.white,
-            //                 fontSize: 14,
-            //                 fontWeight: FontWeight.normal,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //     const SizedBox(width: 5),
-            //     //Join call
-            //     Expanded(
-            //       child: Container(
-            //         height: 45,
-            //         margin: const EdgeInsets.only(right: 8.0),
-            //         decoration: BoxDecoration(
-            //           color: AppTheme.mainColor,
-            //           borderRadius: BorderRadius.circular(10),
-            //         ),
-            //         child: Row(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             const SizedBox(width: 8),
-            //             SvgPicture.asset(
-            //               CustomIcons.joinCall,
-            //               height: 18,
-            //               colorFilter: const ColorFilter.mode(
-            //                 Colors.white,
-            //                 BlendMode.srcIn,
-            //               ),
-            //             ),
-            //             const SizedBox(width: 8),
-            //             Text(
-            //               "Join Call",
-            //               style: GoogleFonts.lato(
-            //                 color: Colors.white,
-            //                 fontSize: 14,
-            //                 fontWeight: FontWeight.normal,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             const SizedBox(height: 10),
             //Call History
             Expanded(
               child: Stack(
                 children: [
-                  Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          "You haven't made a call yet mate!",
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.lato(
-                            fontSize: 14,
-                            color: Colors.black54,
-                          ),
-                        ),
+                  Center(
+                    child: Text(
+                      "You haven't made a call yet mate!",
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.lato(
+                        fontSize: 14,
+                        color: Colors.black54,
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text(
+          "Join Call",
+          style: GoogleFonts.lato(
+            color: Colors.white,
+            fontSize: 14,
+          ),
+        ),
+        backgroundColor: AppTheme.mainColor,
+        onPressed: () {},
+        icon: SvgPicture.asset(
+          CustomIcons.joinCall,
+          height: 18,
+          colorFilter: const ColorFilter.mode(
+            Colors.white,
+            BlendMode.srcIn,
+          ),
         ),
       ),
     );
