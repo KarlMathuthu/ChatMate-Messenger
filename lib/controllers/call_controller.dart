@@ -1,7 +1,10 @@
+import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+
+import 'notifications_controller.dart';
 
 typedef StreamStateCallback = void Function(MediaStream stream);
 
@@ -23,12 +26,14 @@ class CallController {
   String? roomId;
   String? currentRoomText;
   StreamStateCallback? onAddRemoteStream;
+  ChatController chatController = ChatController();
   //Create Call.
   Future<String> createCallRoom({
     RTCVideoRenderer? remoteRenderer,
     required String mateUid,
     required String callType,
     required CustomLoader customLoader,
+    required Function(String) roomUid,
   }) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference roomRef = db.collection('callRooms').doc();
@@ -58,6 +63,7 @@ class CallController {
     await roomRef.set(roomWithOffer);
     var roomId = roomRef.id;
     currentRoomText = 'Current room is $roomId - You are the caller!';
+    await roomUid(roomId);
     // Send a call invitation to friend chat room.
 
     // String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
@@ -230,6 +236,14 @@ class CallController {
 
     var db = FirebaseFirestore.instance;
     var roomRef = db.collection('callRooms').doc(callRoomId);
+    var calleeCandidates = await roomRef.collection('calleeCandidates').get();
+    for (var document in calleeCandidates.docs) {
+      document.reference.delete();
+    }
+    var callerCandidates = await roomRef.collection('callerCandidates').get();
+    for (var document in callerCandidates.docs) {
+      document.reference.delete();
+    }
     await roomRef.delete();
     customLoader.hideLoader();
 

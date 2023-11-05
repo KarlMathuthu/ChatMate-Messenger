@@ -41,6 +41,8 @@ class _ChatsPageState extends State<ChatsPage> {
     return 'No friend found';
   }
 
+
+
   Stream<String> getUserNameByUID(String uid) {
     return FirebaseFirestore.instance
         .collection("users")

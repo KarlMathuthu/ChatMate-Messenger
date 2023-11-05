@@ -39,7 +39,7 @@ class _CallPageState extends State<CallPage> {
   CustomLoader customLoader = CustomLoader();
   String currentUser = FirebaseAuth.instance.currentUser!.uid;
   String? mateToken;
-  String? callRoom;
+  String callRoom = "none";
 
   @override
   void initState() {
@@ -73,34 +73,42 @@ class _CallPageState extends State<CallPage> {
   }
 
   void initializeCall() async {
-    String callRoomId = await signaling.createCallRoom(
+    await signaling.createCallRoom(
       remoteRenderer: remoteRenderer,
       mateUid: widget.mateUid,
       callType: widget.callType,
       customLoader: customLoader,
+      roomUid: (roomUid) {
+        callRoom = roomUid;
+      },
     );
-    callRoom = callRoomId;
     setState(() {});
   }
 
   void sendCalMessageInvitationCode() async {
-    //send message
-    await chatController.sendMessage(
-      chatId: widget.chatRoomId,
-      senderId: currentUser,
-      messageText:
-          "Hey ${widget.mateName}, Join my call room now & let's talk!",
-      type: "call",
-    );
-    //send notifcation
-    if (mateToken != null) {
-      await NotificationsController.sendMessageNotification(
-        userToken: mateToken!,
-        body:
-            "Hey ${widget.mateName}, Join my call room now & let's talk!, This is my code ",
-        title: widget.mateName,
-      );
-    }
+    Future.delayed(const Duration(seconds: 5)).then((value) => {
+          //send message
+          if (callRoom != "none")
+            {
+              chatController.sendMessage(
+                chatId: widget.chatRoomId,
+                senderId: currentUser,
+                messageText:
+                    "Hey ${widget.mateName}, Join my call room now & let's talk!",
+                type: "call",
+              ),
+              //send notifcation
+              if (mateToken != null)
+                {
+                  NotificationsController.sendMessageNotification(
+                    userToken: mateToken!,
+                    body:
+                        "Hey ${widget.mateName}, Join my call room now & let's talk!, This is my code $callRoom",
+                    title: widget.mateName,
+                  ),
+                }
+            }
+        });
   }
 
   @override
