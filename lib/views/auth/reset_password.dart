@@ -55,7 +55,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           child: Column(
             children: [
               const SizedBox(height: 20),
-             
+
               Container(
                 height: 50,
                 width: double.infinity,
@@ -116,6 +116,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         customLoader.showLoader(context);
                         authController.resetPassword(
                           email: emailController.text.trim(),
+                          customLoader: customLoader,
                         );
                       } else {
                         Get.snackbar("Error", "Enter a valid email");
