@@ -43,6 +43,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
             borderRadius: BorderRadius.circular(6),
             onTap: () {
               //discover channels
+              // Get.to(() => CreateChannelPage());
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -132,29 +133,29 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //My chanels
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        margin: const EdgeInsets.only(left: 8),
-                        height: 32,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 214, 227, 255),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Following",
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.lato(
-                              color: AppTheme.mainColor,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      //   margin: const EdgeInsets.only(left: 8),
+                      //   height: 32,
+                      //   width: 100,
+                      //   decoration: BoxDecoration(
+                      //     color: const Color.fromARGB(255, 214, 227, 255),
+                      //     borderRadius: BorderRadius.circular(6),
+                      //   ),
+                      //   child: Center(
+                      //     child: Text(
+                      //       "Following",
+                      //       overflow: TextOverflow.ellipsis,
+                      //       style: GoogleFonts.lato(
+                      //         color: AppTheme.mainColor,
+                      //         fontSize: 13,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       ListView.builder(
                         itemCount: snapshot.data!.docs.length,
-                        // shrinkWrap: true,
+                        shrinkWrap: true,
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           Map<String, dynamic> lastMessage =
@@ -188,17 +189,17 @@ class _ChannelsPageState extends State<ChannelsPage> {
 
                           return ListTile(
                             onTap: () {
-                              Get.to(
-                                () => ChannelRoomPage(
-                                  isAdmin: isAdmin,
-                                  isMateFllowing: isMateFollwingChannel(),
-                                  isChannelVerified: isChannelVerified,
-                                  channelName: channelName,
-                                  channelUid: channelUid,
-                                  channelPhotoUrl: channelPhotoUrl,
-                                  followersText: followersText,
-                                ),
-                              );
+                              // Get.to(
+                              //   () => ChannelRoomPage(
+                              //     isAdmin: isAdmin,
+                              //     isMateFllowing: isMateFollwingChannel(),
+                              //     isChannelVerified: isChannelVerified,
+                              //     channelName: channelName,
+                              //     channelUid: channelUid,
+                              //     channelPhotoUrl: channelPhotoUrl,
+                              //     followersText: followersText,
+                              //   ),
+                              // );
                             },
                             title: Row(
                               children: [

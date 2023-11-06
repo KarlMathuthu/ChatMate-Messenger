@@ -119,14 +119,17 @@ class AuthController extends GetxController {
 
   // Reset Password
   Future<void> resetPassword({
-    required String email,
+    required String email,required CustomLoader customLoader,
   }) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
       Get.snackbar("Success", "Check your email to change password!");
+customLoader.hideLoader();
     } catch (e) {
       Get.snackbar("Error sending password reset email", "$e");
+      customLoader.hideLoader();
     }
+
   }
 
   // Logout
