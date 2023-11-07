@@ -73,14 +73,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Get.back();
-          //   },
-          //   icon: Icon(
-          //     Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
-          //   ),
-          // ),
           automaticallyImplyLeading: false,
           leadingWidth: 5,
           title: Row(
