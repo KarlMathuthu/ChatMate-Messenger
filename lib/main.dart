@@ -22,7 +22,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //Initialize Notifications
+  //Initialize Notifications 
   await NotificationsController.initNotification();
   await NotificationsController.localNotiInit();
   //Initialize background notifcations.
