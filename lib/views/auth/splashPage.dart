@@ -69,6 +69,7 @@ class _SplashPageState extends State<SplashPage> {
                         color: Colors.grey,
                       ),
                     ),
+                    // From Text
                     TextSpan(
                       text: "\nKarl Kiyotaka",
                       style: GoogleFonts.lato(
