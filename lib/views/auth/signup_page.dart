@@ -289,14 +289,17 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       } else {
                         // Custom Loader
                         customLoader.showLoader(context);
-                        Get.to(
-                          () => ProfileSetupPage(
-                            email: emailController.text.trim(),
-                            password: passController.text.trim(),
-                            userName: nameController.text.trim(),
-                          ),
-                          transition: Transition.rightToLeft,
-                        );
+                        Future.delayed(const Duration(seconds: 3))
+                            .then((value) => {
+                                  Get.to(
+                                    () => ProfileSetupPage(
+                                      email: emailController.text.trim(),
+                                      password: passController.text.trim(),
+                                      userName: nameController.text.trim(),
+                                    ),
+                                    transition: Transition.rightToLeft,
+                                  ),
+                                });
                       }
                     },
                   ),
