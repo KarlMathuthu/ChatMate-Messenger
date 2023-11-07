@@ -291,6 +291,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         customLoader.showLoader(context);
                         Future.delayed(const Duration(seconds: 3))
                             .then((value) => {
+                              // Hide loader when the delay is done
                               customLoader.hideLoader(),
                                   Get.to(
                                     () => ProfileSetupPage(
