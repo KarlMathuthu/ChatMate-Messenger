@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../widgets/custom_loader.dart';
 import '../../widgets/remove_spaces_formatter.dart';
 
 class CreateAccountPage extends StatefulWidget {
@@ -21,6 +22,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController passController = TextEditingController();
+
+  CustomLoader customLoader = CustomLoader();
 
   FocusNode emaiNode = FocusNode();
   FocusNode nameNode = FocusNode();
@@ -284,6 +287,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       } else if (isWeakPassword(passController.text)) {
                         Get.snackbar("Warning", "Password is too weak");
                       } else {
+                        customLoader.showLoader(context);
                         Get.to(
                           () => ProfileSetupPage(
                             email: emailController.text.trim(),
