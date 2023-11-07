@@ -287,6 +287,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       } else if (isWeakPassword(passController.text)) {
                         Get.snackbar("Warning", "Password is too weak");
                       } else {
+                        // Custom Loader
                         customLoader.showLoader(context);
                         Get.to(
                           () => ProfileSetupPage(
