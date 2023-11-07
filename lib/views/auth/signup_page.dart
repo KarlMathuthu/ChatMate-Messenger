@@ -291,6 +291,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         customLoader.showLoader(context);
                         Future.delayed(const Duration(seconds: 3))
                             .then((value) => {
+                              customLoader.hideLoader(),
                                   Get.to(
                                     () => ProfileSetupPage(
                                       email: emailController.text.trim(),
