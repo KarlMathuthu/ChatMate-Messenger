@@ -39,6 +39,8 @@ class ChatController extends GetxController {
         .collection("users")
         .doc(currentUser)
         .collection("chats")
+        .doc(mateUid)
+        .collection("messages")
         .doc()
         .set(myMessageModel.toMap());
     //  Update last_message
@@ -46,6 +48,8 @@ class ChatController extends GetxController {
         .collection("users")
         .doc(currentUser)
         .collection("chats")
+        .doc(mateUid)
+        .collection("messages")
         .add(mylastMessage);
     // Send to mate
 
@@ -68,6 +72,8 @@ class ChatController extends GetxController {
         .collection("users")
         .doc(mateUid)
         .collection("chats")
+        .doc(currentUser)
+        .collection("messages")
         .doc()
         .set(mateMessageModel.toMap());
     //  Update last_message
@@ -75,6 +81,8 @@ class ChatController extends GetxController {
         .collection("users")
         .doc(mateUid)
         .collection("chats")
+        .doc(currentUser)
+        .collection("messages")
         .add(matelastMessage);
   }
 
