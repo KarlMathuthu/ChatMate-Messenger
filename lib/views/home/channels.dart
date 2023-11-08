@@ -203,6 +203,7 @@ class _ChannelsPageState extends State<ChannelsPage> {
                                   style: GoogleFonts.lato(
                                     fontSize: 14,
                                     color: Colors.black,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(width: 3),

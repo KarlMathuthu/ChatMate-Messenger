@@ -68,68 +68,64 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Platform.isAndroid
         ? Scaffold(
-            backgroundColor: AppTheme.scaffoldBacgroundColor,
+            backgroundColor: Colors.grey.shade300,
             body: pages[currentIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              selectedFontSize: 12,
-              unselectedFontSize: 12,
-              selectedLabelStyle: GoogleFonts.lato(),
-              unselectedLabelStyle: GoogleFonts.lato(),
-              selectedItemColor: AppTheme.mainColor,
-              currentIndex: currentIndex,
-              backgroundColor: Colors.white,
-              elevation: 5,
-              onTap: (index) {
-                changePage(index);
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    CustomIcons.chat,
-                    height: iconSize,
-                    colorFilter: ColorFilter.mode(
-                      currentIndex == 0 ? AppTheme.mainColor : Colors.black,
-                      BlendMode.srcIn,
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.only(top: 0.8),
+              child: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                selectedFontSize: 12,
+                unselectedFontSize: 12,
+                selectedLabelStyle: GoogleFonts.lato(),
+                unselectedLabelStyle: GoogleFonts.lato(),
+                selectedItemColor: AppTheme.mainColor,
+                currentIndex: currentIndex,
+                backgroundColor: Colors.white,
+                elevation: 2,
+                onTap: (index) {
+                  changePage(index);
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      CustomIcons.chat,
+                      height: iconSize,
+                      colorFilter: ColorFilter.mode(
+                        currentIndex == 0 ? AppTheme.mainColor : Colors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
+                    label: "Chats",
                   ),
-                  label: "Chats",
-                ),
-                //Satuses chaning to Calls
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    CustomIcons.call,
-                    height: iconSize,
-                    colorFilter: ColorFilter.mode(
-                      currentIndex == 1 ? AppTheme.mainColor : Colors.black,
-                      BlendMode.srcIn,
+                  //Satuses chaning to Calls
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      CustomIcons.call,
+                      height: iconSize,
+                      colorFilter: ColorFilter.mode(
+                        currentIndex == 1 ? AppTheme.mainColor : Colors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
+                    label: "Calls",
                   ),
-                  label: "Calls",
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    CustomIcons.channels,
-                    height: iconSize,
-                    colorFilter: ColorFilter.mode(
-                      currentIndex == 2 ? AppTheme.mainColor : Colors.black,
-                      BlendMode.srcIn,
+                  BottomNavigationBarItem(
+                    icon: Icon(CupertinoIcons.person_2, size: iconSize),
+                    label: "Channels",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      CustomIcons.cog,
+                      height: iconSize,
+                      colorFilter: ColorFilter.mode(
+                        currentIndex == 3 ? AppTheme.mainColor : Colors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
+                    label: "Settings",
                   ),
-                  label: "Channels",
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    CustomIcons.cog,
-                    height: iconSize,
-                    colorFilter: ColorFilter.mode(
-                      currentIndex == 3 ? AppTheme.mainColor : Colors.black,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  label: "Settings",
-                ),
-              ],
+                ],
+              ),
             ),
           )
         : CupertinoTabScaffold(
