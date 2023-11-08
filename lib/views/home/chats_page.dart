@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
-import 'package:chat_mate_messanger/controllers/sharedPref_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
+import 'package:chat_mate_messanger/utils/custom_icons.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,15 +25,6 @@ class _ChatsPageState extends State<ChatsPage> {
   String currentUserId = FirebaseAuth.instance.currentUser!.uid;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CustomLoader customLoader = CustomLoader();
-  SharedPrefController sharedPrefController = Get.put(SharedPrefController());
-
-  // String getFriendUid(
-  //     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> chatData, int index) {
-  //   List<String> members =
-  //       List<String>.from(chatData.data!.docs[index]['members']);
-
-  //   return 'No friend found';
-  // }
 
   Stream<String> getUserNameByUID(String uid) {
     return FirebaseFirestore.instance
@@ -45,7 +36,7 @@ class _ChatsPageState extends State<ChatsPage> {
         String userName = userDoc.data()?['userName'];
         return userName;
       } else {
-        return "@ChatMateBot";
+        return "@userName";
       }
     }).handleError((error) {
       return "Error fetching user data";
@@ -222,48 +213,74 @@ class _ChatsPageState extends State<ChatsPage> {
                   return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
+                      Map<String, dynamic> lastMessage =
+                          snapshot.data!.docs[index]["last_message"];
+                      bool isSender = lastMessage["sender"] == currentUserId;
                       return ListTile(
-                        leading: StreamBuilder<String>(
-                          stream: getUserStatus(snapshot.data!.docs[index].id),
-                          builder: (context, userStatusSnap) {
-                            if (!userStatusSnap.hasData) {
-                              return Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color: AppTheme.mainColorLight,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "HL",
+                        subtitle: Text(
+                          lastMessage["messageText"],
+                          style: GoogleFonts.lato(
+                            fontSize: 13,
+                            color:
+                                isSender ? Colors.black54 : AppTheme.mainColor,
+                          ),
+                        ),
+                        title: StreamBuilder<String>(
+                          stream:
+                              getUserNameByUID(snapshot.data!.docs[index].id),
+                          builder: (context, nameSnapshot) {
+                            if (!nameSnapshot.hasData ||
+                                nameSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                              return const SizedBox();
+                            } else {
+                              return Row(
+                                children: [
+                                  Text(
+                                    "@${nameSnapshot.data!}",
                                     style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                      color: Colors.white,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ),
+                                  const SizedBox(width: 3),
+                                  StreamBuilder(
+                                    stream: getUserVerification(
+                                        snapshot.data!.docs[index].id),
+                                    builder: (context, vSnapshot) {
+                                      if (vSnapshot.hasError ||
+                                          !vSnapshot.hasData ||
+                                          vSnapshot.connectionState ==
+                                              ConnectionState.waiting ||
+                                          vSnapshot.data! == "false") {
+                                        return const SizedBox();
+                                      } else {
+                                        return const Icon(
+                                          Icons.verified,
+                                          color: AppTheme.mainColor,
+                                          size: 16,
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
                               );
-                            } else if (userStatusSnap.connectionState ==
+                            }
+                          },
+                        ),
+                        leading: StreamBuilder<String>(
+                          stream: getUserStatus(snapshot.data!.docs[index].id),
+                          builder: (context, userStatusSnap) {
+                            if (userStatusSnap.connectionState ==
                                 ConnectionState.waiting) {
                               return Container(
                                 height: 50,
                                 width: 50,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(25),
-                                  color: AppTheme.mainColorLight,
+                                  color: AppTheme.mainColor,
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    "HL",
-                                    style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
+                                child: const Center(),
                               );
                             } else {
                               bool isUserOnline =
@@ -273,23 +290,15 @@ class _ChatsPageState extends State<ChatsPage> {
                                 stream: getUserProfilePic(
                                     snapshot.data!.docs[index].id),
                                 builder: (context, profileSnap) {
-                                  if (!profileSnap.hasData) {
+                                  if (!profileSnap.hasData ||
+                                      profileSnap.connectionState ==
+                                          ConnectionState.waiting) {
                                     return Container(
                                       height: 50,
                                       width: 50,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(25),
-                                        color: AppTheme.mainColorLight,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "HL",
-                                          style: GoogleFonts.lato(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+                                        color: AppTheme.mainColor,
                                       ),
                                     );
                                   } else {
@@ -300,7 +309,7 @@ class _ChatsPageState extends State<ChatsPage> {
                                       width: 50,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(25),
-                                        color: AppTheme.mainColorLight,
+                                        color: AppTheme.mainColor,
                                       ),
                                       child: Stack(
                                         children: [
@@ -309,15 +318,8 @@ class _ChatsPageState extends State<ChatsPage> {
                                                   imageUrl: profileSnap.data!,
                                                 )
                                               : Center(
-                                                  child: Text(
-                                                    "HL",
-                                                    style: GoogleFonts.lato(
-                                                      fontSize: 16,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
+                                                  child: SvgPicture.asset(
+                                                      CustomIcons.defaultIcon),
                                                 ),
                                           if (isUserOnline) ...{
                                             Positioned(
