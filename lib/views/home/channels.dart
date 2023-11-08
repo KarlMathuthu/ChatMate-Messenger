@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/channels_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/views/channels/channel_room.dart';
-import 'package:chat_mate_messanger/views/channels/create_channel.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
 class ChannelsPage extends StatefulWidget {
   const ChannelsPage({super.key});
@@ -120,12 +119,9 @@ class _ChannelsPageState extends State<ChannelsPage> {
                 } else if (snapshot.data!.docs.isEmpty) {
                   // Display a message when there are no channels.
                   return Center(
-                    child: Text(
-                      "No followed channels",
-                      style: GoogleFonts.lato(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
+                    child: LottieBuilder.asset(
+                      "assets/lottie/no_channels.json",
+                      height: 150,
                     ),
                   );
                 } else {

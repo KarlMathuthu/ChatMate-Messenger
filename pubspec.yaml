@@ -31,6 +31,7 @@ dependencies:
   http: ^1.1.0
   image_picker: ^1.0.4
   loading_animation_widget: ^1.2.0+4
+  lottie: ^2.7.0
   shared_preferences: ^2.2.2
   timeago: ^3.5.0
   uuid: ^4.1.0
@@ -53,3 +54,4 @@ flutter:
         - assets/avatars/
         - .env
         - assets/audio/
+        - assets/lottie/
