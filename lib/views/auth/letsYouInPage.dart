@@ -1,13 +1,12 @@
 import 'package:chat_mate_messanger/routes/route_class.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/utils/constants.dart';
 import 'package:chat_mate_messanger/utils/custom_icons.dart';
-import 'package:chat_mate_messanger/utils/images.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class LetsYouInPage extends StatelessWidget {
   const LetsYouInPage({super.key});
@@ -19,23 +18,13 @@ class LetsYouInPage extends StatelessWidget {
       appBar: AppBar(backgroundColor: AppTheme.scaffoldBacgroundColor),
       body: Column(
         children: [
-          Text(
-            AppConstants.introText,
-            style: GoogleFonts.lato(
-              color: Colors.black,
-              fontSize: 25,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: Align(
               alignment: Alignment.topCenter,
-              child: Image.asset(
-                Images.splashImage2,
-                height: 160,
-                width: 160,
+              child: LottieBuilder.asset(
+                "assets/lottie/welcome.json",
+                height: 180,
               ),
             ),
           ),

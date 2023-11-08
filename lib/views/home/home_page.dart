@@ -79,6 +79,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               selectedItemColor: AppTheme.mainColor,
               currentIndex: currentIndex,
               backgroundColor: Colors.white,
+              elevation: 5,
               onTap: (index) {
                 changePage(index);
               },
