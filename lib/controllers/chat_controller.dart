@@ -6,67 +6,128 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
+import '../model/chat_model.dart';
 import '../model/message_model.dart';
 
 class ChatController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Send a message.
-  Future<bool> sendMessage({
+ Future<String> createChat({
+    required List<String> members,
+    required String senderId,
     required String messageText,
-    required String messageType,
-    required String mateUid,
+    required String type,
   }) async {
     try {
-      String currentUser = FirebaseAuth.instance.currentUser!.uid;
-      DateTime timestamp = DateTime.now();
+      String chatRoomId = const Uuid().v1();
 
-      // Create a single instance of MessageModel to be used for both sender and mate
-      final messageModel = MessageModel(
-        sender: currentUser,
+      // Create a new chat model
+      final ChatModel newChat = ChatModel(
+        chatId: chatRoomId,
+        members: members,
+        messages: [
+          MessageModel(
+            sender: senderId,
+            messageText: messageText,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+            messageType: type,
+          )
+        ],
+      );
+      Map<String, dynamic> lastMessage = {
+        "messageText": messageText,
+        "sender": senderId,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "read": false,
+        "type": type,
+      };
+
+      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
+      await updateLastMessage(chatRoomId, lastMessage);
+      return chatRoomId;
+    } catch (e) {
+      print('Error creating chat: $e');
+    }
+    return "none";
+  }
+
+  //Send a wave
+  void sendAWaveToMate({
+    required List<String> members,
+    required String senderId,
+    required String messageText,
+    required String type,
+  }) async {
+    try {
+      String chatRoomId = const Uuid().v1();
+
+      // Create a new chat model
+      final ChatModel newChat = ChatModel(
+        chatId: chatRoomId,
+        members: members,
+        messages: [
+          MessageModel(
+            sender: senderId,
+            messageText: messageText,
+            timestamp: DateTime.now().millisecondsSinceEpoch,
+            messageType: type,
+          )
+        ],
+      );
+      Map<String, dynamic> lastMessage = {
+        "messageText": messageText,
+        "sender": senderId,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "read": false,
+        "type": type,
+      };
+
+      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
+      await updateLastMessage(chatRoomId, lastMessage);
+    } catch (e) {
+      print('Error sending wave : $e');
+    }
+  }
+
+  // Send Message
+  Future<void> sendMessage({
+    required String chatId,
+    required String senderId,
+    required String messageText,
+    required String type,
+  }) async {
+    try {
+      final newMessage = MessageModel(
+        sender: senderId,
         messageText: messageText,
-        timestamp: timestamp.toString(),
-        messageType: messageType,
-        read: false,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        messageType: type,
       );
 
-      // Send to me
-      final myMessageRef = _firestore
-          .collection("users")
-          .doc(currentUser)
-          .collection("chats")
-          .doc(mateUid)
-          .collection("messages")
-          .doc();
-      await myMessageRef.set(messageModel.toMap());
+      Map<String, dynamic> lastMessage = {
+        "messageText": messageText,
+        "sender": senderId,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "read": false,
+        "type": type,
+      };
 
-      // Update last_message for the sender (currentUser)
-      await myMessageRef.parent.parent!.set(
-        {
-          "last_message": messageModel.toMap(),
-        },
-      );
+      final chatDoc = _firestore.collection('chats').doc(chatId);
 
-      // Send to mate
-      final mateMessageRef = _firestore
-          .collection("users")
-          .doc(mateUid)
-          .collection("chats")
-          .doc(currentUser)
-          .collection("messages")
-          .doc();
-      await mateMessageRef.set(messageModel.toMap());
+      final DocumentSnapshot chatSnapshot = await chatDoc.get();
 
-      // Update last_message for the mate (mateUid)
-      await mateMessageRef.parent.parent!.set(
-        {
-          "last_message": messageModel.toMap(),
-        },
-      );
+      if (chatSnapshot.exists) {
+        List<dynamic> currentMessages = chatSnapshot.get("messages");
 
-      return true;
-    } catch (error) {
-      return false;
+        currentMessages.add(newMessage.toMap());
+
+        await chatDoc.update({'messages': currentMessages});
+      }
+      await updateLastMessage(chatId, lastMessage);
+    } catch (e) {
+      print('Error sending message: $e');
     }
   }
 

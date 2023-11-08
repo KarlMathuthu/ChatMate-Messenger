@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
+import 'package:chat_mate_messanger/controllers/sharedPref_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/utils/custom_icons.dart';
+import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:badges/badges.dart' as badges;
 
+import '../../model/message_model.dart';
 import '../chats/cantacts_page.dart';
 
 class ChatsPage extends StatefulWidget {
@@ -26,6 +26,18 @@ class _ChatsPageState extends State<ChatsPage> {
   String currentUserId = FirebaseAuth.instance.currentUser!.uid;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CustomLoader customLoader = CustomLoader();
+  SharedPrefController sharedPrefController = Get.put(SharedPrefController());
+
+  String getFriendUid(
+      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> chatData, int index) {
+    List<String> members =
+        List<String>.from(chatData.data!.docs[index]['members']);
+    if (members.length > 1) {
+      return members.firstWhere((userId) => userId != currentUserId,
+          orElse: () => 'No friend found');
+    }
+    return 'No friend found';
+  }
 
   Stream<String> getUserNameByUID(String uid) {
     return FirebaseFirestore.instance
@@ -37,7 +49,7 @@ class _ChatsPageState extends State<ChatsPage> {
         String userName = userDoc.data()?['userName'];
         return userName;
       } else {
-        return "@userName";
+        return "@ChatMateBot";
       }
     }).handleError((error) {
       return "Error fetching user data";
@@ -61,87 +73,17 @@ class _ChatsPageState extends State<ChatsPage> {
     });
   }
 
-  Stream<String> getUserProfilePic(String uid) {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
-        .snapshots()
-        .map((userDoc) {
-      if (userDoc.exists) {
-        String profilePic = userDoc.data()?['photoUrl'];
-        return profilePic;
-      } else {
-        return "none";
-      }
-    }).handleError((error) {
-      return "none";
-    });
-  }
-
-  Stream<String> getUserVerification(String uid) {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
-        .snapshots()
-        .map((userDoc) {
-      if (userDoc.exists) {
-        String isVerified = userDoc.data()!['isVerified'].toString();
-        return isVerified;
-      } else {
-        return "false";
-      }
-    }).handleError((error) {
-      return "false";
-    });
-  }
-
-  Future<int> calculateUnreadMessageCount(String chatUid) async {
-    final chatRef = FirebaseFirestore.instance
-        .collection("users")
-        .doc(currentUserId)
-        .collection("chats")
-        .doc(chatUid)
-        .collection("messages");
-
-    final unreadMessageQuery =
-        await chatRef.where("read", isEqualTo: false).get();
-
-    return unreadMessageQuery.docs.length;
-  }
-
-  Stream<List<int>> getUnreadMessageCounts(
-      List<DocumentSnapshot> chatDocuments) async* {
-    List<int> unreadMessageCounts = [];
-    for (var chatDocument in chatDocuments) {
-      int unreadMessages = await calculateUnreadMessageCount(chatDocument.id);
-      unreadMessageCounts.add(unreadMessages);
-      yield List<int>.from(unreadMessageCounts);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBacgroundColor,
       appBar: AppBar(
-        title: RichText(
-          text: const TextSpan(
-            text: "Chat",
-            style: TextStyle(
-              color: AppTheme.mainColor,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-            children: <TextSpan>[
-              TextSpan(
-                text: " Mate",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+        title: Text(
+          "ChatMate",
+          style: GoogleFonts.lato(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -149,8 +91,6 @@ class _ChatsPageState extends State<ChatsPage> {
             borderRadius: BorderRadius.circular(6),
             onTap: () {
               //Find mate
-              Get.to(() => const ContactsPage(),
-                  transition: Transition.cupertino);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -173,249 +113,305 @@ class _ChatsPageState extends State<ChatsPage> {
           const SizedBox(width: 10),
         ],
       ),
-      body: Column(
-        children: [
-          //Search chats/mate
-          Container(
-            height: 40,
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 245, 245, 245),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                const SizedBox(width: 8),
-                SvgPicture.asset(
-                  "assets/icons/search.svg",
-                  height: 18,
-                  colorFilter:
-                      const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "Search chats...",
-                  style: GoogleFonts.lato(
-                    color: Colors.grey,
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            //Search chats/mate
+            Container(
+              height: 40,
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    "assets/icons/search.svg",
+                    height: 18,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    "Search chats...",
+                    style: GoogleFonts.lato(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          //Chats
-          Expanded(
-            child: StreamBuilder(
+            const SizedBox(height: 10),
+            //Chats
+            StreamBuilder(
               stream: firestore
-                  .collection("users")
-                  .doc(currentUserId)
                   .collection("chats")
+                  .where("members", arrayContains: currentUserId)
                   .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // return Center();
-                  return Center(
+              builder: (context, chatSnapshot) {
+                if (!chatSnapshot.hasData) {
+                  return const SizedBox();
+                } else if (chatSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const SizedBox(); /* Center(
                     child: LoadingAnimationWidget.fourRotatingDots(
                       color: AppTheme.loaderColor,
-                      size: 40,
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  // Display a message when there are no chats.
-                  return Center(
-                    child: Text(
-                      "No recent chats",
-                      style: GoogleFonts.lato(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  );
+                      size: 50,
+                    ), */
+                  // );
                 } else {
                   return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
+                    itemCount: chatSnapshot.data!.docs.length,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      Map<String, dynamic> lastMessage =
-                          snapshot.data!.docs[index]["last_message"];
-                      bool isSender = lastMessage["sender"] == currentUserId;
+                      List<dynamic> messages =
+                          chatSnapshot.data!.docs[index]["messages"];
+                      List<MessageModel> unreadMessages = [];
 
-                      return ListTile(
-                        subtitle: Text(
-                          lastMessage["messageText"],
-                          style: GoogleFonts.lato(
-                            fontSize: 13,
-                            color:
-                                isSender ? Colors.black54 : AppTheme.mainColor,
-                          ),
-                        ),
-                        title: StreamBuilder<String>(
-                          stream:
-                              getUserNameByUID(snapshot.data!.docs[index].id),
-                          builder: (context, nameSnapshot) {
-                            if (!nameSnapshot.hasData ||
-                                nameSnapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                              return const SizedBox();
-                            } else {
-                              return Row(
-                                children: [
-                                  Text(
-                                    "@${nameSnapshot.data!}",
-                                    style: GoogleFonts.lato(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                      for (var messageData in messages) {
+                        bool isSenderCurrentUser =
+                            messageData["sender"] == currentUserId;
+
+                        if (!isSenderCurrentUser && !messageData["read"]) {
+                          MessageModel message = MessageModel(
+                            sender: messageData["sender"],
+                            messageText: messageData["messageText"],
+                            timestamp: messageData["timestamp"],
+                            read: messageData["read"],
+                            messageType: messageData["messageType"],
+                          );
+                          unreadMessages.add(message);
+                        }
+                      }
+
+                      int unreadMessageCount = unreadMessages.length;
+
+                      return StreamBuilder<String>(
+                        stream:
+                            getUserNameByUID(getFriendUid(chatSnapshot, index)),
+                        builder: (context, friendUidSnapshot) {
+                          if (friendUidSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const SizedBox();
+                          } else if (!friendUidSnapshot.hasData) {
+                            return const SizedBox();
+                          } else {
+                            String friendUsername =
+                                friendUidSnapshot.data.toString();
+                            String initials = friendUsername[0].toUpperCase() +
+                                friendUsername[friendUsername.length - 1]
+                                    .toUpperCase();
+                            Map<String, dynamic>? lastMessage =
+                                chatSnapshot.data!.docs[index]["last_message"];
+                            String lastMessageSenderId = lastMessage!["sender"];
+                            String messageType = lastMessage["type"];
+                            bool isAWave = messageType == "wave" ||
+                                lastMessage["messageText"] == null;
+
+                            bool isLastMessageRead() {
+                              if (lastMessageSenderId != currentUserId &&
+                                  lastMessage["read"] == true) {
+                                return true;
+                              }
+                              return false;
+                            }
+
+                            return ListTile(
+                              onLongPress: () {
+                                chatController.showDeleteDialog(
+                                  context: context,
+                                  chatId: chatSnapshot.data!.docs[index].id,
+                                  customLoader: customLoader,
+                                );
+                              },
+                              onTap: () {
+                                chatController.markChatAsRead(
+                                  chatSnapshot.data!.docs[index]["chatId"],
+                                );
+                                Get.to(
+                                  () => ChatRoomPage(
+                                    mateName: friendUsername,
+                                    mateUid: getFriendUid(chatSnapshot, index),
+                                    chatRoomId: chatSnapshot.data!.docs[index]
+                                        ["chatId"],
+                                    isNewChat: false,
+                                  ),
+                                  transition: Transition.cupertino,
+                                );
+                              },
+                              title: Text(
+                                friendUsername,
+                                style: GoogleFonts.lato(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              subtitle: isAWave
+                                  ? Text(
+                                      "A new wave 👋!",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.lato(
+                                        fontSize: 12,
+                                        color: Colors.black54,
+                                      ),
+                                    )
+                                  : Text(
+                                      lastMessageSenderId == currentUserId
+                                          ? "Me : ${lastMessage["messageText"]}"
+                                          : lastMessage["messageText"],
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.lato(
+                                        color: isLastMessageRead() == false &&
+                                                lastMessageSenderId !=
+                                                    currentUserId
+                                            ? AppTheme.loaderColor
+                                            : Colors.black54,
+                                        fontSize: 12,
+                                        fontWeight: isLastMessageRead() == false
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 3),
-                                  StreamBuilder(
-                                    stream: getUserVerification(
-                                        snapshot.data!.docs[index].id),
-                                    builder: (context, vSnapshot) {
-                                      if (vSnapshot.hasError ||
-                                          !vSnapshot.hasData ||
-                                          vSnapshot.connectionState ==
-                                              ConnectionState.waiting ||
-                                          vSnapshot.data! == "false") {
-                                        return const SizedBox();
-                                      } else {
-                                        return const Icon(
-                                          Icons.verified,
-                                          color: AppTheme.mainColor,
-                                          size: 16,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                        ),
-                        trailing: StreamBuilder(
-                          stream: getUnreadMessageCounts(snapshot.data!.docs),
-                          builder: (context, msSnapshot) {
-                            if (!msSnapshot.hasData ||
-                                msSnapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                              return const SizedBox();
-                            } else {
-                              return badges.Badge(
-                                badgeStyle: const badges.BadgeStyle(
-                                  badgeColor: AppTheme.mainColor,
-                                ),
-                                badgeContent: Text(
-                                  msSnapshot.data!.length.toString(),
-                                  style: GoogleFonts.lato(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                        leading: StreamBuilder<String>(
-                          stream: getUserStatus(snapshot.data!.docs[index].id),
-                          builder: (context, userStatusSnap) {
-                            if (userStatusSnap.connectionState ==
-                                ConnectionState.waiting) {
-                              return Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color: AppTheme.mainColor,
-                                ),
-                                child: const Center(),
-                              );
-                            } else {
-                              bool isUserOnline =
-                                  userStatusSnap.data! == "online";
+                              trailing: unreadMessageCount > 0
+                                  ? badges.Badge(
+                                      badgeAnimation:
+                                          const badges.BadgeAnimation.fade(),
+                                      badgeStyle: const badges.BadgeStyle(
+                                        badgeColor: AppTheme.mainColor,
+                                      ),
+                                      badgeContent: Text(
+                                        unreadMessageCount.toString(),
+                                        style: GoogleFonts.lato(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              leading: StreamBuilder<String>(
+                                  stream: getUserStatus(
+                                      getFriendUid(chatSnapshot, index)),
+                                  builder: (context, userStatusSnap) {
+                                    if (!userStatusSnap.hasData) {
+                                      return Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          color: AppTheme.mainColorLight,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            initials,
+                                            style: GoogleFonts.lato(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else if (userStatusSnap.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          color: AppTheme.mainColorLight,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            initials,
+                                            style: GoogleFonts.lato(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      bool isUserOnline =
+                                          userStatusSnap.data! == "online";
 
-                              return StreamBuilder<String>(
-                                stream: getUserProfilePic(
-                                    snapshot.data!.docs[index].id),
-                                builder: (context, profileSnap) {
-                                  if (!profileSnap.hasData ||
-                                      profileSnap.connectionState ==
-                                          ConnectionState.waiting) {
-                                    return Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
-                                        color: AppTheme.mainColor,
-                                      ),
-                                    );
-                                  } else {
-                                    bool hasProfilePicture =
-                                        profileSnap.data! != "none";
-                                    return Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
-                                        color: AppTheme.mainColor,
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          hasProfilePicture
-                                              ? CachedNetworkImage(
-                                                  imageUrl: profileSnap.data!,
-                                                )
-                                              : Center(
-                                                  child: SvgPicture.asset(
-                                                      CustomIcons.defaultIcon),
-                                                ),
-                                          if (isUserOnline) ...{
-                                            Positioned(
-                                              bottom: 0,
-                                              right: 0,
-                                              child: Container(
-                                                width: 15,
-                                                height: 15,
-                                                decoration: const BoxDecoration(
-                                                  color: AppTheme.onlineStatus,
-                                                  shape: BoxShape.circle,
+                                      return Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          color: AppTheme.mainColorLight,
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            Center(
+                                              child: Text(
+                                                initials,
+                                                style: GoogleFonts.lato(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                            )
-                                          } else
-                                            const SizedBox()
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                },
-                              );
-                            }
-                          },
-                        ),
+                                            ),
+                                            if (isUserOnline) ...{
+                                              Positioned(
+                                                bottom: 0,
+                                                right: 0,
+                                                child: Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Color.fromARGB(
+                                                        255, 73, 255, 167),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                              )
+                                            } else
+                                              const SizedBox()
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  }),
+                            );
+                          }
+                        },
                       );
                     },
                   );
                 }
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
 
       //Create message button
-      // floatingActionButton: FloatingActionButton(
-      //   shape: CircleBorder(),
-      //   backgroundColor: AppTheme.mainColor,
-      //   child: SvgPicture.asset(
-      //     "assets/icons/chat.svg",
-      //     color: Colors.white,
-      //   ),
-      //   onPressed: () {
-      //     Get.to(() => const ContactsPage(), transition: Transition.cupertino);
-      //   },
-      // ),
+      floatingActionButton: FloatingActionButton(
+        shape: CircleBorder(),
+        backgroundColor: AppTheme.mainColor,
+        child: SvgPicture.asset(
+          "assets/icons/chat.svg",
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Get.to(() => const ContactsPage(), transition: Transition.cupertino);
+        },
+      ),
     );
   }
 }
