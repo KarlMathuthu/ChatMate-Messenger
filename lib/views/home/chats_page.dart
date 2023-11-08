@@ -10,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../chats/cantacts_page.dart';
 
@@ -92,6 +93,24 @@ class _ChatsPageState extends State<ChatsPage> {
     }).handleError((error) {
       return "false";
     });
+  }
+
+  int calculateUnreadMessageCount(String chatUid) {
+    int ureadMessages = 0;
+    final chatRef = FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUserId)
+        .collection("chats")
+        .doc(chatUid)
+        .collection("messages");
+
+    chatRef.where("read", isEqualTo: false).get().then(
+          (value) => {
+            ureadMessages = value.docs.length,
+          },
+        );
+
+    return ureadMessages;
   }
 
   @override
@@ -216,6 +235,10 @@ class _ChatsPageState extends State<ChatsPage> {
                       Map<String, dynamic> lastMessage =
                           snapshot.data!.docs[index]["last_message"];
                       bool isSender = lastMessage["sender"] == currentUserId;
+
+                      int ureadMessages = calculateUnreadMessageCount(
+                          snapshot.data!.docs[index].id);
+
                       return ListTile(
                         subtitle: Text(
                           lastMessage["messageText"],
@@ -268,6 +291,20 @@ class _ChatsPageState extends State<ChatsPage> {
                             }
                           },
                         ),
+                        trailing: ureadMessages == 0
+                            ? const SizedBox()
+                            : badges.Badge(
+                                badgeStyle: const badges.BadgeStyle(
+                                  badgeColor: AppTheme.mainColor,
+                                ),
+                                badgeContent: Text(
+                                  ureadMessages.toString(),
+                                  style: GoogleFonts.lato(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
                         leading: StreamBuilder<String>(
                           stream: getUserStatus(snapshot.data!.docs[index].id),
                           builder: (context, userStatusSnap) {
