@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/controllers/sharedPref_controller.dart';
 import 'package:chat_mate_messanger/theme/app_theme.dart';
-import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:chat_mate_messanger/widgets/custom_loader.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../model/message_model.dart';
 import '../chats/cantacts_page.dart';
 
 class ChatsPage extends StatefulWidget {
@@ -30,16 +27,13 @@ class _ChatsPageState extends State<ChatsPage> {
   CustomLoader customLoader = CustomLoader();
   SharedPrefController sharedPrefController = Get.put(SharedPrefController());
 
-  String getFriendUid(
-      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> chatData, int index) {
-    List<String> members =
-        List<String>.from(chatData.data!.docs[index]['members']);
-    if (members.length > 1) {
-      return members.firstWhere((userId) => userId != currentUserId,
-          orElse: () => 'No friend found');
-    }
-    return 'No friend found';
-  }
+  // String getFriendUid(
+  //     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> chatData, int index) {
+  //   List<String> members =
+  //       List<String>.from(chatData.data!.docs[index]['members']);
+
+  //   return 'No friend found';
+  // }
 
   Stream<String> getUserNameByUID(String uid) {
     return FirebaseFirestore.instance
@@ -225,7 +219,133 @@ class _ChatsPageState extends State<ChatsPage> {
                     ),
                   );
                 } else {
-                  return ListTile();
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: StreamBuilder<String>(
+                          stream: getUserStatus(snapshot.data!.docs[index].id),
+                          builder: (context, userStatusSnap) {
+                            if (!userStatusSnap.hasData) {
+                              return Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: AppTheme.mainColorLight,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "HL",
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else if (userStatusSnap.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: AppTheme.mainColorLight,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "HL",
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              bool isUserOnline =
+                                  userStatusSnap.data! == "online";
+
+                              return StreamBuilder<String>(
+                                stream: getUserProfilePic(
+                                    snapshot.data!.docs[index].id),
+                                builder: (context, profileSnap) {
+                                  if (!profileSnap.hasData) {
+                                    return Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: AppTheme.mainColorLight,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "HL",
+                                          style: GoogleFonts.lato(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    bool hasProfilePicture =
+                                        profileSnap.data! != "none";
+                                    return Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: AppTheme.mainColorLight,
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          hasProfilePicture
+                                              ? CachedNetworkImage(
+                                                  imageUrl: profileSnap.data!,
+                                                )
+                                              : Center(
+                                                  child: Text(
+                                                    "HL",
+                                                    style: GoogleFonts.lato(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                          if (isUserOnline) ...{
+                                            Positioned(
+                                              bottom: 0,
+                                              right: 0,
+                                              child: Container(
+                                                width: 15,
+                                                height: 15,
+                                                decoration: const BoxDecoration(
+                                                  color: AppTheme.onlineStatus,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                            )
+                                          } else
+                                            const SizedBox()
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  );
                 }
               },
             ),
