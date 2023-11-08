@@ -194,13 +194,24 @@ class _ContactsPageState extends State<ContactsPage> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return Center();
+                    return const Center();
                   } else if (snapshot.connectionState ==
                       ConnectionState.waiting) {
                     return Center(
                       child: LoadingAnimationWidget.fourRotatingDots(
                         color: AppTheme.loaderColor,
                         size: 40,
+                      ),
+                    );
+                  } else if (snapshot.data!.docs.isEmpty) {
+                    // Display a message when there are no chats.
+                    return Center(
+                      child: Text(
+                        "No mates yet!",
+                        style: GoogleFonts.lato(
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
                       ),
                     );
                   } else {

@@ -227,7 +227,7 @@ class _AppSettingsPageState extends State<AppSettingsPage> {
                         ],
                       ),
                       subtitle: Text(
-                        userbio,
+                        userbio,overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.lato(
                           color: Colors.black54,
                           fontSize: 12,
