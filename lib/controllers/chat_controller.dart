@@ -12,78 +12,84 @@ class ChatController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Send a message.
-  Future<void> sendMessage({
+  Future<bool> sendMessage({
     required String messageText,
     required String messageType,
     required String mateUid,
   }) async {
-    String currentUser = FirebaseAuth.instance.currentUser!.uid;
+    try {
+      String currentUser = FirebaseAuth.instance.currentUser!.uid;
 
-    Map<String, dynamic> mylastMessage = {
-      "messageText": messageText,
-      "sender": currentUser,
-      "timestamp": DateTime.now().toString(),
-      "read": false,
-      "type": messageType,
-    };
+      Map<String, dynamic> mylastMessage = {
+        "messageText": messageText,
+        "sender": currentUser,
+        "timestamp": DateTime.now().toString(),
+        "read": false,
+        "type": messageType,
+      };
 
-    final myMessageModel = MessageModel(
-      sender: currentUser,
-      messageText: messageText,
-      timestamp: DateTime.now().toString(),
-      messageType: messageType,
-      read: false,
-    );
-    // Send to me
-    await _firestore
-        .collection("users")
-        .doc(currentUser)
-        .collection("chats")
-        .doc(mateUid)
-        .collection("messages")
-        .doc()
-        .set(myMessageModel.toMap());
-    //  Update last_message
-    await _firestore
-        .collection("users")
-        .doc(currentUser)
-        .collection("chats")
-        .doc(mateUid)
-        .collection("messages")
-        .add(mylastMessage);
-    // Send to mate
+      final myMessageModel = MessageModel(
+        sender: currentUser,
+        messageText: messageText,
+        timestamp: DateTime.now().toString(),
+        messageType: messageType,
+        read: false,
+      );
+      // Send to me
+      await _firestore
+          .collection("users")
+          .doc(currentUser)
+          .collection("chats")
+          .doc(mateUid)
+          .collection("messages")
+          .doc()
+          .set(myMessageModel.toMap());
+      //  Update last_message
+      await _firestore
+          .collection("users")
+          .doc(currentUser)
+          .collection("chats")
+          .doc(mateUid)
+          .collection("messages")
+          .add(mylastMessage);
+      // Send to mate
 
-    Map<String, dynamic> matelastMessage = {
-      "messageText": messageText,
-      "sender": currentUser,
-      "timestamp": DateTime.now().toString(),
-      "read": false,
-      "type": messageType,
-    };
+      Map<String, dynamic> matelastMessage = {
+        "messageText": messageText,
+        "sender": currentUser,
+        "timestamp": DateTime.now().toString(),
+        "read": false,
+        "type": messageType,
+      };
 
-    final mateMessageModel = MessageModel(
-      sender: mateUid,
-      messageText: messageText,
-      timestamp: DateTime.now().toString(),
-      messageType: messageType,
-      read: false,
-    );
-    await _firestore
-        .collection("users")
-        .doc(mateUid)
-        .collection("chats")
-        .doc(currentUser)
-        .collection("messages")
-        .doc()
-        .set(mateMessageModel.toMap());
-    //  Update last_message
-    await _firestore
-        .collection("users")
-        .doc(mateUid)
-        .collection("chats")
-        .doc(currentUser)
-        .collection("messages")
-        .add(matelastMessage);
+      final mateMessageModel = MessageModel(
+        sender: mateUid,
+        messageText: messageText,
+        timestamp: DateTime.now().toString(),
+        messageType: messageType,
+        read: false,
+      );
+      await _firestore
+          .collection("users")
+          .doc(mateUid)
+          .collection("chats")
+          .doc(currentUser)
+          .collection("messages")
+          .doc()
+          .set(mateMessageModel.toMap());
+      //  Update last_message
+      await _firestore
+          .collection("users")
+          .doc(mateUid)
+          .collection("chats")
+          .doc(currentUser)
+          .collection("messages")
+          .add(matelastMessage);
+
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   // Function to delete a message
