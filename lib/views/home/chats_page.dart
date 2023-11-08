@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../model/message_model.dart';
 import '../chats/cantacts_page.dart';
@@ -216,14 +217,10 @@ class _ChatsPageState extends State<ChatsPage> {
                     ),
                   );
                 } else if (chatSnapshot.data!.docs.isEmpty) {
-                  // Display a message when there are no chats.
                   return Center(
-                    child: Text(
-                      "No recent chats",
-                      style: GoogleFonts.lato(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
+                    child: LottieBuilder.asset(
+                      "assets/lottie/chats.json",
+                      height: 150,
                     ),
                   );
                 } else {

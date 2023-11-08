@@ -117,7 +117,6 @@ class _ChannelsPageState extends State<ChannelsPage> {
                     ),
                   );
                 } else if (snapshot.data!.docs.isEmpty) {
-                  // Display a message when there are no channels.
                   return Center(
                     child: LottieBuilder.asset(
                       "assets/lottie/no_channels.json",
