@@ -19,72 +19,50 @@ class ChatController extends GetxController {
   }) async {
     try {
       String currentUser = FirebaseAuth.instance.currentUser!.uid;
+      DateTime timestamp = DateTime.now();
 
-      Map<String, dynamic> mylastMessage = {
-        "messageText": messageText,
-        "sender": currentUser,
-        "timestamp": DateTime.now().toString(),
-        "read": false,
-        "type": messageType,
-      };
-
-      final myMessageModel = MessageModel(
+      // Create a single instance of MessageModel to be used for both sender and mate
+      final messageModel = MessageModel(
         sender: currentUser,
         messageText: messageText,
-        timestamp: DateTime.now().toString(),
+        timestamp: timestamp.toString(),
         messageType: messageType,
         read: false,
       );
+
       // Send to me
-      await _firestore
+      final myMessageRef = _firestore
           .collection("users")
           .doc(currentUser)
           .collection("chats")
           .doc(mateUid)
           .collection("messages")
-          .doc()
-          .set(myMessageModel.toMap());
-      //  Update last_message
-      await _firestore
-          .collection("users")
-          .doc(currentUser)
-          .collection("chats")
-          .doc(mateUid)
-          .collection("messages")
-          .add(mylastMessage);
-      // Send to mate
+          .doc();
+      await myMessageRef.set(messageModel.toMap());
 
-      Map<String, dynamic> matelastMessage = {
-        "messageText": messageText,
-        "sender": currentUser,
-        "timestamp": DateTime.now().toString(),
-        "read": false,
-        "type": messageType,
-      };
-
-      final mateMessageModel = MessageModel(
-        sender: mateUid,
-        messageText: messageText,
-        timestamp: DateTime.now().toString(),
-        messageType: messageType,
-        read: false,
+      // Update last_message for the sender (currentUser)
+      await myMessageRef.parent.parent!.set(
+        {
+          "last_message": messageModel.toMap(),
+        },
       );
-      await _firestore
+
+      // Send to mate
+      final mateMessageRef = _firestore
           .collection("users")
           .doc(mateUid)
           .collection("chats")
           .doc(currentUser)
           .collection("messages")
-          .doc()
-          .set(mateMessageModel.toMap());
-      //  Update last_message
-      await _firestore
-          .collection("users")
-          .doc(mateUid)
-          .collection("chats")
-          .doc(currentUser)
-          .collection("messages")
-          .add(matelastMessage);
+          .doc();
+      await mateMessageRef.set(messageModel.toMap());
+
+      // Update last_message for the mate (mateUid)
+      await mateMessageRef.parent.parent!.set(
+        {
+          "last_message": messageModel.toMap(),
+        },
+      );
 
       return true;
     } catch (error) {

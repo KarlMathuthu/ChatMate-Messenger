@@ -114,29 +114,12 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
               : IconButton(
                   onPressed: () async {
                     if (_textController.text.trim() != '') {
-                      // widget.isNewChat
-                      //     ? chatController.createChat(
-                      //         members: [
-                      //           widget.currentUser,
-                      //           widget.mateUid ?? "",
-                      //         ],
-                      //         senderId: widget.currentUser,
-                      //         messageText: _textController.text.trim(),
-                      //         type: "text",
-                      //       )
-                      //     :
-                      //     //send message
-                      //     chatController.sendMessage(
-                      //         chatId: widget.chatRoomId,
-                      //         senderId: widget.currentUser,
-                      //         messageText: _textController.text.trim(),
-                      //         type: "text",
-                      //       );
-                      chatController.sendMessage(
+                      bool isMessageSent = await chatController.sendMessage(
                         messageText: _textController.text.trim(),
                         messageType: "text",
                         mateUid: widget.mateUid,
                       );
+                      print(isMessageSent);
                     }
                     _textController.text = '';
                     //send notifcation

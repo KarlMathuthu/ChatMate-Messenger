@@ -205,10 +205,7 @@ class _ChatsPageState extends State<ChatsPage> {
                   .collection("chats")
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox();
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   // return Center();
                   return Center(
                     child: LoadingAnimationWidget.fourRotatingDots(
@@ -216,7 +213,7 @@ class _ChatsPageState extends State<ChatsPage> {
                       size: 40,
                     ),
                   );
-                } else if (snapshot.data!.docs.isEmpty) {
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   // Display a message when there are no chats.
                   return Center(
                     child: Text(
