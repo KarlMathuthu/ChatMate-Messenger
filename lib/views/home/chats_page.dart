@@ -95,8 +95,7 @@ class _ChatsPageState extends State<ChatsPage> {
     });
   }
 
-  int calculateUnreadMessageCount(String chatUid) {
-    int ureadMessages = 0;
+  Future<int> calculateUnreadMessageCount(String chatUid) async {
     final chatRef = FirebaseFirestore.instance
         .collection("users")
         .doc(currentUserId)
@@ -104,13 +103,20 @@ class _ChatsPageState extends State<ChatsPage> {
         .doc(chatUid)
         .collection("messages");
 
-    chatRef.where("read", isEqualTo: false).get().then(
-          (value) => {
-            ureadMessages = value.docs.length,
-          },
-        );
+    final unreadMessageQuery =
+        await chatRef.where("read", isEqualTo: false).get();
 
-    return ureadMessages;
+    return unreadMessageQuery.docs.length;
+  }
+
+  Stream<List<int>> getUnreadMessageCounts(
+      List<DocumentSnapshot> chatDocuments) async* {
+    List<int> unreadMessageCounts = [];
+    for (var chatDocument in chatDocuments) {
+      int unreadMessages = await calculateUnreadMessageCount(chatDocument.id);
+      unreadMessageCounts.add(unreadMessages);
+      yield List<int>.from(unreadMessageCounts);
+    }
   }
 
   @override
@@ -236,9 +242,6 @@ class _ChatsPageState extends State<ChatsPage> {
                           snapshot.data!.docs[index]["last_message"];
                       bool isSender = lastMessage["sender"] == currentUserId;
 
-                      int ureadMessages = calculateUnreadMessageCount(
-                          snapshot.data!.docs[index].id);
-
                       return ListTile(
                         subtitle: Text(
                           lastMessage["messageText"],
@@ -291,20 +294,29 @@ class _ChatsPageState extends State<ChatsPage> {
                             }
                           },
                         ),
-                        trailing: ureadMessages == 0
-                            ? const SizedBox()
-                            : badges.Badge(
+                        trailing: StreamBuilder(
+                          stream: getUnreadMessageCounts(snapshot.data!.docs),
+                          builder: (context, msSnapshot) {
+                            if (!msSnapshot.hasData ||
+                                msSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                              return const SizedBox();
+                            } else {
+                              return badges.Badge(
                                 badgeStyle: const badges.BadgeStyle(
                                   badgeColor: AppTheme.mainColor,
                                 ),
                                 badgeContent: Text(
-                                  ureadMessages.toString(),
+                                  msSnapshot.data!.length.toString(),
                                   style: GoogleFonts.lato(
                                     color: Colors.white,
                                     fontSize: 10,
                                   ),
                                 ),
-                              ),
+                              );
+                            }
+                          },
+                        ),
                         leading: StreamBuilder<String>(
                           stream: getUserStatus(snapshot.data!.docs[index].id),
                           builder: (context, userStatusSnap) {
