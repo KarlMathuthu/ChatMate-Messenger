@@ -14,122 +14,19 @@ import '../model/message_model.dart';
 class ChatController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Create Chat
-  Future<String> createChat({
-    required List<String> members,
-    required String senderId,
-    required String messageText,
-    required String type,
-  }) async {
-    try {
-      String chatRoomId = const Uuid().v1();
-
-      // Create a new chat model
-      final ChatModel newChat = ChatModel(
-        chatId: chatRoomId,
-        members: members,
-        messages: [
-          MessageModel(
-            sender: senderId,
-            messageText: messageText,
-            timestamp: DateTime.now().millisecondsSinceEpoch,
-            messageType: type,
-          )
-        ],
-      );
-      Map<String, dynamic> lastMessage = {
-        "messageText": messageText,
-        "sender": senderId,
-        "timestamp": DateTime.now().millisecondsSinceEpoch,
-        "read": false,
-        "type": type,
-      };
-
-      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
-      await updateLastMessage(chatRoomId, lastMessage);
-      return chatRoomId;
-    } catch (e) {
-      print('Error creating chat: $e');
-    }
-    return "none";
-  }
-
-  //Send a wave
-  void sendAWaveToMate({
-    required List<String> members,
-    required String senderId,
-    required String messageText,
-    required String type,
-  }) async {
-    try {
-      String chatRoomId = const Uuid().v1();
-
-      // Create a new chat model
-      final ChatModel newChat = ChatModel(
-        chatId: chatRoomId,
-        members: members,
-        messages: [
-          MessageModel(
-            sender: senderId,
-            messageText: messageText,
-            timestamp: DateTime.now().millisecondsSinceEpoch,
-            messageType: type,
-          )
-        ],
-      );
-      Map<String, dynamic> lastMessage = {
-        "messageText": messageText,
-        "sender": senderId,
-        "timestamp": DateTime.now().millisecondsSinceEpoch,
-        "read": false,
-        "type": type,
-      };
-
-      await _firestore.collection('chats').doc(chatRoomId).set(newChat.toMap());
-      await updateLastMessage(chatRoomId, lastMessage);
-    } catch (e) {
-      print('Error sending wave : $e');
-    }
-  }
-
-  // Send Message
-  Future<void> sendMessage({
-    required String chatId,
-    required String senderId,
-    required String messageText,
-    required String type,
-  }) async {
-    try {
-      final newMessage = MessageModel(
-        sender: senderId,
-        messageText: messageText,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-        messageType: type,
-      );
-
-      Map<String, dynamic> lastMessage = {
-        "messageText": messageText,
-        "sender": senderId,
-        "timestamp": DateTime.now().millisecondsSinceEpoch,
-        "read": false,
-        "type": type,
-      };
-
-      final chatDoc = _firestore.collection('chats').doc(chatId);
-
-      final DocumentSnapshot chatSnapshot = await chatDoc.get();
-
-      if (chatSnapshot.exists) {
-        List<dynamic> currentMessages = chatSnapshot.get("messages");
-
-        currentMessages.add(newMessage.toMap());
-
-        await chatDoc.update({'messages': currentMessages});
-      }
-      await updateLastMessage(chatId, lastMessage);
-    } catch (e) {
-      print('Error sending message: $e');
-    }
+  // Send a message.
+  Future<void> sendMessage() async {
+    String currentUser = FirebaseAuth.instance.currentUser!.uid;
+    // Send to me
+   await _firestore
+        .collection("users")
+        .doc(currentUser)
+        .collection("chats")
+        .doc()
+        .set(
+      {},
+    );
+    // Send to mate
   }
 
   // Function to delete a message
@@ -249,7 +146,7 @@ class ChatController extends GetxController {
   }
 
   // Get user profile pic
-   Stream<String> getUserProfilePic(String uid) {
+  Stream<String> getUserProfilePic(String uid) {
     return FirebaseFirestore.instance
         .collection("users")
         .doc(uid)
@@ -265,8 +162,9 @@ class ChatController extends GetxController {
       return "none";
     });
   }
+
   // Get user verification badge.
-   Stream<String> getUserVerification(String uid) {
+  Stream<String> getUserVerification(String uid) {
     return FirebaseFirestore.instance
         .collection("users")
         .doc(uid)
