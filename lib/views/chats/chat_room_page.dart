@@ -20,13 +20,9 @@ class ChatRoomPage extends StatefulWidget {
     super.key,
     required this.mateName,
     required this.mateUid,
-    required this.chatRoomId,
-    required this.isNewChat,
   });
   final String mateName;
   final String mateUid;
-  final String chatRoomId;
-  final bool isNewChat;
   @override
   State<ChatRoomPage> createState() => _ChatRoomPageState();
 }
@@ -209,14 +205,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           actions: [
             IconButton(
               onPressed: () {
-                Get.to(
-                  () => CallPage(
-                    mateUid: widget.mateUid,
-                    callType: "audio",
-                    mateName: widget.mateName,
-                    chatRoomId: widget.chatRoomId,
-                  ),
-                );
+                // Get.to(
+                //   () => CallPage(
+                //     mateUid: widget.mateUid,
+                //     callType: "audio",
+                //     mateName: widget.mateName,
+                //     chatRoomId: widget.chatRoomId,
+                //   ),
+                // );
               },
               icon: SvgPicture.asset(
                 "assets/icons/call.svg",
@@ -225,14 +221,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             ),
             IconButton(
               onPressed: () {
-                Get.to(
-                  () => CallPage(
-                    mateUid: widget.mateUid,
-                    callType: "video",
-                    mateName: widget.mateName,
-                    chatRoomId: widget.chatRoomId,
-                  ),
-                );
+                // Get.to(
+                //   () => CallPage(
+                //     mateUid: widget.mateUid,
+                //     callType: "video",
+                //     mateName: widget.mateName,
+                //     chatRoomId: widget.chatRoomId,
+                //   ),
+                // );
               },
               icon: SvgPicture.asset(
                 "assets/icons/video.svg",
@@ -254,69 +250,42 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               Expanded(
                 child: StreamBuilder(
                   stream: firestore
+                      .collection("users")
+                      .doc(auth.currentUser!.uid)
                       .collection("chats")
-                      .doc(widget.chatRoomId)
+                      .doc(widget.mateUid)
+                      .collection("messages")
                       .snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData ||
-                        snapshot.data == null ||
-                        snapshot.data!.data() == null) {
-                      return const Center(
-                          // child: Text("Send your first message"),
-                          );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      // return Center();
                       return Center(
                         child: LoadingAnimationWidget.fourRotatingDots(
                           color: AppTheme.loaderColor,
                           size: 40,
                         ),
                       );
+                    } else if (!snapshot.hasData ||
+                        snapshot.data!.docs.isEmpty) {
+                      // Display a message when there are no chats.
+                      return Center(
+                        child: Text(
+                          "No recent chats",
+                          style: GoogleFonts.lato(
+                            fontSize: 14,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      );
                     } else {
-                      List<dynamic> messages =
-                          snapshot.data!.data()!["messages"];
-                      // Sort messages by "timestamp" in descending order
-                      messages.sort(
-                          (a, b) => b["timestamp"].compareTo(a["timestamp"]));
-
-                      return ListView.builder(
-                        itemCount: messages.length,
-                        reverse: true,
-                        physics: const BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          bool isSender = messages[index]["sender"] ==
-                              auth.currentUser!.uid;
-
-                          bool isRead = messages[index]["read"];
-
-                          bool isSent = isRead == false;
-
-                          return GestureDetector(
-                            onLongPress: () {
-                              chatController.showCustomDialog(
-                                context: context,
-                                isCurrentUser: isSender,
-                                message: messages[index]["messageText"],
-                                chatId: widget.chatRoomId,
-                                messageId: snapshot.data!.id,
-                              );
-                            },
-                            child: MyChatBubble(
-                              message: messages[index]["messageText"],
-                              isSender: isSender,
-                              type: messages[index]["messageType"],
-                              //isRead: isRead,
-                              //isDelivered: isDelivered,
-                              //isSent: isSent,
-                            ),
-                          );
-                        },
+                      return Center(
+                        child: Text("data"),
                       );
                     }
                   },
                 ),
               ),
+
               const SizedBox(height: 10),
 
               //Write message
@@ -331,10 +300,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     messageBarHintStyle: GoogleFonts.lato(fontSize: 14),
                     textFieldTextStyle: GoogleFonts.lato(fontSize: 14),
                     currentUser: auth.currentUser!.uid,
-                    chatRoomId: widget.chatRoomId,
                     mateName: widget.mateName,
                     mateToken: mateToken ?? "none",
-                    isNewChat: widget.isNewChat,
                     mateUid: widget.mateUid,
                   );
                 },

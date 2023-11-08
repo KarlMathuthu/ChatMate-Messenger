@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_mate_messanger/controllers/chat_controller.dart';
 import 'package:chat_mate_messanger/controllers/notifications_controller.dart';
+import 'package:chat_mate_messanger/views/chats/chat_room_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -264,10 +265,12 @@ class _ContactsPageState extends State<ContactsPage> {
                                 ),
                               );
                             } else {
-                              showSendWaveDialog(
-                                username,
-                                mateUid,
-                                mateToken,
+                              Get.off(
+                                transition: Transition.cupertino,
+                                () => ChatRoomPage(
+                                  mateName: username,
+                                  mateUid: mateUid,
+                                ),
                               );
                             }
                           },

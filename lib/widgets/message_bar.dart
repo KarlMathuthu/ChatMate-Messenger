@@ -14,10 +14,8 @@ class CustomMessageBar extends StatefulWidget {
   final Color sendButtonColor;
   final FocusNode focusNode;
   final String currentUser;
-  final String chatRoomId;
   final String mateName;
   final String mateToken;
-  final bool isNewChat;
   final String mateUid;
 
   CustomMessageBar({
@@ -29,10 +27,8 @@ class CustomMessageBar extends StatefulWidget {
     required this.mateUid,
     required this.focusNode,
     required this.currentUser,
-    required this.chatRoomId,
     required this.mateName,
     required this.mateToken,
-    required this.isNewChat,
   });
 
   @override
