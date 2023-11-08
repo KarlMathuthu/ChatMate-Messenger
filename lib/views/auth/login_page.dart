@@ -42,16 +42,16 @@ class _LoginPageState extends State<LoginPage> {
       return true;
     }
 
-    final commonPasswords = [
-      '123456',
-      'password',
-      'qwerty',
-      'abc123',
-    ];
+    // final commonPasswords = [
+    //   '123456',
+    //   'password',
+    //   'qwerty',
+    //   'abc123',
+    // ];
 
-    if (commonPasswords.contains(password.toLowerCase())) {
-      return true;
-    }
+    // if (commonPasswords.contains(password.toLowerCase())) {
+    //   return true;
+    // }
     if (!password.contains(RegExp(r'[0-9]'))) {
       return true;
     }

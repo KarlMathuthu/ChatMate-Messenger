@@ -128,7 +128,7 @@ class LetsYouInPage extends StatelessWidget {
               Get.toNamed(RouteClass.createAccountPage);
             },
             child: Container(
-              height: 30,
+              height: 40,
               width: double.infinity,
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Center(
