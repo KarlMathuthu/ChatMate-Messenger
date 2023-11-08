@@ -1,7 +1,7 @@
 class MessageModel {
   final String sender;
   final String messageText;
-  final int timestamp;
+  final String timestamp;
   bool read;
   final String messageType;
 
@@ -9,7 +9,7 @@ class MessageModel {
     required this.sender,
     required this.messageText,
     required this.timestamp,
-    this.read = false,
+    required this.read,
     required this.messageType,
   });
 

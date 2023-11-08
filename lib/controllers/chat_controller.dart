@@ -6,27 +6,76 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uuid/uuid.dart';
-
-import '../model/chat_model.dart';
 import '../model/message_model.dart';
 
 class ChatController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Send a message.
-  Future<void> sendMessage() async {
+  Future<void> sendMessage({
+    required String messageText,
+    required String messageType,
+    required String mateUid,
+  }) async {
     String currentUser = FirebaseAuth.instance.currentUser!.uid;
+
+    Map<String, dynamic> mylastMessage = {
+      "messageText": messageText,
+      "sender": currentUser,
+      "timestamp": DateTime.now().toString(),
+      "read": false,
+      "type": messageType,
+    };
+
+    final myMessageModel = MessageModel(
+      sender: currentUser,
+      messageText: messageText,
+      timestamp: DateTime.now().toString(),
+      messageType: messageType,
+      read: false,
+    );
     // Send to me
-   await _firestore
+    await _firestore
         .collection("users")
         .doc(currentUser)
         .collection("chats")
         .doc()
-        .set(
-      {},
-    );
+        .set(myMessageModel.toMap());
+    //  Update last_message
+    await _firestore
+        .collection("users")
+        .doc(currentUser)
+        .collection("chats")
+        .add(mylastMessage);
     // Send to mate
+
+    Map<String, dynamic> matelastMessage = {
+      "messageText": messageText,
+      "sender": currentUser,
+      "timestamp": DateTime.now().toString(),
+      "read": false,
+      "type": messageType,
+    };
+
+    final mateMessageModel = MessageModel(
+      sender: mateUid,
+      messageText: messageText,
+      timestamp: DateTime.now().toString(),
+      messageType: messageType,
+      read: false,
+    );
+    await _firestore
+        .collection("users")
+        .doc(mateUid)
+        .collection("chats")
+        .doc()
+        .set(mateMessageModel.toMap());
+    //  Update last_message
+    await _firestore
+        .collection("users")
+        .doc(mateUid)
+        .collection("chats")
+        .add(matelastMessage);
   }
 
   // Function to delete a message
