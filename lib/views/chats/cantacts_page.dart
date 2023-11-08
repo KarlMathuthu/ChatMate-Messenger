@@ -65,7 +65,7 @@ class _ContactsPageState extends State<ContactsPage> {
             onPressed: () async {
               Get.back();
               //send a wave to mate
-              waveAtMate(currentUserUid, mateUid);
+              // waveAtMate(currentUserUid, mateUid);
               //send a notification.
               NotificationsController.sendMessageNotification(
                 userToken: mateToken,
@@ -82,17 +82,17 @@ class _ContactsPageState extends State<ContactsPage> {
     );
   }
 
-  void waveAtMate(String currentUserUid, String mateUid) {
-    chatController.sendAWaveToMate(
-      members: [
-        currentUserUid,
-        mateUid,
-      ],
-      senderId: currentUserUid,
-      messageText: "👋👋",
-      type: "wave",
-    );
-  }
+  // void waveAtMate(String currentUserUid, String mateUid) {
+  //   chatController.sendAWaveToMate(
+  //     members: [
+  //       currentUserUid,
+  //       mateUid,
+  //     ],
+  //     senderId: currentUserUid,
+  //     messageText: "👋👋",
+  //     type: "wave",
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

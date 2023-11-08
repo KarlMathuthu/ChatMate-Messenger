@@ -58,7 +58,8 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
             onTap: () async {},
             child: SvgPicture.asset(
               "assets/icons/emoji.svg",
-              colorFilter:const ColorFilter.mode(AppTheme.mainColor, BlendMode.srcIn),
+              colorFilter:
+                  const ColorFilter.mode(AppTheme.mainColor, BlendMode.srcIn),
             ),
           ),
           const SizedBox(width: 5),
@@ -117,24 +118,29 @@ class _CustomMessageBarState extends State<CustomMessageBar> {
               : IconButton(
                   onPressed: () async {
                     if (_textController.text.trim() != '') {
-                      widget.isNewChat
-                          ? chatController.createChat(
-                              members: [
-                                widget.currentUser,
-                                widget.mateUid ?? "",
-                              ],
-                              senderId: widget.currentUser,
-                              messageText: _textController.text.trim(),
-                              type: "text",
-                            )
-                          :
-                          //send message
-                          chatController.sendMessage(
-                              chatId: widget.chatRoomId,
-                              senderId: widget.currentUser,
-                              messageText: _textController.text.trim(),
-                              type: "text",
-                            );
+                      // widget.isNewChat
+                      //     ? chatController.createChat(
+                      //         members: [
+                      //           widget.currentUser,
+                      //           widget.mateUid ?? "",
+                      //         ],
+                      //         senderId: widget.currentUser,
+                      //         messageText: _textController.text.trim(),
+                      //         type: "text",
+                      //       )
+                      //     :
+                      //     //send message
+                      //     chatController.sendMessage(
+                      //         chatId: widget.chatRoomId,
+                      //         senderId: widget.currentUser,
+                      //         messageText: _textController.text.trim(),
+                      //         type: "text",
+                      //       );
+                      chatController.sendMessage(
+                        messageText: _textController.text.trim(),
+                        messageType: "text",
+                        mateUid: widget.mateUid,
+                      );
                     }
                     _textController.text = '';
                     //send notifcation
