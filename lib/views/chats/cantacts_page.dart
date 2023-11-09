@@ -94,7 +94,6 @@ class _ContactsPageState extends State<ContactsPage> {
       type: "wave",
     );
   }
-  
 
   @override
   Widget build(BuildContext context) {
