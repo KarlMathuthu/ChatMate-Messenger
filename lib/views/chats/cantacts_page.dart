@@ -66,7 +66,6 @@ class _ContactsPageState extends State<ContactsPage> {
             onPressed: () async {
               Get.back();
               //send a wave to mate
-              
               waveAtMate(currentUserUid, mateUid);
               //send a notification.
               NotificationsController.sendMessageNotification(
