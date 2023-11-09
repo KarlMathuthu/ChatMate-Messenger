@@ -67,7 +67,8 @@ class _ContactsPageState extends State<ContactsPage> {
               Get.back();
               //send a wave to mate
               waveAtMate(currentUserUid, mateUid);
-              //send a notification.      
+              //send a notification.    
+              //  
               NotificationsController.sendMessageNotification(
                 userToken: mateToken,
                 body:
