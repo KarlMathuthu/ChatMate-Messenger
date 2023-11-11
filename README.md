@@ -17,7 +17,7 @@ ChatMate - Messenger comes packed with a range of features to enhance your messa
 - **Call History**: Keep track of your call history and never lose an important conversation.
 
 
-## Note: Testing 🧪
+<!-- ## Note: Testing 🧪
 
 If you'd like to test the app, please use the following credentials. Creating dummy accounts is discouraged, as they will be promptly removed during testing. We appreciate your cooperation.
 
@@ -29,7 +29,7 @@ If you'd like to test the app, please use the following credentials. Creating du
 - Email: boyd@gmail.com
 - Password: 123456M
 
-Feel free to use these accounts for testing and familiarizing yourself with the app's features. Your feedback is invaluable as we continue to improve ChatMate - Messenger. Thank you for your understanding and assistance.
+Feel free to use these accounts for testing and familiarizing yourself with the app's features. Your feedback is invaluable as we continue to improve ChatMate - Messenger. Thank you for your understanding and assistance. -->
 
 ## Credits 🙌
 
