@@ -127,4 +127,4 @@ Happy chatting! 😊📱📢📸🎉
 
 ## Developer
 
-Made with ❤️ by Karl Mathuthu.
+Built with ❤️ by Karl Mathuthu.
