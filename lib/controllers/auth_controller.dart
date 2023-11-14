@@ -158,6 +158,7 @@ customLoader.hideLoader();
       print("Error deleting account: $e");
     }
   }
+  
   //Update user token
   Future<void> updateUserToken() async {
     if (_auth.currentUser != null) {
