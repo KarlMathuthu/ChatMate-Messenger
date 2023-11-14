@@ -29,7 +29,6 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundNotification);
 
   //Handle foreground notifications
-  
   FirebaseMessaging.onMessage.listen(
     (RemoteMessage message) {
       String notificationPayLoad = jsonEncode(message.data);
